@@ -56,7 +56,10 @@ citestyle= authoryear
 \author{Simon dos Reis Spedsbjerg}
 
 \newcommand{\Phases}{PHASES }
-\newcommand{\phaseq}{PHASE1}
+\newcommand{\phaseq}{Research Phase}
+\newcommand{\phasew}{Data Collection/Creation}
+\newcommand{\phasee}{Analysis Phase}
+\newcommand{\phaser}{Design Phase}
 
 \usepackage{biblatex}
 
@@ -67,8 +70,16 @@ citestyle= authoryear
 	As data collection forever increases and systems ever becomes more depended on the quality of the data. Faulty data may damage the quality of analysis which is performed on the data, and outlier data may indicate another system is failing or an uncommon phenomenon has occurred on the sampled group.
 	
 	\section{Project}
+	The projects goal is to develop a new system based on variables dependencies on each other. As a variable value changes, its change may be a reflection of an error on another variable. As a web of variables all connected, the program should be able to pinpoint the problem area based on the affected variables, to the degree of affection and the spread of the affection. The projects goal is to develop the product, compare it to similar solutions in the aspect of speed, accuracy, ANDRE TING INDENFOR EMNET SÅSOM TRUE-FALSE RATIO through relevant analysis methods. 
+	
+	
 	We intend to go into \Phases phases during this project.
-
+		\begin{itemize}
+			\item \phaseq, develop a clear and thorough understanding of the current state of research in anomaly detection and fault detection and diagnosis by creating a systematic literature review of the subjects.
+			\item \phasew, Collect or create relevant data depending on the results of the \phaseq which is relevant to the subject. As the results will be drawn on the solutions ability to handle the data, the quality of the data has a high impact on the project.
+			\item \phasee, analyse the problem and with the help of software engineering methods based on the \phaseq \space results.
+			\item \phaser, design a theoretical solution to the problem specified in the \phasee with software engineering methods.
+		\end{itemize}
 	
 	In the following, we see the expected timeline for the project.\newline
 	%Timeline
@@ -108,13 +119,13 @@ citestyle= authoryear
 		\draw (3,0)
 		node[below=3pt] {\scriptsize DATE}
 		node[above=3pt] {\begin{turn}{45}
-				\phaset
+				PHASE
 		\end{turn}};
 		
 		\draw (5,0)
 		node[below=3pt] {\scriptsize DATE}
 		node[above=3pt] {\begin{turn}{45}
-				\phasey
+				PHASE
 		\end{turn}};
 		
 		\draw (6.25,0) node[below=3pt] {\scriptsize DATE}; node[above=3pt] {$ $}; %end date
