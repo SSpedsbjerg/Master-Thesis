@@ -2,15 +2,15 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel} %language
 \usepackage[
-backend=biber,
-style=alphabetic,
-citestyle= authoryear
+backend=bibtex
 ]{biblatex}
+\addbibresource{references.bib}
 \usepackage{amssymb}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{array}
 \usepackage{float}
+\usepackage{amsmath}
 
 %CodeColours
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -18,6 +18,8 @@ citestyle= authoryear
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 \definecolor{codeblue}{rgb}{0,0,0.80}
+
+
 
 %Codestyle
 \lstdefinestyle{mystyle}{
@@ -70,10 +72,10 @@ citestyle= authoryear
 	\maketitle
 	
 	\section{Problem}
-	As data collection forever increases and systems ever becomes more depended on the quality of the data. Faulty data may damage the quality of analysis which is performed on the data, and outlier data may indicate another system is failing or an uncommon phenomenon has occurred on the sampled group.
+	As data collection forever increases and systems ever becomes more depended on the quality of the data. Faulty data may damage the quality of analysis which is performed on the data, and outlier data may indicate another system is failing or an uncommon phenomenon has occurred on the sampled group. Anomalies has become an interest in many sectors, Mukherjee, A\cite{MUKHERJEE2024102444} cite transport, manufactoring, water and power making use of IOT-based sensing.
 	
 	\section{Project}
-	The projects goal is to develop a new system based on variables dependencies on each other. As a variable value changes, its change may be a reflection of an error on another variable. As a web of variables all connected, the program should be able to pinpoint the problem area based on the afflicted variables, to the degree of affliction and the spread of the affliction. The projects goal is to develop the product, compare it to similar solutions in the aspect of speed, accuracy, ANDRE TING INDENFOR EMNET SÅSOM TRUE-FALSE RATIO through relevant analysis methods. Determining the pros and cons of this system or any algorithms developed for it compared to state of the art systems or algorithms, may further possible future solutions for software problems.
+	The projects goal is to develop a new system which detect anomalies based on different variables dependencies on each other. As a variable value changes, its change may be a reflection of an error on another variable. As a web of variables all connected, the program should be able to pinpoint the problem area based on the afflicted variables, to the degree of affliction and the spread of the affliction. The projects goal is to develop the product, compare it to similar solutions in the aspect of speed, accuracy, ANDRE TING INDENFOR EMNET SÅSOM TRUE-FALSE RATIO through relevant analysis methods. Determining the pros and cons of this system or any algorithms developed for it compared to state of the art systems or algorithms, may further possible future solutions for software problems.
 	
 	There is two types of anomalies which the system intends to handle, the normal anomaly which is a one off anomaly which is rare or just a misreading, the other is a discord which is a reaccuring anomaly which can indicate a fault, failure or special event at some point in the observed systems. By the different sensors variables having relations among one another, it is hoped that discords can be determined with high accuracy and precision.
 	
@@ -82,9 +84,9 @@ citestyle= authoryear
 		\begin{itemize}
 			\item Making the system be able to differentiate between a anomaly and a discord with a small sample size.
 			\item Determining whether to focus on supervised learning, unsupervised learning or both.
+			\item Availbility of data which has the quality required for this project. Either it is successful to gain such data, or a virtual twin of machines which this system would function with has to be made.
 		\end{itemize}
-	
-	\newpage
+	\subsection{Phases}
 	We intend to go into \Phases phases during this project.
 		\begin{itemize}
 			\item \phaseq, develop a clear and thorough understanding of the current state of research in anomaly detection and fault detection and diagnosis by creating a systematic literature review of the subjects.
@@ -153,4 +155,6 @@ citestyle= authoryear
 		\draw (6,0) node[below=3pt]{\scriptsize DATE 8} node[above=3pt] {\begin{turn}{45} Finish \end{turn}};%end date
 	\end{tikzpicture}
 	
+	\newpage
+	\printbibliography
 \end{document}
