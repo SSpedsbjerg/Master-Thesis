@@ -68,25 +68,39 @@ backend=bibtex
 
 \usepackage{biblatex}
 
+
+\usepackage[acronym]{glossaries}
+\input{acronyms}
+
 \begin{document}
 	\maketitle
-	
-	\section{Problem}
+	\section{Context}
 		As data collection forever increases and systems ever become more dependent on the quality of the data. Faulty data may damage the quality of analysis that is performed on the data, and outlier data may indicate another system is failing or an uncommon phenomenon has occurred in the sampled group. Anomalies has become an interest in many sectors, Mukherjee, A\cite{MUKHERJEE2024102444} cite transport, manufacturing, water, and power, making use of IOT-based sensing. This problem is also an interest when it comes to cyberattacks. Gauthama et al. worked on analysing possible attack detection systems for a multi-point IOT system\cite{MR2022103046}.
+			
+	\section{Problem}
+		Research Questions:
+		\begin{itemize}
+			\item RQ1: What is the benefit of a \gls{vrdad} in a multi-variable sensor system. 
+			\item RQ2: What advantages and disadvantages does \gls{vrdad} have compared to state-of-the-art solutions.
+		\end{itemize}
 	
+	\section{Approach}
+		To find answers to the research questions I plan to either: using qualitative data I can simulate a real-life system using separated computers as individual systems, implement the different algorithms and make qualitative comparisons to determine whether \gls{vrdad} has any validity. The other is to setup digital twins of systems which the \gls{vrdad} would be a fit and generate the data live and then compare it to state of art solutions to determine the validity of \gls{vrdad} system.
+		
 	\section{Project}
 		The project's goal is to develop a new system that detects anomalies based on different variables dependencies on each other. As a variable value changes, its change may be a reflection of an error on another variable. As a web of variables all connected, the program should be able to pinpoint the problem area based on the afflicted variables, the degree of affliction, and the spread of the affliction. The project's goal is to develop the product and compare it to similar solutions in the aspects of speed, accuracy, and precision through relevant analysis methods. Determining the pros and cons of this system or any algorithms developed for it compared to state-of-the-art systems or algorithms may further possible future solutions for software problems.
 	
 		There are two types of anomalies that the system intends to handle: the normal anomaly, which is a one-off anomaly that is rare or just a misreading, and the discord anomaly, which is a recurring anomaly that can indicate a fault, failure, or special event at some point in the observed systems. By the different sensor variables having relations among one another, it is hoped that discords can be determined with high accuracy and precision.
-	\newpage
+		
 	\subsection{Expected Challenges}
-		throughout the project I expect that I would have to find solutions for the following challenges.
+		Throughout the project I expect that I would have to find solutions for the following challenges.
 		\begin{itemize}
 			\item Making the system be able to differentiate between a anomaly and a discord with a small sample size.
 			\item Determining whether to focus on supervised learning, unsupervised learning or both.
 			\item Availability of data which has the quality required for this project. Either it is successful to gain such data, or a virtual twin of machines which this system would function with has to be made.
 		\end{itemize}
-	\subsection{Phases}
+		
+	\subsection{Timeline}
 	We intend to go into \Phases phases during this project.
 		\begin{itemize}
 			\item \phaseq, develop a clear and thorough understanding of the current state of research in anomaly detection and fault detection and diagnosis by creating a systematic literature review of the subjects.
@@ -98,7 +112,6 @@ backend=bibtex
 			\item \phasey, verify the results from the project and check if it full fills the hypothesis. From this draw a conclusion.
 		\end{itemize}
 	
-	\newpage
 	In the following, we see the expected timeline for the project.\newline
 	%Timeline
 	\begin{tikzpicture}
@@ -155,6 +168,9 @@ backend=bibtex
 		\draw (6,0) node[below=3pt]{\scriptsize DATE 8} node[above=3pt] {\begin{turn}{45} Finish \end{turn}};%end date
 	\end{tikzpicture}
 	
-	\newpage
+	\section{Preliminaries/Feasibility}
+	Tænker jeg at bedst jeg diskutere med dig med hvordan jeg bedst kan opfylde dette afsnit
+	
 	\printbibliography
+	\include{acronyms}
 \end{document}
