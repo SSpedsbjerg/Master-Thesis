@@ -64,7 +64,7 @@ backend=bibtex
 \newcommand{\phaser}{Design}
 \newcommand{\phaset}{Implementation}
 \newcommand{\phasey}{Software Verification}
-\newcommand{\phaseu}{Scientific Verification}
+\newcommand{\phaseu}{Evaluation}
 
 \usepackage{biblatex}
 
@@ -80,14 +80,93 @@ backend=bibtex
 	\section{Problem}
 		Research Questions:
 		\begin{itemize}
-			\item RQ1: What is the benefit of a \gls{vrdad} in a multi-variable sensor system. 
-			\item RQ2: What advantages and disadvantages does \gls{vrdad} have compared to state-of-the-art solutions.
+			\item RQ1: What is the benefit of a \gls{vrdad} in a multi-variable sensor system?
+			\item RQ2: What advantages and disadvantages does \gls{vrdad} have compared to state-of-the-art solutions?
 		\end{itemize}
 	
 	\section{Approach}
-		To find answers to the research questions I plan to either: using qualitative data I can simulate a real-life system using separated computers as individual systems, implement the different algorithms and make qualitative comparisons to determine whether \gls{vrdad} has any validity. The other is to setup digital twins of systems which the \gls{vrdad} would be a fit and generate the data live and then compare it to state of art solutions to determine the validity of \gls{vrdad} system.
+		To find answers to the research questions, I plan to either: using qualitative data I can simulate a real-life system using separate computers as individual systems, implement the different algorithms, and make qualitative comparisons to determine whether \gls{vrdad} has any validity. The other is to set up digital twins of systems where the \gls{vrdad} would be a fit and generate the data live and then compare it to state-of-the-art solutions to determine the validity of \gls{vrdad} system.
 		
-	\section{Project}
+		
+	\section{Timeline}
+	I intend to go into \Phases phases during this project.
+		\begin{itemize}
+			\item \phaseq, develop a clear and thorough understanding of the current state of research in anomaly detection and 'fault detection and diagnosis' by creating a systematic literature review of the subjects.
+			\item \phasew, Collect or create relevant data depending on the results of the \phaseq \space which is relevant to the subject. As the results will be drawn on the solution's ability to handle the data, the quality of the data has a high impact on the project.
+			\item \phasee, analyse the problem with the help of software engineering methods based on the \phaseq \space results.
+			\item \phaser, design a theoretical solution to the problem specified in the \phasee \space with software engineering methods.
+			\item \phaset, develop the project based on the results of the \phasee \space and \phaser \space using software engineering methods. This includes setup for any experimentations.
+			\item \phasey, verify that the solution successfully conforms to the requirements determined in the \phasee \space phase and implements all critical features.
+			\item \phasey, verify the results from the project and check if it fulfils the hypothesis. From this, draw a conclusion.
+		\end{itemize}
+	
+	In the following, we see the expected timeline for the project. The dates are start dates\newline
+	%Timeline
+	\begin{center}
+			\begin{tikzpicture}
+			%create the line
+			\draw (-6,0) -- (6,0);
+			
+			%vertical lines
+			\foreach \x in {-6, -4.5, -3, -1.5, 0, 1.5, 3, 4.5, 6}
+			\draw (\x cm, 3pt) -- (\x cm, -3pt); %Size of the points in the timeline
+			
+			%draw
+			\draw (-6,0) node[below=3pt] {\scriptsize August} node[above=3pt] {\scriptsize\begin{turn}{45}Problem Description\end{turn}}; %start date
+			
+			\draw (-4.5,0)
+			node[below=3pt] {\scriptsize September}
+			node[above=3pt] {\scriptsize\begin{turn}{45}\phaseq\end{turn}};
+			
+			\draw (-3,0)
+			node[below=3pt] {\scriptsize DATE 2}
+			node[above=3pt] {\scriptsize\begin{turn}{45}
+					\phasew
+			\end{turn}};
+			
+			\draw (-1.5,0)
+			node[below=3pt] {\scriptsize DATE 3}
+			node[above=3pt] {\scriptsize\begin{turn}{45}
+					\phasee
+			\end{turn}};
+			
+			\draw (0,0)
+			node[below=3pt] {\scriptsize DATE 4}
+			node[above=3pt] {\scriptsize\begin{turn}{45}
+					\phaser
+			\end{turn}};
+			
+			\draw (1.5,0)
+			node[below=3pt] {\scriptsize DATE 5}
+			node[above=3pt] {\scriptsize\begin{turn}{45}
+					\phaset
+			\end{turn}};
+			
+			\draw (3,0)
+			node[below=3pt] {\scriptsize DATE 6}
+			node[above=3pt] {\scriptsize\begin{turn}{45}
+					\phasey
+			\end{turn}};
+			
+			\draw (4.5,0)
+			node[below=3pt] {\scriptsize DATE 7}
+			node[above=3pt] {\scriptsize\begin{turn}{45}
+					\phaseu
+			\end{turn}};
+			
+			\draw (6,0) node[below=3pt]{\scriptsize DATE 8} node[above=3pt] {\scriptsize\begin{turn}{45} Finish \end{turn}};%end date
+		\end{tikzpicture}
+	\end{center}
+
+	It is planned that every 1-4 weeks a plan will be made detailing the coming weeks' task. Each time a plan is made, the previous weeks will be documented on what went well, okay, not so well, and terribly. This is so the supervisor and I can create a perspective and course correct if need be.
+	
+	The plan is to hold meetings with the supervisor every week, a agenda will be send to the supervisor 48 hours before the meeting.
+
+	
+	\section{Preliminaries/Feasibility}
+		Tænker jeg at bedst jeg diskutere med dig med hvordan jeg bedst kan opfylde dette afsnit, jeg har tilføjet noget men til hvilken grad det passer er jeg meget usikker på.
+	
+	\subsection{Project}
 		The project's goal is to develop a new system that detects anomalies based on different variables dependencies on each other. As a variable value changes, its change may be a reflection of an error on another variable. As a web of variables all connected, the program should be able to pinpoint the problem area based on the afflicted variables, the degree of affliction, and the spread of the affliction. The project's goal is to develop the product and compare it to similar solutions in the aspects of speed, accuracy, and precision through relevant analysis methods. Determining the pros and cons of this system or any algorithms developed for it compared to state-of-the-art systems or algorithms may further possible future solutions for software problems.
 	
 		There are two types of anomalies that the system intends to handle: the normal anomaly, which is a one-off anomaly that is rare or just a misreading, and the discord anomaly, which is a recurring anomaly that can indicate a fault, failure, or special event at some point in the observed systems. By the different sensor variables having relations among one another, it is hoped that discords can be determined with high accuracy and precision.
@@ -95,82 +174,11 @@ backend=bibtex
 	\subsection{Expected Challenges}
 		Throughout the project I expect that I would have to find solutions for the following challenges.
 		\begin{itemize}
-			\item Making the system be able to differentiate between a anomaly and a discord with a small sample size.
-			\item Determining whether to focus on supervised learning, unsupervised learning or both.
-			\item Availability of data which has the quality required for this project. Either it is successful to gain such data, or a virtual twin of machines which this system would function with has to be made.
+			\item Making the system be able to differentiate between an anomaly and a discord with a small sample size.
+			\item Determining whether to focus on supervised learning, unsupervised learning, or both.
+			\item Availability of data that has the quality required for this project. Either it is successful to gain such data, or a virtual twin of machines which this system would function on, has to be made.
 		\end{itemize}
 		
-	\subsection{Timeline}
-	We intend to go into \Phases phases during this project.
-		\begin{itemize}
-			\item \phaseq, develop a clear and thorough understanding of the current state of research in anomaly detection and fault detection and diagnosis by creating a systematic literature review of the subjects.
-			\item \phasew, Collect or create relevant data depending on the results of the \phaseq which is relevant to the subject. As the results will be drawn on the solutions ability to handle the data, the quality of the data has a high impact on the project.
-			\item \phasee, analyse the problem and with the help of software engineering methods based on the \phaseq \space results.
-			\item \phaser, design a theoretical solution to the problem specified in the \phasee with software engineering methods.
-			\item \phaset, develop the project based on the results of the \phasee and \phaser using software engineering methods.
-			\item \phasey, verify that the solution successfully conforms to the requirements determined in the \phasee and implements all critical features.
-			\item \phasey, verify the results from the project and check if it full fills the hypothesis. From this draw a conclusion.
-		\end{itemize}
-	
-	In the following, we see the expected timeline for the project.\newline
-	%Timeline
-	\begin{tikzpicture}
-		%create the line
-		\draw (-6,0) -- (6,0);
-		
-		%vertical lines
-		\foreach \x in {-6, -5, -4.25, -3.5, -2.75, -2, -1.25, -05, 0.25, 1, 1.75, 2.5, 3.25, 4, 4.75, 5.5, 6}
-		\draw (\x cm, 3pt) -- (\x cm, -3pt); %Size of the points in the timeline
-		
-		%draw
-		\draw (-6,0) node[below=3pt] {\scriptsize DATE 0}; node[above=3pt] {$ $}; %start date
-		
-		\draw (-4.25,0)
-		node[below=3pt] {\scriptsize DATE 1}
-		node[above=3pt] {\begin{turn}{45}\phaseq\end{turn}};
-		
-		\draw (-2.75,0)
-		node[below=3pt] {\scriptsize DATE 2}
-		node[above=3pt] {\begin{turn}{45}
-				\phasew
-		\end{turn}};
-		
-		\draw (-1.25,0)
-		node[below=3pt] {\scriptsize DATE 3}
-		node[above=3pt] {\begin{turn}{45}
-				\phasee
-		\end{turn}};
-		
-		\draw (0.25,0)
-		node[below=3pt] {\scriptsize DATE 4}
-		node[above=3pt] {\begin{turn}{45}
-				\phaser
-		\end{turn}};
-		
-		\draw (1.75,0)
-		node[below=3pt] {\scriptsize DATE 5}
-		node[above=3pt] {\begin{turn}{45}
-				\phaset
-		\end{turn}};
-		
-		\draw (3.25,0)
-		node[below=3pt] {\scriptsize DATE 6}
-		node[above=3pt] {\begin{turn}{45}
-				\phasey
-		\end{turn}};
-		
-		\draw (4.75,0)
-		node[below=3pt] {\scriptsize DATE 7}
-		node[above=3pt] {\begin{turn}{45}
-				\phaseu
-		\end{turn}};
-	
-		\draw (6,0) node[below=3pt]{\scriptsize DATE 8} node[above=3pt] {\begin{turn}{45} Finish \end{turn}};%end date
-	\end{tikzpicture}
-	
-	\section{Preliminaries/Feasibility}
-	Tænker jeg at bedst jeg diskutere med dig med hvordan jeg bedst kan opfylde dette afsnit
-	
 	\printbibliography
 	\include{acronyms}
 \end{document}
