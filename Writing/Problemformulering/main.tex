@@ -54,17 +54,18 @@ backend=bibtex
 \usetikzlibrary{snakes}
 \usepackage{rotating}
 
-\title{Title}
+\title{Event prediction using values and the relation to other values}
 \author{Simon dos Reis Spedsbjerg}
 
-\newcommand{\Phases}{7 }
+\newcommand{\Phases}{8 }
 \newcommand{\phaseq}{Related Work}
 \newcommand{\phasew}{Data Collection}
 \newcommand{\phasee}{Analysis}
 \newcommand{\phaser}{Design}
 \newcommand{\phaset}{Implementation}
-\newcommand{\phasey}{Software Evaluation}
-\newcommand{\phaseu}{Evaluation}
+\newcommand{\phaseSetup}{Setup}
+\newcommand{\phasey}{Evaluation}
+\newcommand{\phaseu}{Conclusion}
 
 \usepackage{biblatex}
 
@@ -75,36 +76,37 @@ backend=bibtex
 \begin{document}
 	\maketitle
 	\section{Context}
-		The amount of data collected forever increases, and systems ever become more dependent on the quality of the data. Faulty time series data may damage the quality of analysis that is performed on the data, and outlier data may indicate another system is failing, or an uncommon phenomenon has occurred. As sensor values rarely are independent of other environmental variables, decrease in temperature leads to increase in power consumption for heating leads to higher heating bill. While if power consumption did not rise might indicate that the people have extra cloths on or is using another heat source. The goal is to predict future events or explain current events so the administrator of the system can proactively mitigate the event. Sensors that give of data which is abnormal might indicate need for maintenance\cite{MUKHERJEE2024102444}, a specific event, or a successful intrusion into some parts of the system\cite{MR2022103046}. Information to predict events or needs has become an interest in many sectors, Mukherjee, A\cite{MUKHERJEE2024102444} cites transport, manufacturing, water, and power, while they themselves trying to predict maintenance for container cranes. Predicting ongoing events might have high importance when it comes to cyberattacks. Gauthama et al. worked on analysing possible attack detection systems in a water treatment plant using its multipoint IOT sensory system\cite{MR2022103046}.
-			
+		The amount of data collected is ever increasing, and analysis and predictive systems ever become more dependent on the quality of the data. Faulty (caused by an error in the system) or abnormal (caused by an event that does not represent the system) data may damage the quality of analysis that is performed on the data. The abnormal data point may indicate another system is failing, or an unrepresentative event is at play and may need someone to take a look at the system. As sensor values rarely are independent of environmental variables outside those they are designed to react to, we could expect a decrease in outside temperature to lead to an increase in power consumption for heating thus a higher heating bill. If a power consumption is not observed, then this may indicate that the occupants are dressing warmer or are using another heat source that we are not measuring. To be able to predict future events or explain current events can allow for proactive mitigation. Sensors that give data that is abnormal might indicate the need for maintenance\cite{MUKHERJEE2024102444}, an upcoming domain specific event, or a successful intrusion into some parts of the system\cite{MR2022103046}. Information to predict events or needs has become an interest in many sectors. Mukherjee, A\cite{MUKHERJEE2024102444} cites the transport, manufacturing, water, and power domains, while they try to predict maintenance for container cranes. Predicting ongoing events might be important when it comes to cyberattacks. Gauthama et al. worked on predicting an ongoing event of a possible attack in a water treatment plant using its multipoint IoT sensory system\cite{MR2022103046}.
+		I define \gls{reps} as a system that attempts to predict an event based on changes to a value and values which it shares any form of relation with. A value could be a value read from a sensor.
+
 	\section{Problem}
-		I define \gls{reps} as a system which attempts to predict an event based on changes to a variable and variables which it shares any form of relation with.\\
 		Research Questions:
 		\begin{itemize}
-			\item RQ1: What is the benefit of a \gls{reps} in a system with multiple sensors?
-			\item RQ2: What advantages and disadvantages does \gls{reps} have compared to state-of-the-art solutions?
+			\item RQ1: How well does \gls{reps} perform in a system with multiple sensors?
+			\item RQ2: What advantages and disadvantages does \gls{reps} have compared to other state-of-the-art solutions?
 		\end{itemize}
 	\newpage
 	\section{Approach}
-		To find answers to the research questions, I propose 2 approaches: 
+		To find answers to the research questions, I choose either of 2 approaches depending on availability of data: 
 		\begin{itemize}
-			\item \textbf{Qualitative Comparison}, using the data I will simulate a real-life system using separate computers as individual systems where my system, \gls{reps}, will try to make predictions. I will also implement other algorithms that tries to solve the same or similar problems, and make qualitative comparisons to determine whether \gls{reps} has any validity.
-			\item \textbf{Digital Twin}, The second approach is to set up digital twins of systems where the \gls{reps} would be a fit and generate the data live and then compare it to state-of-the-art solutions to determine the validity of \gls{reps} system. This will require constant attention that the digital twins do not give an advantage to \gls{reps} when compared to other algorithms which solves the same problem.
+			\item \textbf{Data Based Prediction}, using the data I will simulate a real-life system using separate computers as individual systems where the \gls{reps} will try to make predictions. I will also make use other publicly available algorithms that tries to solve the same or similar problems, and make qualitative comparisons to determine whether \gls{reps} has validity.
+			\item \textbf{Digital Twin}, defined as digital model of a physical system. The second approach is to set up digital twins of systems where the \gls{reps} would generate data live and then compare it to similar publicly available solutions to determine the validity of \gls{reps} system. This will require constant attention that the digital twins do not give an unfair advantage to \gls{reps} when compared to other algorithms to avoid bias towards \gls{reps}.
 		\end{itemize}
-		 
+		Then a comparison between the \gls{reps} and other available algorithms is performed where they will be measured for any relevant attributes in performing their task in predicting future events and thereby answering the research questions.
 		
 		
 	\section{Timeline}
-	I intend to go into \Phases phases during this project.
-		\begin{itemize}
+	I intend to go into \Phases phases during this project. This timeline will most likely change during the project as many unknowns still exists, but it serves as a subjective view of the time needed for the different phases based on my previous experience.
+		\begin{enumerate}
 			\item \textbf{\phaseq}, develop a clear and thorough understanding of the current state of research in anomaly detection and 'fault detection and diagnosis' by creating a systematic literature review of the subjects.
 			\item \textbf{\phasew}, Collect or create relevant data depending on the results of the \phaseq \space which is relevant to the subject. As the results will be drawn on the solution's ability to handle the data, the quality of the data has a high impact on the project.
 			\item \textbf{\phasee}, analyse the problem with the help of software engineering methods based on the \phaseq \space results.
-			\item \textbf{\phaser}, design a theoretical solution to the problem specified in the \phasee \space phase with software engineering methods.
-			\item \textbf{\phaset}, develop the project based on the results of the \phasee \space and \phaser \space using software engineering methods. This includes setup for any experimentations.
-			\item \textbf{\phasey}, how well does the solution fulfil the requirements determined in the \phasee \space phase and does it implement all features which is deemed critical .
-			\item \textbf{\phaseu}, verify the results from the project and check if it fulfils the hypothesis. From this, draw a conclusion.
-		\end{itemize}
+			\item \textbf{\phaser}, design a solution to the problem specified in the \phasee \space phase with software engineering methods so it can be efficiently implemented.
+			\item \textbf{\phaset}, develop the project based on the results of the \phasee \space and the \phaser \space using software engineering methods. This includes setup for any experimentations.
+			\item \textbf{\phasey}, how well does the solution fulfil the requirements determined in the \phasee \space phase and does it implement all features which is deemed critical.
+			\item \textbf{\phaseSetup}, the setup may involve many tools which need setup, this could be for stress testing, having several data producers on each their own services.
+			\item \textbf{\phaseu}, Evaluate the results from the project and how well the results answers the research questions. From this, draw a conclusion.
+		\end{enumerate}
 	
 	In the following, we see the expected timeline for the project.\newline
 	%Timeline
@@ -121,41 +123,47 @@ backend=bibtex
 			\draw (-6,0) node[below=3pt] {\begin{turn}{45}\scriptsize 04/08$\rightarrow$09/08\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}Problem Description\end{turn}}; %start date
 			\draw (-4.5,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 02/09$\rightarrow$30/09\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 02/09$\rightarrow$18/10\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}\phaseq\end{turn}};
 			
 			\draw (-3,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 16/09$\rightarrow$14/10\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 14/10$\rightarrow$15/11\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
 					\phasew
 			\end{turn}};
 			
 			\draw (-1.5,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 01/10$\rightarrow$01/11\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 04/11$\rightarrow$22/11\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
 					\phasee
 			\end{turn}};
 			
 			\draw (0,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 01/11$\rightarrow$15/11\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 18/11$\rightarrow$2/12\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
 					\phaser
 			\end{turn}};
 			
 			\draw (1.5,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 18/11$\rightarrow$31/03\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 25/11$\rightarrow$31/03\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
 					\phaset
 			\end{turn}};
 			
 			\draw (3,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 01/04$\rightarrow$04/04\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 01/04$\rightarrow$08/04\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
 					\phasey
 			\end{turn}};
 			
+			\draw (3.75,0)
+			node[below=3pt] {\begin{turn}{45}\scriptsize 02/04$\rightarrow$18/04\end{turn}}
+			node[above=3pt] {\scriptsize\begin{turn}{45}
+					\phaseSetup
+			\end{turn}};
+			
 			\draw (4.5,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 07/04$\rightarrow$30/05\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 14/04$\rightarrow$30/05\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
 					\phaseu
 			\end{turn}};
@@ -163,14 +171,13 @@ backend=bibtex
 			\draw (6,0) node[below=3pt]{\begin{turn}{45}\scriptsize 30/05$\rightarrow$END\end{turn}} node[above=3pt] {\scriptsize\begin{turn}{45} Finish \end{turn}};%end date
 		\end{tikzpicture}
 	\end{center}
-	{\scriptsize a Gantt version exists in appendix}\\
 	Every 1-4 weeks a plan will be made detailing the coming weeks' task. Each time a plan is made, the previous weeks will be documented on what went well, okay, not so well, and terribly. This is so the supervisor and I can create a perspective and course correct if need be.
 	
-	The plan is to hold meetings with the supervisor at least every week, an agenda will be send to the supervisor at minimum 48 hours before the meeting.
+	The plan is to hold meetings with the supervisor every week, an agenda will be send to the supervisor at minimum 48 hours before the meeting.
 
 	
 	\section{Preliminaries/Feasibility}
-		The will have a high chance of success based on the risk analysis and as long the mitigation tactics are used.
+		The project will have a high chance of success based on the risk analysis and as long the mitigation tactics are used.
 	
 		\subsection{Risk analysis}
 			The risk levels are as follows, insignificant, very low, low, medium, high, very high. This is the likelihood of the risk coming true. An impact value is also set and it has the same levels as the risk levels. Mitigation is the tactic and how well it can be mitigated if the risk were to happen. All these factors will be taken into consideration throughout the project's lifetime based on the cost-benefit.
@@ -180,9 +187,9 @@ backend=bibtex
 					\hline
 					Risk Type & Description & Risk & Impact & Mitigation & Comments \\ \hline
 					Missing Related work & There is not enough related work to form a proper ground for research & Insignificant & Very high & Reformulate research question & Already from the research that I have read for this topic, it is clear that there is more than enough. \\ \hline
-					Unable to gather data for simulations & Either I am able to gain the data or I will have to set up some form of a digital twin. & Medium & Medium & Set up digital twins; what the twin is of will be decided after going through related work & The twin is not intended to fit perfectly with the system that I intend to implement, it is supposed to be used to decide whether it is in general a possible solution to the problem while comparing it to other solutions whose goal is to solve the same problem.\\ \hline
+					Unable to gather data for simulations & Either I am able to find the data or I will have to set up some form of a digital twin. & Medium & Medium & Set up digital twins; what the twin is of will be decided after going through related work & The twin is not intended to fit perfectly with the system that I intend to implement, it is supposed to be used to decide whether it is in general a possible solution to the problem while comparing it to other solutions whose goal is to solve the same problem.\\ \hline
 					Collected data or Twin is over-fitted for the implementation & Over-fitting means that it just fits too well for this specific case but will not give similar results in other similar scenarios which would fail the project. & Medium & Very High & As long as this is kept in mind throughout the project with the intention it should not fit perfectly, it should not be a problem. & The problem will most likely happen if this is forgotten about, emphasising constant thought and care about this problem. \\ \hline
-					Implementation fails & The implemented code is in a state where it fails to give useful results that allow me to answer the research questions. & Very low & Very High & Implement only 'must have' requirements and scale the system down in size & In my opinion is scaleable, while scaling down will give a worse result, it will allow for the completion of the project. \\ \hline
+					Implementation fails & The implemented code is in a state where it fails to give useful results that allow me to answer the research questions. & Very low & Very High & Implement only 'must have' requirements and scale the system down in size. Performing iterations can ensure an early viable product and lower cost upon failure of an iteration & In my opinion is scaleable, while scaling down will give a worse result, it will allow for the completion of the project. \\ \hline
 				\end{tabular}
 			\end{center}
 			}
