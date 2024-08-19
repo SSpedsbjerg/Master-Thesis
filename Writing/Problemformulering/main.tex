@@ -54,8 +54,8 @@ backend=bibtex
 \usetikzlibrary{snakes}
 \usepackage{rotating}
 
-\title{Event prediction using values and the relation to other values}
-\author{Simon dos Reis Spedsbjerg}
+\title{Event Prediction Using Values and the Relation to Other Values}
+\author{Simon dos Reis Spedsbjerg : sispe20@student.sdu.dk\\ {\small Advisor: Aslak Johansen : asjo@mmmi.sdu.dk}}
 
 \newcommand{\Phases}{8 }
 \newcommand{\phaseq}{Related Work}
@@ -76,25 +76,34 @@ backend=bibtex
 \begin{document}
 	\maketitle
 	\section{Context}
-		The amount of data collected is ever increasing, and analysis and predictive systems ever become more dependent on the quality of the data. Faulty (caused by an error in the system) or abnormal (caused by an event that does not represent the system) data may damage the quality of analysis that is performed on the data. The abnormal data point may indicate another system is failing, or an unrepresentative event is at play and may need someone to take a look at the system. As sensor values rarely are independent of environmental variables outside those they are designed to react to, we could expect a decrease in outside temperature to lead to an increase in power consumption for heating thus a higher heating bill. If a power consumption is not observed, then this may indicate that the occupants are dressing warmer or are using another heat source that we are not measuring. To be able to predict future events or explain current events can allow for proactive mitigation. Sensors that give data that is abnormal might indicate the need for maintenance\cite{MUKHERJEE2024102444}, an upcoming domain specific event, or a successful intrusion into some parts of the system\cite{MR2022103046}. Information to predict events or needs has become an interest in many sectors. Mukherjee, A\cite{MUKHERJEE2024102444} cites the transport, manufacturing, water, and power domains, while they try to predict maintenance for container cranes. Predicting ongoing events might be important when it comes to cyberattacks. Gauthama et al. worked on predicting an ongoing event of a possible attack in a water treatment plant using its multipoint IoT sensory system\cite{MR2022103046}.
+		Imagine, you are tasked in setting up a new department in Lego, the goal, 3D print bricks instead of using a mould to make the bricks so Lego can achieve higher adaptability. One day, several printers fail within an hour of each other, sensors indicate a problem with the nozzles, and the heating element is bit off but not enough to cause a problem and the value disappears among all other sensor values. So you start replacing the nozzles, but it does not fix the problem. In the mean time, other printers has been working just fine, so you take one that is working and one that is not and compare them. You notice quickly that the one that is not working is using some of the new plastic batch. Using the heating element with the nozzle sensor, this event in the system your department are setting up could have been pinpointed using those values.
+		
+		What will be considered as an event is in this context is something that happens, whether positive or negative, which one would try to mitigate or solve, it is not some outcomes being true if they do not affect something.
+		
+		The amount of data collected is ever increasing, and analysis and predictive systems ever become more dependent on the quality of their input data. Faulty (caused by an error in the system) or abnormal (caused by an event that does not represent normal operations in the system) data may invalidate the analysis that is performed on the data. An abnormal data point such as the heating element may indicate another part system is cause, as sensor values rarely are independent of environmental variables outside those they are designed to react to. A lack of an event in one place could mean an event in another place, we could expect a decrease in outside temperature to lead to an increase in power consumption for heating thus a higher heating bill. If an increase in power consumption is not observed, then this may indicate that the occupants are dressing warmer or are using another heat source that we are not measuring. To be able to predict future events or explain current events can allow for proactive mitigation. 
+		
+		Sensors that give data that is abnormal might indicate the need for maintenance\cite{MUKHERJEE2024102444}, an upcoming domain specific event, or a successful intrusion into some parts of the system\cite{MR2022103046}. Information to predict events or needs has become an interest in many sectors. Mukherjee, A\cite{MUKHERJEE2024102444} cites the transport, manufacturing, water, and power domains, while they try to predict maintenance for container cranes. Predicting ongoing events might be important when it comes to cyberattacks. Gauthama et al. worked on predicting an ongoing event of a possible attack in a water treatment plant using its multipoint IoT sensory system\cite{MR2022103046}.
+		
 		I define \gls{reps} as a system that attempts to predict an event based on changes to a value and values which it shares any form of relation with. A value could be a value read from a sensor.
 
 	\section{Problem}
 		Research Questions:
 		\begin{itemize}
+			\item RQ0: How should a \gls{reps} be constructed?
 			\item RQ1: How well does \gls{reps} perform in a system with multiple sensors?
 			\item RQ2: What advantages and disadvantages does \gls{reps} have compared to other state-of-the-art solutions?
 		\end{itemize}
 	\newpage
 	\section{Approach}
-		To find answers to the research questions, I choose either of 2 approaches depending on availability of data: 
+		To find answers to the research questions, I can choose either of 2 approaches depending on availability of data: 
 		\begin{itemize}
-			\item \textbf{Data Based Prediction}, using the data I will simulate a real-life system using separate computers as individual systems where the \gls{reps} will try to make predictions. I will also make use other publicly available algorithms that tries to solve the same or similar problems, and make qualitative comparisons to determine whether \gls{reps} has validity.
-			\item \textbf{Digital Twin}, defined as digital model of a physical system. The second approach is to set up digital twins of systems where the \gls{reps} would generate data live and then compare it to similar publicly available solutions to determine the validity of \gls{reps} system. This will require constant attention that the digital twins do not give an unfair advantage to \gls{reps} when compared to other algorithms to avoid bias towards \gls{reps}.
+			\item \textbf{Data Based Prediction}, using the data I will simulate a real-life system using separate computers as individual systems where the \gls{reps} will try to make predictions.
+			\item \textbf{Digital Twin}, defined as digital model of a real world physical system. The second approach is to set up digital twins of systems that would generate data live. This will require constant attention that the digital twins does not give an unfair advantage to \gls{reps} to avoid bias.
 		\end{itemize}
+		Either case, the approach chosen will be compared to other available algorithms which solves same or similar problem.
 		Then a comparison between the \gls{reps} and other available algorithms is performed where they will be measured for any relevant attributes in performing their task in predicting future events and thereby answering the research questions.
 		
-		
+		The \textbf{Digital Twin} approach is preferred because it would grant me the ability to create a more varied but realistic scenarios that would be rare to occur in the real world. The \textbf{Data Based Prediction} is more accurate to the real world as this was what real sensors would be giving as a result.
 	\section{Timeline}
 	I intend to go into \Phases phases during this project. This timeline will most likely change during the project as many unknowns still exists, but it serves as a subjective view of the time needed for the different phases based on my previous experience.
 		\begin{enumerate}
