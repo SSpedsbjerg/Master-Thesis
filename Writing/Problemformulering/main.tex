@@ -76,11 +76,11 @@ backend=bibtex
 \begin{document}
 	\maketitle
 	\section{Context}
-		Imagine, you are tasked in setting up a new department in Lego, the goal, 3D print bricks instead of using a mould to make the bricks so Lego can achieve higher adaptability. One day, several printers fail within an hour of each other, sensors indicate a problem with the nozzles, and the heating element is bit off but not enough to cause a problem and the value disappears among all other sensor values. So you start replacing the nozzles, but it does not fix the problem. In the mean time, other printers has been working just fine, so you take one that is working and one that is not and compare them. You notice quickly that the one that is not working is using some of the new plastic batch. Using the heating element with the nozzle sensor, this event in the system your department are setting up could have been pinpointed using those values.
+		Imagine, you are tasked in setting up a new department in Lego, the goal, 3D print bricks instead of using a mould to make the bricks so Lego can achieve higher adaptability. One day, several printers fail within an hour of each other, sensors indicate a problem with the nozzles, and the heating element is bit off but not enough to cause a problem and its value disappears among all other sensor values which is measured. So you start replacing the nozzles, but it does not fix the problem. In the mean time, other printers has been working just fine, so you take one that is working and one that is not and compare them. You notice quickly that the one that is not working is using some of the new plastic batch. Using the heating element with the nozzle sensor, this event in the system your department are setting up could have been pinpointed using those values.
 		
-		What will be considered as an event is in this context is something that happens, whether positive or negative, which one would try to mitigate or solve, it is not some outcomes being true if they do not affect something.
+		What will be considered as an event is in this context, something that happens which is either positive or negative, which one would try to mitigate or solve, it is not some outcomes being true if they do not have an effect.
 		
-		The amount of data collected is ever increasing, and analysis and predictive systems ever become more dependent on the quality of their input data. Faulty (caused by an error in the system) or abnormal (caused by an event that does not represent normal operations in the system) data may invalidate the analysis that is performed on the data. An abnormal data point such as the heating element may indicate another part system is cause, as sensor values rarely are independent of environmental variables outside those they are designed to react to. A lack of an event in one place could mean an event in another place, we could expect a decrease in outside temperature to lead to an increase in power consumption for heating thus a higher heating bill. If an increase in power consumption is not observed, then this may indicate that the occupants are dressing warmer or are using another heat source that we are not measuring. To be able to predict future events or explain current events can allow for proactive mitigation. 
+		The amount of data collected is ever increasing, and analysis and predictive systems ever become more dependent on the quality of their input data. Faulty (caused by an error in the system) or abnormal (caused by an event that does not represent normal operations in the system) data may invalidate the analysis that is performed on the data. An abnormal data point such as the heating element may indicate another part system is cause, as sensor values rarely are independent of environmental variables outside those they are designed to react to. A lack of an expected event in one place could mean an event in another place, we could expect a decrease in outside temperature to lead to an increase in power consumption for heating thus a higher heating bill. If an increase in power consumption is not observed, then this may indicate that the occupants are dressing warmer or are using another heat source that we are not measuring. To be able to predict future events or explain current events can allow for proactive mitigation. 
 		
 		Sensors that give data that is abnormal might indicate the need for maintenance\cite{MUKHERJEE2024102444}, an upcoming domain specific event, or a successful intrusion into some parts of the system\cite{MR2022103046}. Information to predict events or needs has become an interest in many sectors. Mukherjee, A\cite{MUKHERJEE2024102444} cites the transport, manufacturing, water, and power domains, while they try to predict maintenance for container cranes. Predicting ongoing events might be important when it comes to cyberattacks. Gauthama et al. worked on predicting an ongoing event of a possible attack in a water treatment plant using its multipoint IoT sensory system\cite{MR2022103046}.
 		
@@ -112,9 +112,9 @@ backend=bibtex
 			\item \textbf{\phasee}, analyse the problem with the help of software engineering methods based on the \phaseq \space results.
 			\item \textbf{\phaser}, design a solution to the problem specified in the \phasee \space phase with software engineering methods so it can be efficiently implemented.
 			\item \textbf{\phaset}, develop the project based on the results of the \phasee \space and the \phaser \space using software engineering methods. This includes setup for any experimentations.
+			\item \textbf{\phaseSetup}, the setup may involve many tools which need setup, this could be for stress testing, having several data producers on each their own services. The setup's purpose is to have all small prerequisites ready for the \phasey \space phase.
 			\item \textbf{\phasey}, how well does the solution fulfil the requirements determined in the \phasee \space phase and does it implement all features which is deemed critical.
-			\item \textbf{\phaseSetup}, the setup may involve many tools which need setup, this could be for stress testing, having several data producers on each their own services.
-			\item \textbf{\phaseu}, Evaluate the results from the project and how well the results answers the research questions. From this, draw a conclusion.
+			\item \textbf{\phaseu}, Answer the research questions and draw a conclusion.
 		\end{enumerate}
 	
 	In the following, we see the expected timeline for the project.\newline
@@ -162,22 +162,16 @@ backend=bibtex
 			\draw (3,0)
 			node[below=3pt] {\begin{turn}{45}\scriptsize 01/04$\rightarrow$08/04\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
-					\phasey
-			\end{turn}};
-			
-			\draw (3.75,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 02/04$\rightarrow$18/04\end{turn}}
-			node[above=3pt] {\scriptsize\begin{turn}{45}
 					\phaseSetup
 			\end{turn}};
 			
 			\draw (4.5,0)
-			node[below=3pt] {\begin{turn}{45}\scriptsize 14/04$\rightarrow$30/05\end{turn}}
+			node[below=3pt] {\begin{turn}{45}\scriptsize 02/04$\rightarrow$18/04\end{turn}}
 			node[above=3pt] {\scriptsize\begin{turn}{45}
-					\phaseu
+					\phasey
 			\end{turn}};
 			
-			\draw (6,0) node[below=3pt]{\begin{turn}{45}\scriptsize 30/05$\rightarrow$END\end{turn}} node[above=3pt] {\scriptsize\begin{turn}{45} Finish \end{turn}};%end date
+			\draw (6,0) node[below=3pt]{\begin{turn}{45}\scriptsize 14/04$\rightarrow$END\end{turn}} node[above=3pt] {\scriptsize\begin{turn}{45} \phaseu \end{turn}};%end date
 		\end{tikzpicture}
 	\end{center}
 	Every 1-4 weeks a plan will be made detailing the coming weeks' task. Each time a plan is made, the previous weeks will be documented on what went well, okay, not so well, and terribly. This is so the supervisor and I can create a perspective and course correct if need be.
