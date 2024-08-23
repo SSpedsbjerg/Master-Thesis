@@ -54,7 +54,7 @@ backend=bibtex
 \usetikzlibrary{snakes}
 \usepackage{rotating}
 
-\title{Event Prediction Using Values and the Relation to Other Values}
+\title{Root-Causing and Event Identification Trough Sensor Data}
 \author{Simon dos Reis Spedsbjerg : sispe20@student.sdu.dk\\ {\small Advisor: Aslak Johansen : asjo@mmmi.sdu.dk}}
 
 \newcommand{\Phases}{8 }
@@ -76,22 +76,59 @@ backend=bibtex
 \begin{document}
 	\maketitle
 	\section{Context}
-		Imagine, you are tasked in setting up a new department in Lego, the goal, 3D print bricks instead of using a mould to make the bricks so Lego can achieve higher adaptability. One day, several printers fail within an hour of each other, sensors indicate a problem with the nozzles, and the heating element is bit off but not enough to cause a problem and its value disappears among all other sensor values which is measured. So you start replacing the nozzles, but it does not fix the problem. In the mean time, other printers has been working just fine, so you take one that is working and one that is not and compare them. You notice quickly that the one that is not working is using some of the new plastic batch. Using the heating element with the nozzle sensor, this event in the system your department are setting up could have been pinpointed using those values.
+		What will be considered as an event is any change across a set of data streams that one might want to act on, i.e. planning reasons, mitigation or avoidance. An event is considered ongoing if the event still produces an effect.
+		I define \gls{reps} as a system that attempts to predict an event based on changes to one or more values which it shares any form of relation with. A value is produced by a sensor. 
 		
-		What will be considered as an event is in this context, something that happens which is either positive or negative, which one would try to mitigate or solve, it is not some outcomes being true if they do not have an effect.
+		Event rules are logic statements that have to be fulfilled before a event can occur, an event rule can be attached to one or more events.
+		Using \gls{reps} we can predict events based on the event rules of each event. Given an ongoing event, \gls{reps} is able to backtrace and determine the causes of the ongoing event.
+		\begin{figure}[!h]
+			\centering
+			\includegraphics[width=.9\textwidth]{Events}
+			\caption{Predicting events based on current events and the event rules}
+			\label{fig:prediction}
+		\end{figure}
+		\newpage
+		An event thereby have a rules and triggers:
+		\begin{itemize}
+			\item When an event is triggered, it emits a boolean value. (Figure \ref{fig:eventInAOut})
+			\item An event trigger can occur without the event rules being fulfilled, but this in itself indicates a problem.
+			\item The input can vary, have levels (e.g. low, medium high),, have a value above or below a threshold, or be boolean.
+			\item An event output is a function over the events inputs. %inkludere tid
+			\item An event may consider time and state and previous states.
+		\end{itemize}
 		
-		The amount of data collected is ever increasing, and analysis and predictive systems ever become more dependent on the quality of their input data. Faulty (caused by an error in the system) or abnormal (caused by an event that does not represent normal operations in the system) data may invalidate the analysis that is performed on the data. An abnormal data point such as the heating element may indicate another part system is cause, as sensor values rarely are independent of environmental variables outside those they are designed to react to. A lack of an expected event in one place could mean an event in another place, we could expect a decrease in outside temperature to lead to an increase in power consumption for heating thus a higher heating bill. If an increase in power consumption is not observed, then this may indicate that the occupants are dressing warmer or are using another heat source that we are not measuring. To be able to predict future events or explain current events can allow for proactive mitigation. 
+		\begin{figure}[!h]
+			\centering
+			\includegraphics[width=.8\textwidth]{EventTrigger}
+			\caption{Event Input and Outputs}
+			\label{fig:eventInAOut}
+		\end{figure}
+		
+		A sensor does not have any input nodes(Figure \ref{fig:prediction}), it is the first producer of data which feeds the rest of the event network.		
+		
+		The amount of data collected is ever increasing, and analysis and predictive systems ever become more dependent on the quality of their input data. Faulty (caused by an error in the system) or abnormal (caused by an event that does not represent normal operations in the system by having high or low values) data may invalidate the analysis that is performed on the data. An abnormal data point may indicate that another part of the system is the cause.
+		An expected event that never occurs (i.e. according to event rules, the event should be triggered but is not) in one place, could mean an event in another place has been triggered. we could expect in the event of a decrease in outside temperature to lead to an increase in power consumption for heating thus a higher heating bill. If an increase in power consumption is not observed, then this may indicate that the occupants are dressing warmer or are using another heat source that we are not measuring. An event not being triggered even though its rules are fulfilled can indicate:
+		\begin{itemize}
+			\item A sensor is not producing correct data.
+			\item The \gls{reps} logic is wrong and need readjustment.
+		\end{itemize}
 		
 		Sensors that give data that is abnormal might indicate the need for maintenance\cite{MUKHERJEE2024102444}, an upcoming domain specific event, or a successful intrusion into some parts of the system\cite{MR2022103046}. Information to predict events or needs has become an interest in many sectors. Mukherjee, A\cite{MUKHERJEE2024102444} cites the transport, manufacturing, water, and power domains, while they try to predict maintenance for container cranes. Predicting ongoing events might be important when it comes to cyberattacks. Gauthama et al. worked on predicting an ongoing event of a possible attack in a water treatment plant using its multipoint IoT sensory system\cite{MR2022103046}.
 		
-		I define \gls{reps} as a system that attempts to predict an event based on changes to a value and values which it shares any form of relation with. A value could be a value read from a sensor.
-
+		\gls{reps} thereby attempts to predict future and ongoing events based on the event rules and the current readings from the sensors. \gls{reps} is also able to backtrace once a event is triggered to determine the cause of the event. It will predict future events by measuring the sensors' values and by the event rules. It will try to determine the root cause of an event by removing events from the set of possible events by querying by their event rules (Figure \ref{fig:EventRuleBroken}).
+		\begin{figure}[!h]
+			\centering
+			\includegraphics[width=.7\textwidth]{EventRuleBroken}
+			\caption{Cause determination of ongoing event}
+			\label{fig:EventRuleBroken}
+		\end{figure}
+		
 	\section{Problem}
 		Research Questions:
 		\begin{itemize}
 			\item RQ0: How should a \gls{reps} be constructed?
 			\item RQ1: How well does \gls{reps} perform in a system with multiple sensors?
-			\item RQ2: What advantages and disadvantages does \gls{reps} have compared to other state-of-the-art solutions?
+			\item RQ2: What advantages and disadvantages does \gls{reps} have compared to other solutions?
 		\end{itemize}
 	\newpage
 	\section{Approach}
