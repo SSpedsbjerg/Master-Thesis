@@ -1,0 +1,62 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{lipsum}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+	
+\newbox\one
+\newbox\two
+\long\def\loremlines#1{%
+	\setbox\one=\vbox {%
+		\footnote{}%
+		\lipsum\footnote{}%
+	}
+	\setbox\two=\vsplit\one to #1\baselineskip
+	\unvbox\two}
+	
+\begin{document}
+	
+	\title{Root-Causing and Event Identification Through Sensor Data}
+	
+	\author{\IEEEauthorblockN{1\textsuperscript{st} Simon dos Reis Spedsbjerg}
+		\IEEEauthorblockA{\textit{MMMI} \\
+			\textit{SDU}\\
+			Odense, Denmark \\
+			sispe20@student.sdu.dk}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		\loremlines{10}
+	\end{abstract}
+	
+	\begin{IEEEkeywords}
+		component, formatting, style, styling, insert
+	\end{IEEEkeywords}
+	
+	\section{Introduction}
+		\loremlines{10}
+		
+	\section{Lipsum}
+		\loremlines{50}
+	
+	\subsection{Authors and Affiliations}
+		\loremlines{15}
+
+	
+	\section{Acknowledgment}
+		\loremlines{10}
+	
+	\section*{References}
+		\loremlines{20}
+	
+	
+\end{document}
