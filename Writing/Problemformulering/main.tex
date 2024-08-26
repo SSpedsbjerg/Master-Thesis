@@ -77,13 +77,13 @@ backend=bibtex
 	\maketitle
 	\section{Context}
 		
-			In this project, some definitions has to be agreed upon to achieve best understanding of the project.
+			For this project, some definitions is set to achieve best understanding of the project.
 			\begin{itemize}
-				\item \textbf{Change of State}, a change of state is one or more of an objects attributes has changed. A change of state might be a concern which one would want to act on, i.e. planning reasons, mitigation or avoidance.
-				\item \textbf{Event}, an event is the change of the state of an object, it has one or more inputs and outputs. The input of an event can vary, have levels (e.g. low, medium and high), have a value above or below a threshold, consider time and state, or be boolean. An event output is a function over the events inputs.
-				\item \textbf{Ongoing Event}, an event is considered ongoing if the change has not reversed to a normal state, normal state being the state the object was before the event.
+				\item \textbf{Change of State}, a change of state is when one or more of attributes of an object have changed. A change of state might be a concern that one would want to act on, i.e. planning reasons, mitigation or avoidance.
+				\item \textbf{Event}, an event is the change of the state of an object, it has one or more inputs and outputs. The input of an event can vary, have levels (e.g. low, medium and high), have a value above or below a threshold, or consider time and state. An event output is a function over the events inputs.
+				\item \textbf{Ongoing Event}, an event is considered ongoing if the change has not reversed to a normal state, the normal state being the state the object was before the event.
 				\item \textbf{Value}, A value is produced by a sensor or an event.
-				\item \textbf{Event Rule}, Event rules are logic statements that are expected to have be fulfilled before an event can occur, an event rule can be attached to one or more events. An event can occur without the rules being fulfilled, but this means the expectations are wrong. The Event might not occur while the event rules are fulfilled, which means the expectations are wrong.%And the system needs to be revised
+				\item \textbf{Event Rule}, Event rules are logic statements that are expected to be fulfilled before an event can occur, an event rule can be attached to one or more events. An event can occur without the rules being fulfilled, but this means the expectations are wrong. The Event might not occur while the event rules are fulfilled, which means the expectations are wrong.%And the system needs to be revised
 				\item \textbf{Trigger} An event is triggered when the change of state occurs. When an event is triggered, it emits a boolean value. (Figure \ref{fig:eventInAOut})
 			\end{itemize}
 		I define \gls{reps} as a system that attempts to predict an event based on changes to one or more values which the value shares any form of relation with. 
@@ -142,13 +142,13 @@ backend=bibtex
 	I intend to go into \Phases phases during this project. This timeline will most likely change during the project as many unknowns still exists, but it serves as a subjective view of the time needed for the different phases based on my previous experience.
 		\begin{enumerate}
 			\item \textbf{\phaseq}, develop a clear and thorough understanding of the current state of research in anomaly detection and 'fault detection and diagnosis' by creating a systematic literature review of the subjects.
-			\item \textbf{\phasew}, Collect or create relevant data depending on the results of the \phaseq \space which is relevant to the subject. As the results will be drawn on the solution's ability to handle the data, the quality of the data has a high impact on the project.
+			\item \textbf{\phasew}, collect or create relevant data depending on the results of the \phaseq \space which is relevant to the subject. As the results will be drawn on the solution's ability to handle the data, the quality of the data has a high impact on the project.
 			\item \textbf{\phasee}, analyse the problem with the help of software engineering methods based on the \phaseq \space results.
 			\item \textbf{\phaser}, design a solution to the problem specified in the \phasee \space phase with software engineering methods so it can be efficiently implemented.
 			\item \textbf{\phaset}, develop the project based on the results of the \phasee \space and the \phaser \space using software engineering methods. This includes setup for any experimentations.
 			\item \textbf{\phaseSetup}, the setup may involve many tools which need setup, this could be for stress testing, having several data producers on each their own services. The setup's purpose is to have all small prerequisites ready for the \phasey \space phase.
 			\item \textbf{\phasey}, how well does the solution fulfil the requirements determined in the \phasee \space phase and does it implement all features which is deemed critical.
-			\item \textbf{\phaseu}, Answer the research questions and draw a conclusion.
+			\item \textbf{\phaseu}, answer the research questions and draw a conclusion.
 		\end{enumerate}
 	
 	In the following, we see the expected timeline for the project.\newline
