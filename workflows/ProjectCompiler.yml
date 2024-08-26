@@ -1,0 +1,21 @@
+name: Build LaTeX document
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build_LaTeX:
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup
+        uses: actions/checkout@v4
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-actions
+        with:
+          root_file: ./Writing/Problemformulering/main.tex
+      - name: Upload PDF File
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDF
+          path: ProblemDescription.pdf
