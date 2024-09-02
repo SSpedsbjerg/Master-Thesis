@@ -17,35 +17,35 @@ jobs:
           name: repository-artifacts
           path: .
 
-    Compile-LaTeX:
-      runs-on: ubuntu-latest
-      needs: Clone-Repo
-      permissions:
-        packages: write
-        contents: read
-      steps:
-        - name: Checkout Repo
-          uses: actions/checkout@v4
-        - name: Cache Packages
-          id: latex-cache
-          uses: actions/cache@v3.3.0
-          with:
-            path: |
-              /usr/shrae/texlive/
-            key: ${{ runner.os }}-texlive-v4
-        - name: Install Packages
-          if: steps.latex-cache.outputs.cache-hit != 'true'
-          run: |
-            sudo apt-get update
-            sudo apt-get install -y texlive texlive-science
-        - name: Install Extensions
-          run: |
-            sudo apt-get install -y texlive-xetex
-            mkdir output/
-        - name: Compile
-          run: |
-            cd Writing/Problemformulering
-            xelatex -synctex=1 -interaction=nonstopmode main.tex
-        - name: rename compiled PDF
-          run: |
-            mv Writing/Problemformulering/main.pdf ./ProblemDescription.pdf
+  Compile-LaTeX:
+    runs-on: ubuntu-latest
+    needs: Clone-Repo
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Cache Packages
+        id: latex-cache
+        uses: actions/cache@v3.3.0
+        with:
+          path: |
+            /usr/shrae/texlive/
+          key: ${{ runner.os }}-texlive-v4
+      - name: Install Packages
+        if: steps.latex-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive texlive-science
+      - name: Install Extensions
+        run: |
+          sudo apt-get install -y texlive-xetex
+          mkdir output/
+      - name: Compile
+        run: |
+          cd Writing/Problemformulering
+          xelatex -synctex=1 -interaction=nonstopmode main.tex
+      - name: rename compiled PDF
+        run: |
+          mv Writing/Problemformulering/main.pdf ./ProblemDescription.pdf

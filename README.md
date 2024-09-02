@@ -4,7 +4,7 @@ The readme contains work which is not in the final document but is used to show 
 
 This will be updated as the project progress'
 
-# Term & synonym brainstorm
+# Term & Synonym brainstorm
 
 | Term | Synonyms |
 |:----:|----------|
