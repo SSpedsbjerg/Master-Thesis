@@ -1,6 +1,6 @@
 name: Build LaTeX document
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   Clone-Repo:
@@ -49,4 +49,4 @@ jobs:
           xelatex -synctex=1 -interaction=nonstopmode main.tex
       - name: rename compiled PDF
         run: |
-          mv Writing/Problemformulering/main.pdf ./ProblemDescription.pdf
+          mv Writing/Problemformulering/main.pdf ProblemDescription.pdf
