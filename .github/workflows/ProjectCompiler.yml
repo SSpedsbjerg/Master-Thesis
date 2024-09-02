@@ -38,6 +38,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive texlive-science
+          sudo apt-get install texlive-bibtex-extra biber
       - name: Install Extensions
         run: |
           sudo apt-get install -y texlive-xetex
