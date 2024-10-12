@@ -51,3 +51,10 @@ Scenarios with high complexity with many variables to a degree which is undefine
 | Scenario | Reason |
 | :------: | :----: |
 | Weather Forecasting | Too many varaibles, other models clearly has an advantage |
+
+# Potiential features
+
+- Modability during run-time
+- Addition or removal of nodes
+- Hybrid with other predictive models
+- Special repeatable cases such as holidays, check whether machines are turned off.
