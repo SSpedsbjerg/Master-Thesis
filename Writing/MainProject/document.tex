@@ -20,9 +20,10 @@
 	}
 	\setbox\two=\vsplit\one to #1\baselineskip
 	\unvbox\two}
-	
+	\usepackage[acronym]{glossaries}
+	\input{acronyms}
 \begin{document}
-	
+
 	\title{Root-Causing and Event Identification Through Sensor Data}
 	
 	\author{\IEEEauthorblockN{1\textsuperscript{st} Simon dos Reis Spedsbjerg}
@@ -42,9 +43,23 @@
 		component, formatting, style, styling, insert
 	\end{IEEEkeywords}
 	
-	\section{Introduction}
-		\loremlines{10}
+	\section{Introduction}	
+		Modern machine learning systems has a certain level of uncertainty. Developers (depending on the model) cannot always explain how a model makes determinations.  Through statics and training, a model bases its decisions on patterns it has learned during its training. This makes it challenging for developers to understand how the system operates internally, verify the results, or ensure the verifiability of the outcomes. Additionally, many machine learning systems require a significant amount of data and extensive training before they can make reliable determinations.
 		
+		To address these challenges, I present \gls{reps}, a graph-based real-time analysis tool which developers themselves can design to fit their use case while making use of many state-of-the-art machine learning models. \gls{reps} operates by processing input data, which is likely will be sensor data which will pass through nodes called "event nodes". Each node processes inputs from one or more sources (a sensor or event node) and generates a result that can be used on one or multiple downstream nodes. This system enables	real-time decision-making across interconnected components.
+		
+		This project aims to determine whether there are any viable use cases for \gls{reps} and, if so, to what extent it performs relative to similar state-of-the-art solutions in terms of efficiency, accuracy, and scalability.
+		
+	\section{Context}
+		For this project, some definitions is set to achieve best understanding of the project.
+		\begin{itemize}
+			\item \textbf{Change of State}, a change of state is when one or more of attributes of an object have changed. A change of state might be a concern that one would want to act on, i.e. planning reasons, mitigation or avoidance.
+			\item \textbf{Event}, an event is the change of the state of an object, it has one or more inputs and  only one output.
+			\item \textbf{Ongoing Event}, an event is considered ongoing if the change has not reversed to a normal state, the normal state being the state the object was before the event.
+			\item \textbf{Value}, A value is produced by a sensor or an event.
+			\item \textbf{Event Rule}, Event rules are logical statements or criteria that must be met before an event can occur. An event rule can be attached to one or more events, specifying the necessary conditions for their occurrence. An event can occur without the rules being fulfilled indicates a misalignment between the \gls{reps} view of the system and the system itself, similarly, if a rule is fulfilled but the event does not occur.
+			\item \textbf{Trigger} An event is triggered when the change of state occurs. When an event is triggered, it emits a boolean value.
+		\end{itemize}
 	\section{Lipsum}
 		\loremlines{50}
 	
