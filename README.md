@@ -40,7 +40,7 @@ Giving 7.509 results, here after we sort by relevance and sorting through the 10
 
 From the 40 total articles, 24 have been selected based on their abstract.
 
-
+Any further documentation is in the excel sheet
 
 ## List of scenarios where the project idea seems usable
 
@@ -91,16 +91,46 @@ Kort of de danske veje i en digital form, man kan derfra
 Hårde regler mod bløde regler
 f.eks. man kan ikke være yngre end ens barn vs. meget høj internet trafik kan være tegn på DOS angreb
 
+# Weekly Goals
+Here, weekly goals will be written down to document the work.
+| Week | Goals | Comments |
+| :--: | :---: | :------: |
+| 6 | Analysis of the system in forms of requirements and technology; modify or find a system which REPS can fully encompass | Unsure about the second goal, whether it is achieveable this week |
+
 
 # Analysis Phase
 This is the start of the software development process, I will descripe any requirements found, the technology needed to fulfill these requirements and a general design of the system based on these requirements and technology.
 
-## Functional requirements
+## Functional Requirements
+I will be using MoSCoW analysis method as this is the one I see fiting best.
 
 | Requirement ID | Requirement | Prioritization Level | Description | Reason | Comments |
 | :------------: | :---------: | :------------------: | :---------: | :----: | :------: |
 | FR0 | Having individual process in each 'Event Node' | Must have | An 'Event Node' is the main process of make predictions and conclusions | It is the point that these process' can be used to make predictions and conclusions | |
 | FR1 | Is able to communicate with others services which is not part of the REPS | Must have | Other system must be able to get values from REPS to make determinations based on the states REPS notices | For other system can react based on the states REPS notices, it need to share it, otherwise there is no need for REPS | |
-| FR2 | Being able to easily add new 'Event Nodes' | Could have | Using XML or JSON, one could easily add new nodes to the REPS System | It could speed up testing, but it is not a requirement for the system to function | This would require FR3 |
-| FR3 | Being able to quickly spun up REPS using XML or JSON | Could have | Could allow for implementing the system quicker and allow for sharing REPS' | It could speed up testing, but it is not a requirement for the system to function | |
+| FR2 | Being able to easily add new 'Event Nodes' | Could have | Using XML, JSON or a third option, one could easily add new nodes to the REPS System | It could speed up testing, but it is not a requirement for the system to function | This would require FR3 |
+| FR3 | Being able to quickly spun up REPS using a specific file type | Could have | Could allow for implementing the system quicker and allow for sharing REPS' | It could speed up testing, but it is not a requirement for the system to function | |
 | FR4 | Allow for ML Models in the 'Event Nodes' | Should have | This could really expand the use cases for REPS as companies may have their own or develop one for their problem | It is very usefull for this project, but not required to be seen as succesfull | |
+| FR5 | Able to detect events | Must have | Detect any events occuring in the system | This is the whole point of the system | |
+| FR6 | Graphical user-interface | Wont have | A user interface can make it easy for the developer to setup REPS | This would require too much time without giving anything usefull to determine the viability of the system | |
+| FR7 | Automatic RESP creation | Wont have | It could in theory make it so a system could automaticly create a REPS based on system documentation | This is a research topic in itself and is too add this to the project | |
+
+## Non-Functional Requirements
+
+| Requirement ID | Requirement | Prioritization Level | Description | Reason | Comments |
+| :------------: | :---------: | :------------------: | :---------: | :----: | :------: |
+| NF0 | Should not have a high complexity | Should have | high complexity is in terms of the developer being able to understand the system | The advantage with this is the developer should be able to understand it compared to most MLs | |
+| NF1 | Restricted Memory usage | Could have | Risk of high resource usage | I fear that this system might suffer from memory in smaller computers | |
+| NF2 | Easy to communicate with | Should have | Should be easy to gain the values which is needed from the REPS | It would make it hard on the people using REPS if this requirement is not fullfilled, deminishing the usefullnes of REPS | |
+
+## Technology Choices
+
+Based on these requirements, I deem that I'm going to need the following technologies, frameworks or patterns:
+- Publish Subscribe pattern, MQTT (FR1, FR2, FR3, NF2):
+    - A publish subscribe pattern fits best when it comes to communication, the modifiability and adaptability that comes with this pattern fits very well with the communication requirement (FR1) while also allowing for easy adaptability (FR2 & FR3). I want a light weight solution, I there don't see a need for kafka.
+- JSON interpreter for saving (FR2, FR3):
+    - A relational database dosen't fit with the way REPS is built. The adaptability with JSON or XML will work great with REPS. There neither a need for the performance from a relational database. I will be using JSON as I have implented similar feature in JSON several times, while I've done i far less in XML. I will neither be using AVRO due to the increased time cost.
+- C#:
+    - I have most experience with this while it not being an slower language to develop in, like C/C++. I also believe that it being object oriented language fits well with REPS. Only drawback I see is that not alot of ML are developed for C# compared to python. This will limit the time of implementing FR4, but will allow me to quicker implement all other features.
+
+Any further specification, like what MQTT implementation to make use of, will be determined later once all other things in this analysis has been determined.

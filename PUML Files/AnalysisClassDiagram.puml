@@ -1,0 +1,46 @@
+@startuml
+
+enum logic {
+    moreThan
+    lessThan
+    equals
+    and
+    not
+    or
+    multiply
+    divide
+    plus
+    minus
+}
+
+class simpleModel{
+    arraylist<value, logic, value> model
+}
+
+logic -- simpleModel : uses
+
+class JSONIntreperter{
+    +void init()
+}
+
+interface Model{
+    output
+    numberOfInputs
+
+}
+
+class EventNode {
+    Model model
+    EventNode[] childNodeIDs
+    value output
+    +void InsertModel(Model model)
+    +void process()
+    -void Alert()
+}
+
+Model --* EventNode : has
+JSONIntreperter -- EventNode : creates
+simpleModel ..|> Model
+simpleModel ..* EventNode : A simple implementation when a ML model is not needed
+
+@enduml
