@@ -91,6 +91,9 @@ Kort of de danske veje i en digital form, man kan derfra
 Hårde regler mod bløde regler
 f.eks. man kan ikke være yngre end ens barn vs. meget høj internet trafik kan være tegn på DOS angreb
 
+# **Development Phase**
+From this point on, it will be going into the development phase based on the background research done.
+
 # Weekly Goals
 Here, weekly goals will be written down to document the work.
 | Week | Goals | Comments |
@@ -134,3 +137,20 @@ Based on these requirements, I deem that I'm going to need the following technol
     - I have most experience with this while it not being an slower language to develop in, like C/C++. I also believe that it being object oriented language fits well with REPS. Only drawback I see is that not alot of ML are developed for C# compared to python. This will limit the time of implementing FR4, but will allow me to quicker implement all other features.
 
 Any further specification, like what MQTT implementation to make use of, will be determined later once all other things in this analysis has been determined.
+
+## Diagrams
+
+TODO: INSERT THE PUML DIAGRAMS
+
+## Finalise Technology
+Based on the diagrams from previous, I will be using RabbitMQ for MQTT due to it support everything I need while being able to be implemented in C#. It supports all classic MQTT features, but also it supoort Queue priority which I believe will be neccesary in a crisis situation. There should however be a limit to the amount of priority levels, as the higher the max is set, the more CPU resources is required. Also some messages which should expire might be stuck as rabbitMQ expires from the head of the queue. Now I don't believe this will be a problem as long as the end user dosen't send too many messages.
+
+For C# I will have to use the Object type for the output, I could be using dynamic, but as it is casted in runtime to the type that I would might need. I cannot define it as a var because that would still be defined during compile time, and it has to be defined during runtime. Now using object I will have to define a set og legal casting types, so I will lose flexability but I severly decrease the risk of runtime errors with this variable.
+
+A worry that I have, which I do see as a minor problem atm, but the system will only hold one output type to limit memory usage. I will still allow for casting to other types, but is only really intended for that one specific type. And I don't see a reason for disallowing someone to cast to another type, as long as the user knows that cast errors can occur.
+
+I will be using C#'s Roslyn to intrepet a function during runtime. This will allow for full customisation in terms of math and if statements.
+
+The await function releases current thread and allows for the REPS model to operate as a tree when it comes to their dependencies, as a Eventnode requires that the former events has processed before processing itself.
+
+I will have to figure out how to ensure that it actually can become a graph and not a tree. Bit like circular definations.
