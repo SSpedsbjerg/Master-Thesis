@@ -1,0 +1,69 @@
+@startuml
+
+package "Sensors" {
+    stereotype "FanSpeedSensor" as s1
+    stereotype "LPCTempSensor" as s2
+    stereotype "HPCTempSensor" as s3
+    stereotype "CombusterTempSensor" as s4
+    stereotype "N1TempSensor" as s5
+    stereotype "LPTTempSensor" as s6
+    stereotype "HPTTempSensor" as s7
+    stereotype "NozzleTempSensor" as s8
+}
+
+package REPS{
+    circle "TemperatureEventNode" as t1
+    circle "TemperatureEventNode" as t2
+    circle "TemperatureEventNode" as t3
+    circle "TemperatureEventNode" as t4
+    circle "TemperatureEventNode" as t5
+    circle "TemperatureEventNode" as t6
+    circle "TemperatureEventNode" as t7
+    circle "FanSpeedEventNode" as t8
+    circle "FanSpeedMismatchEventNode" as t9
+}
+
+
+protocol MQTT
+
+abstract otherSerivce
+
+otherSerivce --> MQTT : subscribes
+
+t1 ---> MQTT : publish
+t2 ---> MQTT : publish
+t3 ---> MQTT : publish
+t4 ---> MQTT : publish
+t5 ---> MQTT : publish
+t6 ---> MQTT : publish
+t7 ---> MQTT : publish
+t8 ---> MQTT : publish
+t9 ---> MQTT : publish
+
+s2 --> t1
+s3 --> t2
+s4 --> t3
+s5 --> t4
+s6 --> t5
+s7 --> t6
+s8 --> t7
+
+s1 --> t8
+t1 --> t8
+t2 --> t8
+t3 --> t8
+t4 --> t8
+t5 --> t8
+t6 --> t8
+t7 --> t8
+
+s1 --> t9
+t1 --> t9
+t2 --> t9
+t3 --> t9
+t4 --> t9
+t5 --> t9
+t6 --> t9
+t7 --> t9
+
+@enduml

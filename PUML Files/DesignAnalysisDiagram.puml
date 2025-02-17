@@ -1,0 +1,97 @@
+@startuml
+
+annotation JSONConfig{
+    nodeType : Event or Sensor
+    outputType
+    TopicName
+    PriorityLevel
+    Function
+}
+
+note right of JSONConfig : just specifies what it contains,\nnot how it is ordered
+
+circle RabbitMQ
+circle SensorBroker
+
+class Program{
+    List<Node> nodes
+    list<EventNode> topNodes : nodes without children, these only have sensor nodes
+    list<SensorNode> sensorNodes: These will be processed before nodes
+    - void start() : seperate the nodes which is not a child and the ones which is
+    - void process() : process all nodes, starting from the top nodes
+}
+
+package REPS {
+    +enum NotificationLevel {
+        Notification
+        Warning
+        Critical
+    }
+
+    +interface Node {
+        - object output
+        + Task<void> Process()
+    }
+
+    +class SensorNode {
+        - object output
+        + Task<void> Process()
+    }
+
+    +class EventNode {
+        - Model model
+        - List<Node> childNodes
+        - object output
+
+        + EventNode(Model model, List<EventNode> childNodes)
+        - Task<T> castOutput<T>()
+        + Task<T> GetOutput<T>()
+        + Task<void> Process() 
+        - void Alert() : sends a notificationLevel to the MQTT
+        + void InsertModel()
+    }
+
+    +class JSONIntreperter{
+        - string fileName
+        - string path
+
+        + JSONIntreperter(string fileName, string path)
+        + bool Init()
+    }
+
+    +interface Model{
+        + Task<bool> process()
+        object output
+        int numberOfInputs
+        + bool Test() : The test is here to allow the user to verify the function before deployment
+    }
+
+    +class SimpleModel{
+        + object TestValue : to be casted to a simple value
+        + string TestFunction
+        - object output
+        - int numberOfInputs
+        + SimpleModel()
+        + bool Test()
+        + Task<bool> Process()
+    }
+}
+
+
+
+SensorNode -left-|> Node : Implements
+EventNode -up-|> Node : Implements
+JSONIntreperter -right-> Node : Initializes
+JSONIntreperter *-down- Model : Initializes
+SimpleModel --|> Model : Implements
+EventNode -- NotificationLevel : uses
+JSONIntreperter ..|> SimpleModel : Defines
+EventNode o-left- SimpleModel : Has
+EventNode o-up- Node : has
+
+Program --|> REPS : Manages
+JSONConfig -down- JSONIntreperter : Read
+EventNode -- RabbitMQ : publishes
+SensorNode -- SensorBroker : Subscribe
+
+@enduml
