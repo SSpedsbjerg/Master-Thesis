@@ -154,3 +154,5 @@ I will be using C#'s Roslyn to intrepet a function during runtime. This will all
 The await function releases current thread and allows for the REPS model to operate as a tree when it comes to their dependencies, as a Eventnode requires that the former events has processed before processing itself.
 
 I will have to figure out how to ensure that it actually can become a graph and not a tree. Bit like circular definations.
+
+Going to differentiate between the target broker and the broker which the sensors get their data, as I want that modifiability, but also I need to be sure that I have the features from rabbitMQ to post priority notifications.

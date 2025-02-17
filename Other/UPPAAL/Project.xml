@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+bool ConfigFileExists = true;
+int SensorNodesStated = 5;
+int EventNodesStated = 5;
+bool DefinedModel = true;
+int CreatedSensorNodes = 0;
+int CreatedEventNodes = 0;
+bool ModelIsCreated = false;
+int UpdatedSensors = 0;
+
+chan CreateNode;
+chan Notify;
+chan SensorUpdate;
+chan SensorUpdated;
+chan UpdateEvent;
+chan UpdatedEvents;
+chan Determine;
+chan Alert;
+chan AlertDismissed;
+
+clock SensorTimer;
+clock EventTimer;
+clock UserIntervention;
+clock AlertRisk;</declaration>
+	<template>
+		<name>Model</name>
+		<location id="id0" x="42" y="-34">
+			<name x="59" y="-34">Init</name>
+		</location>
+		<location id="id1" x="42" y="-170">
+			<name x="32" y="-204">Determine_Value</name>
+		</location>
+		<location id="id2" x="-238" y="-170">
+			<name x="-248" y="-204">Alarm</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-187" y="-110">Alert!</label>
+			<label kind="comments" x="-459" y="-187">Sends Alert to RabbitMQ</label>
+			<nail x="-204" y="-102"/>
+			<nail x="-170" y="-136"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-459" y="-85">UserIntervention &gt; 100000</label>
+			<label kind="synchronisation" x="-459" y="-68">AlertDismissed!</label>
+			<nail x="-238" y="-34"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-144" y="-136">AlertRisk &lt;= 100000</label>
+			<nail x="8" y="-102"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-195" y="-246">AlertRisk &gt; 100000</label>
+			<label kind="synchronisation" x="-195" y="-229">Alert!</label>
+			<label kind="assignment" x="-195" y="-212">UserIntervention = 0</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="93" y="-110">Determine?</label>
+			<label kind="assignment" x="93" y="-93">AlertRisk = 0</label>
+			<nail x="76" y="-102"/>
+		</transition>
+	</template>
+	<template>
+		<name>EventNodeProcess</name>
+		<location id="id8" x="-204" y="0">
+			<name x="-306" y="-17">Standstill</name>
+		</location>
+		<location id="id9" x="0" y="-170">
+			<name x="17" y="-187">Gathering_NodeData</name>
+		</location>
+		<init ref="id8"/>
+		<transition id="id10">
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="guard" x="8" y="-59">EventTimer &gt; 1000000</label>
+			<label kind="synchronisation" x="8" y="-42">Notify!</label>
+			<nail x="0" y="0"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-195" y="-195">UpdatedEvents!</label>
+			<nail x="-204" y="-170"/>
+		</transition>
+		<transition id="id12">
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<nail x="34" y="-238"/>
+			<nail x="-34" y="-238"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-178" y="-127">UpdateEvent?</label>
+			<label kind="assignment" x="-178" y="-144">EventTimer = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>SensorBroker</name>
+		<location id="id14" x="204" y="-136">
+			<name x="194" y="-170">Initial</name>
+		</location>
+		<location id="id15" x="-204" y="-136">
+			<name x="-348" y="-153">AwaitingUpdate</name>
+		</location>
+		<location id="id16" x="-204" y="0">
+			<name x="-323" y="-8">UpdateFailed</name>
+		</location>
+		<init ref="id14"/>
+		<transition id="id17">
+			<source ref="id16"/>
+			<target ref="id14"/>
+			<label kind="assignment" x="-187" y="17">SensorTimer = 0,
+UpdatedSensors = UpdatedSensors + 1</label>
+			<nail x="204" y="0"/>
+		</transition>
+		<transition id="id18">
+			<source ref="id15"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-382" y="-102">SensorTimer &gt; 1000000</label>
+			<label kind="synchronisation" x="-365" y="-85">Notify!</label>
+		</transition>
+		<transition id="id19">
+			<source ref="id15"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-136" y="-102">SensorUpdated!</label>
+			<label kind="assignment" x="-136" y="-85">UpdatedSensors = UpdatedSensors + 1</label>
+			<nail x="0" y="-102"/>
+		</transition>
+		<transition id="id20">
+			<source ref="id14"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-51" y="-212">SensorUpdate?</label>
+			<label kind="assignment" x="-51" y="-195">SensorTimer = 0</label>
+			<nail x="0" y="-170"/>
+		</transition>
+	</template>
+	<template>
+		<name>Interpretation</name>
+		<location id="id21" x="0" y="0">
+			<name x="-59" y="-17">Init</name>
+		</location>
+		<location id="id22" x="0" y="-136">
+			<name x="34" y="-144">Retrived_Notification_Info</name>
+		</location>
+		<location id="id23" x="-646" y="-136">
+			<name x="-773" y="-153">Notify_Error</name>
+		</location>
+		<location id="id24" x="0" y="-272">
+			<name x="34" y="-289">Created_Sensor_Nodes</name>
+		</location>
+		<location id="id25" x="0" y="-408">
+			<name x="34" y="-425">Created_Event_Nodes</name>
+		</location>
+		<location id="id26" x="0" y="-544">
+			<name x="34" y="-552">Created_Models</name>
+		</location>
+		<location id="id27" x="-646" y="-544">
+			<name x="-782" y="-552">Interpretated</name>
+		</location>
+		<location id="id28" x="-102" y="-306">
+			<name x="-238" y="-306">AddedEventNode</name>
+		</location>
+		<location id="id29" x="-102" y="-170">
+			<name x="-246" y="-170">AddedSensorNode</name>
+		</location>
+		<init ref="id21"/>
+		<transition id="id30">
+			<source ref="id29"/>
+			<target ref="id24"/>
+			<nail x="-34" y="-170"/>
+		</transition>
+		<transition id="id31">
+			<source ref="id24"/>
+			<target ref="id29"/>
+			<label kind="guard" x="-467" y="-221">CreatedSensorNodes != SensorNodesStated</label>
+			<label kind="synchronisation" x="-229" y="-187">CreateNode?</label>
+			<label kind="assignment" x="-493" y="-204">CreatedSensorNodes = CreatedSensorNodes + 1</label>
+		</transition>
+		<transition id="id32">
+			<source ref="id28"/>
+			<target ref="id25"/>
+			<nail x="-34" y="-306"/>
+		</transition>
+		<transition id="id33">
+			<source ref="id25"/>
+			<target ref="id28"/>
+			<label kind="guard" x="-442" y="-357">CreatedEventNodes != EventNodesStated</label>
+			<label kind="synchronisation" x="-229" y="-323">CreateNode?</label>
+			<label kind="assignment" x="-476" y="-340">CreatedEventNodes = CreatedEventNodes + 1</label>
+		</transition>
+		<transition id="id34">
+			<source ref="id26"/>
+			<target ref="id25"/>
+			<nail x="-68" y="-476"/>
+		</transition>
+		<transition id="id35">
+			<source ref="id26"/>
+			<target ref="id27"/>
+			<label kind="assignment" x="-603" y="-603">ModelIsCreated = true</label>
+		</transition>
+		<transition id="id36">
+			<source ref="id25"/>
+			<target ref="id26"/>
+			<label kind="guard" x="34" y="-510">DefinedModel == true &amp;&amp; CreatedEventNodes == EventNodesStated</label>
+			<label kind="synchronisation" x="34" y="-493">CreateNode?</label>
+		</transition>
+		<transition id="id37">
+			<source ref="id25"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-442" y="-399">DefinedModel == false</label>
+			<nail x="-646" y="-408"/>
+		</transition>
+		<transition id="id38">
+			<source ref="id24"/>
+			<target ref="id25"/>
+			<label kind="guard" x="34" y="-357">EventNodesStated &gt; 0 &amp;&amp; CreatedSensorNodes == SensorNodesStated</label>
+			<label kind="synchronisation" x="34" y="-340">CreateNode?</label>
+		</transition>
+		<transition id="id39">
+			<source ref="id24"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-442" y="-263">EventNodesStated == 0</label>
+			<nail x="-646" y="-272"/>
+		</transition>
+		<transition id="id40">
+			<source ref="id22"/>
+			<target ref="id24"/>
+			<label kind="guard" x="34" y="-221">SensorNodesStated &gt; 0</label>
+			<label kind="synchronisation" x="34" y="-204">CreateNode?</label>
+		</transition>
+		<transition id="id41">
+			<source ref="id22"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-442" y="-127">SensorNodesStated == 0</label>
+		</transition>
+		<transition id="id42">
+			<source ref="id21"/>
+			<target ref="id22"/>
+			<label kind="guard" x="25" y="-76">ConfigFileExists == true</label>
+			<label kind="synchronisation" x="25" y="-93">CreateNode?</label>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Main</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id43" x="-612" y="0">
+			<name x="-639" y="-34">Initial</name>
+		</location>
+		<location id="id44" x="-204" y="0">
+			<name x="-272" y="-34">Intrepertating</name>
+		</location>
+		<location id="id45" x="136" y="0">
+			<name x="68" y="-42">Node_Creation</name>
+		</location>
+		<location id="id46" x="-204" y="204">
+			<name x="-264" y="170">Update</name>
+		</location>
+		<location id="id47" x="-204" y="374">
+			<name x="-187" y="357">Updating_Event_Nodes</name>
+		</location>
+		<location id="id48" x="-612" y="306">
+			<name x="-824" y="297">Notification_Processing</name>
+		</location>
+		<location id="id49" x="-204" y="476">
+			<name x="-187" y="484">Model_Processing</name>
+		</location>
+		<location id="id50" x="-612" y="204">
+			<name x="-824" y="195">Awaiting_Sensor_Update</name>
+		</location>
+		<location id="id51" x="-612" y="102">
+			<name x="-586" y="93">Shutdown</name>
+		</location>
+		<location id="id52" x="-204" y="578">
+			<name x="-178" y="569">Alarm</name>
+		</location>
+		<init ref="id43"/>
+		<transition id="id53">
+			<source ref="id49"/>
+			<target ref="id49"/>
+			<label kind="synchronisation" x="-340" y="408">Determine!</label>
+			<nail x="-238" y="408"/>
+			<nail x="-272" y="442"/>
+		</transition>
+		<transition id="id54">
+			<source ref="id52"/>
+			<target ref="id52"/>
+			<label kind="synchronisation" x="-229" y="663">Alert?</label>
+			<nail x="-238" y="646"/>
+			<nail x="-170" y="646"/>
+		</transition>
+		<transition id="id55">
+			<source ref="id52"/>
+			<target ref="id49"/>
+			<label kind="synchronisation" x="-161" y="544">AlertDismissed?</label>
+			<nail x="-170" y="527"/>
+		</transition>
+		<transition id="id56">
+			<source ref="id49"/>
+			<target ref="id52"/>
+			<label kind="synchronisation" x="-297" y="518">Alert?</label>
+			<nail x="-238" y="527"/>
+		</transition>
+		<transition id="id57">
+			<source ref="id49"/>
+			<target ref="id46"/>
+			<label kind="assignment" x="153" y="314">UpdatedSensors = 0</label>
+			<label kind="comments" x="153" y="289">All went as expected</label>
+			<nail x="136" y="476"/>
+			<nail x="136" y="204"/>
+		</transition>
+		<transition id="id58">
+			<source ref="id47"/>
+			<target ref="id48"/>
+			<label kind="synchronisation" x="-578" y="323">Notify?</label>
+			<nail x="-340" y="374"/>
+			<nail x="-340" y="306"/>
+		</transition>
+		<transition id="id59">
+			<source ref="id47"/>
+			<target ref="id49"/>
+			<label kind="synchronisation" x="-170" y="425">UpdatedEvents?</label>
+			<nail x="-170" y="408"/>
+		</transition>
+		<transition id="id60">
+			<source ref="id50"/>
+			<target ref="id46"/>
+			<label kind="synchronisation" x="-459" y="221">SensorUpdated?</label>
+			<nail x="-544" y="221"/>
+			<nail x="-263" y="221"/>
+		</transition>
+		<transition id="id61">
+			<source ref="id46"/>
+			<target ref="id50"/>
+			<label kind="guard" x="-595" y="153">UpdatedSensors != SensorNodesStated</label>
+			<label kind="synchronisation" x="-408" y="136">SensorUpdate!</label>
+			<nail x="-272" y="195"/>
+			<nail x="-544" y="195"/>
+		</transition>
+		<transition id="id62">
+			<source ref="id43"/>
+			<target ref="id51"/>
+			<label kind="guard" x="-595" y="51">ConfigFileExists == false</label>
+		</transition>
+		<transition id="id63">
+			<source ref="id50"/>
+			<target ref="id48"/>
+			<label kind="synchronisation" x="-697" y="263">Notify?</label>
+			<label kind="comments" x="-705" y="238">Timed Out</label>
+		</transition>
+		<transition id="id64">
+			<source ref="id49"/>
+			<target ref="id48"/>
+			<label kind="synchronisation" x="-510" y="450">Notify?</label>
+			<nail x="-612" y="476"/>
+		</transition>
+		<transition id="id65">
+			<source ref="id48"/>
+			<target ref="id46"/>
+			<nail x="-578" y="272"/>
+			<nail x="-238" y="272"/>
+		</transition>
+		<transition id="id66">
+			<source ref="id46"/>
+			<target ref="id47"/>
+			<label kind="guard" x="-187" y="238">UpdatedSensors == SensorNodesStated</label>
+			<label kind="synchronisation" x="-187" y="255">UpdateEvent!</label>
+		</transition>
+		<transition id="id67">
+			<source ref="id44"/>
+			<target ref="id46"/>
+			<label kind="guard" x="-195" y="68">ModelIsCreated == true</label>
+			<label kind="comments" x="-195" y="110">Runtime</label>
+		</transition>
+		<transition id="id68">
+			<source ref="id45"/>
+			<target ref="id44"/>
+			<nail x="136" y="34"/>
+			<nail x="-170" y="34"/>
+		</transition>
+		<transition id="id69">
+			<source ref="id44"/>
+			<target ref="id45"/>
+			<label kind="guard" x="-127" y="-25">ModelIsCreated == false</label>
+			<label kind="synchronisation" x="-110" y="-42">CreateNode!</label>
+		</transition>
+		<transition id="id70">
+			<source ref="id43"/>
+			<target ref="id44"/>
+			<label kind="guard" x="-425" y="0">ConfigFileExists == true</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+MainSystem = Main();
+InterpretationSystem = Interpretation();
+SensorBrokerSystem = SensorBroker();
+EventNodeProcessingSystem = EventNodeProcess();
+ModelSystem = Model();
+// List one or more processes to be composed into a system.
+system MainSystem, InterpretationSystem, SensorBrokerSystem, EventNodeProcessingSystem, ModelSystem;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+		<query>
+			<formula>A[] not deadlock and not Process.Shutdown</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-02-16 23:57:17 +0100">
+			</result>
+		</query>
+	</queries>
+</nta>

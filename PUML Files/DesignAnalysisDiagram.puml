@@ -11,6 +11,7 @@ annotation JSONConfig{
 note right of JSONConfig : just specifies what it contains,\nnot how it is ordered
 
 circle RabbitMQ
+circle SensorBroker
 
 class Program{
     List<Node> nodes
@@ -78,18 +79,19 @@ package REPS {
 
 
 
-SensorNode -left- Node : Implements
-EventNode -up- Node : Implements
-JSONIntreperter -right- Node : Initializes
-JSONIntreperter -down- Model : Initializes
-SimpleModel -- Model : Implements
+SensorNode -left-|> Node : Implements
+EventNode -up-|> Node : Implements
+JSONIntreperter -right-> Node : Initializes
+JSONIntreperter *-down- Model : Initializes
+SimpleModel --|> Model : Implements
 EventNode -- NotificationLevel : uses
-JSONIntreperter -- SimpleModel : Defines
-EventNode -left- SimpleModel : Has
-EventNode -up- Node : has
+JSONIntreperter ..|> SimpleModel : Defines
+EventNode o-left- SimpleModel : Has
+EventNode o-up- Node : has
 
-Program -- REPS : Manages
+Program --|> REPS : Manages
 JSONConfig -down- JSONIntreperter : Read
-EventNode -right- RabbitMQ : publishes
+EventNode -- RabbitMQ : publishes
+SensorNode -- SensorBroker : Subscribe
 
 @enduml
