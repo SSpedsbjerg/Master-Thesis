@@ -1,0 +1,44 @@
+{
+  "BrokerInfo": {
+    "NotificationBroker": "localhost",
+    "NotificationTopic": "notify",
+    "ReportBroker": "localhost"
+  },
+
+  "SensorNodes": [
+    {
+      "ID": 0,
+      "SupportedType": "INT",
+      "Host": "localhost",
+      "RoutingKey": 0,
+      "Topic": "first"
+    },
+    {
+      "ID": 1,
+      "SupportedType": "INT",
+      "Host": "localhost",
+      "RoutingKey": 0,
+      "Topic": "fist"
+    }
+  ],
+
+  "EventNodes": [
+    {
+      "ID": 0,
+      "SensorNodes": [ 0, 1 ],
+      "EventNodes": [],
+      "ReportTopic": "testEventNode",
+      "SupportedType": "INT",
+      "Model": {
+        "ID": 0,
+        "Type": "Simple",
+        "SupportedType": "INT",
+        "Function": "a*b+c",
+        "Parameters": [ "a", "b", "c" ],
+        "TestValue": 5,
+        "TestParameterValues": [ 2, 2, 1 ],
+        "TestTopic": "NONE"
+      }
+    }
+  ]
+}

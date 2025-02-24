@@ -1,0 +1,46 @@
+@startuml
+
+actor SensorBroker as mqtt
+
+== Initialize ==
+activate mqtt
+activate RabbitMQ
+activate Program
+Program -> JSONIntreperter : Initialize
+activate JSONIntreperter
+JSONIntreperter -> JSONIntreperter : Read JSON
+
+alt has nodes
+JSONIntreperter -> EventNodes : Create EventNode
+activate EventNodes
+activate SensorNodes
+EventNodes -> Model : Create Model
+activate Model
+Model --> EventNodes : return this
+EventNodes --> JSONIntreperter : return this
+end
+JSONIntreperter --> Program : return list of nodes
+SensorNodes -> mqtt : Subscribe to topic
+deactivate JSONIntreperter
+== Runtime ==
+alt while true
+Program -> SensorNodes : Update
+alt Update Success
+SensorNodes --> Program : Success
+else
+SensorNodes --> Program : Failed
+Program -> RabbitMQ : Notify about Sensor Failure
+RabbitMQ --> Program : Confirmation
+end
+Program -> EventNodes : Process
+EventNodes -> SensorNodes : Get output
+SensorNodes --> EventNodes : Output
+EventNodes -> Model : Calculate
+Model --> EventNodes
+alt Fulfills criteria to send notice
+EventNodes -> RabbitMQ : Notify
+RabbitMQ --> EventNodes : Confirmation
+end
+EventNodes --> Program : processed
+end
+@enduml
