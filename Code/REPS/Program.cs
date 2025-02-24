@@ -16,7 +16,7 @@ public class Program {
     }
 
     private static async void process() {
-        List<Task> tasks = new List<Task> ();
+        List<Task> tasks = new List<Task>();
         foreach(INode node in nodes) {
             if(node.GetType() == typeof(SensorNode)) {
                 var sensorProcess = node.Process();
@@ -39,14 +39,15 @@ public class Program {
         }
         else if(interpreter.updateRate == REPS.Enums.UpdateRate.Sequencial) {
             foreach(INode node in nodes) {
-            if(node is EventNode) {
-                await node.Process();
+                if(node is EventNode) {
+                    await node.Process();
+                }
             }
-        }
 
+        }
     }
 
-    static void Main(String[] args) {
+    static void Main(string[] args) {
         start(args[0], args[1]);
     }
 }
