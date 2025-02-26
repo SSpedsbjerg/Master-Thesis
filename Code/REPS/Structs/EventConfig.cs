@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 namespace REPS.Structs {
     public struct EventConfig {
         public int id;
+        public string name;
         public SuportedTypes type;
         public List<int> nodeIDs;
-        public IModel model;
+        public ModelConfig model;
         public string modelType;
         public string reportTopic;
+        public string host;
+        public string routingKey;
     }
 }
