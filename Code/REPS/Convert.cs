@@ -40,6 +40,10 @@ namespace REPS {
                 HandleException(ICE);
                 return -1;
             }
+            catch (NullReferenceException NRE) {
+                HandleException(NRE);
+                return -1;
+            }
             catch (Exception e) {
                 HandleException(e);
                 return -1;

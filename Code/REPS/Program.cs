@@ -1,6 +1,8 @@
 ﻿using REPS;
+using REPS.Connections;
 using REPS.Interfaces;
 using REPS.Nodes;
+using REPS.Structs;
 
 public class Program {
     private static List<INode> nodes = new List<INode> ();
@@ -47,7 +49,33 @@ public class Program {
         }
     }
 
+    public static async Task run(Client client) {
+        string[] topics = { "test" };
+        Connection connection = await client.CreateConnectionAsync(topics, string.Empty);
+        var succes = connection.SendMessageAsync("Hello World");
+        Console.WriteLine(succes);
+        //await connection.CloseConnectionAsync();
+    }
+
     static void Main(string[] args) {
-        start(args[0], args[1]);
+        //start(args[0], args[1]);
+        Client client = new Client("localhost");
+
+        SensorConfig sensorConfig = new SensorConfig();
+        sensorConfig.id = 0;
+        sensorConfig.topic = "test";
+        sensorConfig.host = "localhost";
+        sensorConfig.type = REPS.Enums.SuportedTypes.INT;
+        sensorConfig.routingKey = string.Empty;
+        SensorNode sensor = new SensorNode(sensorConfig);
+        Task task = sensor.Process();
+        task.Wait();
+        run(client).Wait();
+        Console.WriteLine("Waiting...");
+        Thread.Sleep(10000);
+        task = sensor.Process();
+        task.Wait();
+        Console.WriteLine(sensor.Output);
+        Console.ReadLine();
     }
 }
