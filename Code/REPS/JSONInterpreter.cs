@@ -108,7 +108,7 @@ namespace REPS {
                     }
                     eventConfig.nodeIDs = eventNode.Value<JArray>("SensorNodes").ToObject<int[]>().ToList();
                     eventConfig.nodeIDs.AddRange(eventNode.Value<JArray>("EventNodes").ToObject<int[]>().ToList());
-                    eventConfig.model = ToModel(eventNode);
+                    eventConfig.modelConfig = ToModel(eventNode);
                     eventConfig.reportTopic = eventNode.GetValue("ReportTopic").ToString();
                     eventConfigs.Add(eventConfig);
                 }
@@ -128,7 +128,7 @@ namespace REPS {
             return eventConfigs;
         }
 
-        private IModel ToModel(JObject config) {
+        private ModelConfig ToModel(JObject config) {
             try {
                 ModelConfig modelConfig = new ModelConfig();
                 modelConfig.id = (int)config.GetValue("ID");
@@ -147,7 +147,11 @@ namespace REPS {
                 modelConfig.testTopic = config.GetValue("TestTopic").ToString();
                 switch(config.GetValue("Type").ToString().ToLower()) {
                     case "simple":
-                    return new SimpleModel(modelConfig);
+                        modelConfig.modelType = "simple";
+                        return modelConfig;
+                    default:
+                        _ = Log.Error(new Exception("Unable to determine model type"), "JSONInterpreter", "");
+                        return modelConfig;
                 }
             }
             catch(InvalidCastException ICE) {
@@ -162,7 +166,7 @@ namespace REPS {
                 Console.WriteLine(e.Message + " Failed to determine the exception type, update the code");
                 Console.ResetColor();
             }
-            return null;
+            return new ModelConfig();
         }
 
         public bool init() {

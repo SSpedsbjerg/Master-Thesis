@@ -82,6 +82,9 @@ namespace REPS.Nodes {
                 _ = await initAsync();
             }
             else {
+                foreach(string parameter in modelConfig.parameters) {
+                    model.UpdateValue(parameter, 2); //TODO: the int is just a testing value, replace with a proper value gained from a another Node
+                }
                 if(await model.Process()) {
                     return;
                 }

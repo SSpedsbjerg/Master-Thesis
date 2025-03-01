@@ -16,18 +16,18 @@ namespace REPS.Models {
         SuportedTypes type;
         object output;
         string function;
-        public List<string> parameters;
+        public List<string> parametersNames;
         private object testValue;
         private List<double> testParameterValues;
         private string testTopic;
-        public Dictionary<string, object> values;
+        public Dictionary<string, object> parameters;
 
 
         public SimpleModel(ModelConfig config) {
             this.id = config.id;
             this.type = config.type;
             this.function = config.function;
-            this.parameters = config.parameters;
+            this.parametersNames = config.parameters;
             this.testValue = config.testvalue;
             this.testParameterValues = config.TestParameterValues;
             this.testTopic = config.testTopic;
@@ -38,7 +38,11 @@ namespace REPS.Models {
             set => output = value;
         }
         public int NumberOfInputs {
-            get => parameters.Count;
+            get => parametersNames.Count;
+        }
+
+        public void UpdateValues(string parameter, object value) {
+            parameters[parameter] = value;
         }
 
         private async Task<Func<List<int>, int>> CompileFunctionAsync(string function, List<string> parameters) {
@@ -79,11 +83,12 @@ namespace REPS.Models {
         }
 
         public async Task<bool> Process() {
-            var _func = CompileFunctionAsync(function, parameters);
+            var _func = CompileFunctionAsync(function, parametersNames);
             if(type == SuportedTypes.INT) {
-                List<int> inputs = values.Values.Cast<int>().ToList();
+                List<int> inputs = parameters.Values.Cast<int>().ToList(); //get the values from the dictionary
                 var func = await _func;
                 output = func(inputs);
+                Console.WriteLine(output.ToString());
                 return true;
             }
             else return false;
@@ -93,7 +98,7 @@ namespace REPS.Models {
             for (int i = 0; i < testParameterValues.Count(); i++) {
                 if(type == SuportedTypes.INT) {
                     int intValue = (int)testParameterValues[i];
-                    values[parameters[i]] = intValue;
+                    parameters[parametersNames[i]] = intValue;
                 }
             }
             _ = Process();
@@ -104,7 +109,7 @@ namespace REPS.Models {
         }
 
         public bool UpdateValue(string valueID, object value) {
-            values[valueID] = value;
+            parameters[valueID] = value;
             return true;
         }
     }

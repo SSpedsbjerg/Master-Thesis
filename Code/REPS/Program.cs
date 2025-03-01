@@ -57,6 +57,8 @@ public class Program {
         //await connection.CloseConnectionAsync();
     }
 
+    private 
+
     static void Main(string[] args) {
         //start(args[0], args[1]);
         Client client = new Client("localhost");
@@ -77,5 +79,7 @@ public class Program {
         task.Wait();
         Console.WriteLine(sensor.Output);
         Console.ReadLine();
+
+        start("./", "TestConfig.json");//real test starts here
     }
 }

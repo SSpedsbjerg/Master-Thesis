@@ -12,7 +12,7 @@ namespace REPS.Structs {
         public string name;
         public SuportedTypes type;
         public List<int> nodeIDs;
-        public ModelConfig model;
+        public ModelConfig modelConfig;
         public string modelType;
         public string reportTopic;
         public string host;
