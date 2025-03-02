@@ -14,5 +14,6 @@ namespace REPS.Structs {
         public object testvalue;
         public List<double> TestParameterValues;
         public string testTopic;
+        public string modelType;
     }
 }

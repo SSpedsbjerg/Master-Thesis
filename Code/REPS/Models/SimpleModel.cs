@@ -31,6 +31,7 @@ namespace REPS.Models {
             this.testValue = config.testvalue;
             this.testParameterValues = config.TestParameterValues;
             this.testTopic = config.testTopic;
+            parameters = new Dictionary<string, object>();
         }
 
         public object Output {
@@ -51,14 +52,15 @@ namespace REPS.Models {
                 using System;
 
                 public class DynamicFunction {{
-                    public static int Compute({parameters.Select(p => $"int {p}")}) {{
+                    public static int Compute({string.Join(", ", parameters.Select(p => $"int {p}"))}) {{
                         return {function};
                     }}
                 }}";
                 SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
                 MetadataReference[] references = {
                     MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(Console).Assembly.Location)
+                    MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
+                    MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location)
                     };
                 CSharpCompilation compilation = CSharpCompilation.Create(
                     "DynamicAssembly",
@@ -94,14 +96,14 @@ namespace REPS.Models {
             else return false;
         }
 
-        public bool Test() {
+        public async Task<bool> Test() {
             for (int i = 0; i < testParameterValues.Count(); i++) {
                 if(type == SuportedTypes.INT) {
                     int intValue = (int)testParameterValues[i];
                     parameters[parametersNames[i]] = intValue;
                 }
             }
-            _ = Process();
+            _ = await Process();
             if(type == SuportedTypes.INT) {
                 _ = Log.NotifyBroker($"Model {id} has processed with value of: {(int)output == (int)testValue}", testTopic);
             }

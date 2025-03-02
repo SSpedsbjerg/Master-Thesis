@@ -11,6 +11,7 @@ public class Program {
 
     private static void start(string path, string filename) {
         interpreter = new JSONInterpreter(path, filename);
+        interpreter.init();
         nodes = interpreter.GetNodes();
         while(true) {
             process();
@@ -19,16 +20,18 @@ public class Program {
 
     private static async void process() {
         List<Task> tasks = new List<Task>();
+        
         foreach(INode node in nodes) {
             if(node.GetType() == typeof(SensorNode)) {
-                var sensorProcess = node.Process();
+                Task sensorProcess = node.Process();
                 tasks.Add(sensorProcess);
             }
         }
         foreach(Task task in tasks) {
             await task;
         }
-        tasks.Clear();
+        //tasks.Clear();
+        //does not reach this point
         if(interpreter.updateRate == REPS.Enums.UpdateRate.Fast) {
             foreach(INode node in nodes) {
                 if(node is EventNode) {
@@ -63,6 +66,7 @@ public class Program {
         //start(args[0], args[1]);
         Client client = new Client("localhost");
 
+        /*
         SensorConfig sensorConfig = new SensorConfig();
         sensorConfig.id = 0;
         sensorConfig.topic = "test";
@@ -79,7 +83,8 @@ public class Program {
         task.Wait();
         Console.WriteLine(sensor.Output);
         Console.ReadLine();
+        */
 
-        start("./", "TestConfig.json");//real test starts here
+        start("C:/Users/simon/Documents/GitHub/Master-Thesis/Code/REPS/", "TestConfig.json");//real test starts here
     }
 }

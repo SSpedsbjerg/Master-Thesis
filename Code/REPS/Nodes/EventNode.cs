@@ -37,7 +37,17 @@ namespace REPS.Nodes {
             this.modelType = config.modelType;
             this.nodeIDs = config.nodeIDs;
             this.client = new Client(config.host);
-            this.connectionTask = client.CreateConnectionAsync(Enumerable.Repeat(reportTopic, 1).ToArray(), config.routingKey);
+            string[] topics = { this.reportTopic };
+            this.connectionTask = client.CreateConnectionAsync(topics, config.routingKey);
+            switch(config.modelConfig.modelType.ToLower()) {
+                case "simple":
+                    this.modelType = "simple";
+                    break;
+                default:
+                    _ = Log.Error(new Exception("Invalid Modeltype"), "EventNode", "Constructor");
+                    this.modelType = "simple";
+                    break;
+            }
         }
         public object Output {
             get => output;
@@ -61,9 +71,9 @@ namespace REPS.Nodes {
         private async Task<bool> initAsync() {
             this.connection = await connectionTask;
             connectionTask.Dispose();
-            if(modelType.ToLower() == "simple") {
+            if(this.modelType == "simple") {
                 model = new SimpleModel(config: modelConfig);
-                if(model.Test() | await model.Process()) {
+                if(await model.Test() | await model.Process()) {
                     _ = connection.SendMessageAsync(message: output as string ?? output?.ToString() ?? "null"); //if output is already a string type we avoid casting and the problems that follow that, if it is not a string we cast it, as well as this 
                 }
                 else {
@@ -73,6 +83,11 @@ namespace REPS.Nodes {
                     Console.WriteLine($"EventNode {id}, {name}, is unable to launch its model");
                     Console.ResetColor();
                 }
+            }
+            else {
+                Console.ForegroundColor= ConsoleColor.Red;
+                Console.WriteLine("Event Nodes ModelType is invalid or non existent");
+                Console.ResetColor();
             }
             return true;
         }

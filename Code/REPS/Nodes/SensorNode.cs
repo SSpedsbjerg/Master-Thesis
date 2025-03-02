@@ -41,7 +41,7 @@ namespace REPS.Nodes {
         }
 
         private async Task<bool> initAsync() {
-            this.connection = await connectionTask;
+            connection = connectionTask.Result;
             connectionTask.Dispose();
             connection.Subscribe(topic);
             return true;

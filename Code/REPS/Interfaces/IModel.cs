@@ -16,7 +16,7 @@ namespace REPS.Interfaces {
         }
 
         Task<bool> Process();
-        bool Test();
+        Task<bool> Test();
 
         public bool UpdateValue(string valueID, object value);
     }

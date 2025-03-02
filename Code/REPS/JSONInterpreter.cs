@@ -57,7 +57,7 @@ namespace REPS {
                     SensorConfig sensorConfig = new SensorConfig();
                     sensorConfig.id = (int)sensorNode.GetValue("ID");
                     sensorConfig.host = sensorNode.GetValue("Host").ToString();
-                    switch(sensorNode.GetValue("SupoortedType").ToString().ToLower()) {
+                    switch(sensorNode.GetValue("SupportedType").ToString().ToLower()) {
                         case "int":
                         sensorConfig.type = Enums.SuportedTypes.INT;
                         break;
@@ -89,7 +89,7 @@ namespace REPS {
             List<EventConfig> eventConfigs = new List<EventConfig>();
             JArray eventNodes = null;
             try {
-                eventNodes = config.Value<JArray>("SensorNodes");
+                eventNodes = config.Value<JArray>("EventNodes");
             }
             catch {
                 _ = Log.Error(new Exception("eventNodes is null"), "JSONInterpreter", "ReadEventConfigs");
@@ -98,7 +98,7 @@ namespace REPS {
                 try {
                     EventConfig eventConfig = new EventConfig();
                     eventConfig.id = (int)eventNode.GetValue("ID");
-                    switch(eventNode.GetValue("SupoortedType").ToString().ToLower()) {
+                    switch(eventNode.GetValue("SupportedType").ToString().ToLower()) {
                         case "int":
                         eventConfig.type = Enums.SuportedTypes.INT;
                         break;
@@ -106,10 +106,14 @@ namespace REPS {
                         _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
                         break;
                     }
+                    var n = eventNode.Value<JArray>("SensorNodes");
+                    var ni = eventNode.Values<JArray>("SensorNodes").Children();
+
                     eventConfig.nodeIDs = eventNode.Value<JArray>("SensorNodes").ToObject<int[]>().ToList();
                     eventConfig.nodeIDs.AddRange(eventNode.Value<JArray>("EventNodes").ToObject<int[]>().ToList());
-                    eventConfig.modelConfig = ToModel(eventNode);
+                    eventConfig.modelConfig = ToModel(eventNode.Value<JObject>("Model"));
                     eventConfig.reportTopic = eventNode.GetValue("ReportTopic").ToString();
+                    eventConfig.host = eventNode.GetValue("Host").ToString();
                     eventConfigs.Add(eventConfig);
                 }
                 catch(InvalidCastException ICE) {
@@ -170,13 +174,27 @@ namespace REPS {
         }
 
         public bool init() {
-            StreamReader reader = new StreamReader(path + fileName);
-            string json = reader.ReadToEnd();
-            JObject config = JObject.Parse(json);
-            SetConfigValues(config);
-            List<SensorConfig> sensorConfigs = ReadSensorConfigs(config);
-            List<EventConfig> eventConfigs = ReadEventConfigs(config);
-            
+            try {
+                StreamReader reader = new StreamReader(path + fileName);
+                string json = reader.ReadToEnd();
+                JObject config = JObject.Parse(json);
+                SetConfigValues(config);
+                List<SensorConfig> sensorConfigs = ReadSensorConfigs(config);
+                List<EventConfig> eventConfigs = ReadEventConfigs(config);
+                foreach(SensorConfig sensorConfig in sensorConfigs) {
+                    nodes.Add(new SensorNode(sensorConfig));
+                }
+                foreach(EventConfig eventConfig in eventConfigs) {
+                    nodes.Add(new EventNode(eventConfig));
+                }
+            }
+            catch (FileNotFoundException fnfe) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(fnfe.Message);
+                Console.ResetColor();
+                _ = Log.Error(fnfe, "JSONInterpreter", "");
+                return false;
+            }
             return true;
         }
 

@@ -16,6 +16,12 @@ namespace REPS {
                 Console.WriteLine(exception + " " + className + " " + description);
                 return true;
             }
+            catch(IOException IO) {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Race condition when writing to error log, printing to console istead: {exception.Message} {className} {description}");
+                Console.ResetColor();
+                return false;
+            }
             catch(Exception ex) {
                 Console.WriteLine(ex.ToString());
                 return false;
@@ -30,6 +36,12 @@ namespace REPS {
                 streamWriter.Close();
                 Console.WriteLine(warning + " " + className + " " + description);
                 return true;
+            }
+            catch(IOException IO) {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Race condition when writing to warning log, printing to console istead: {warning} {className} {description}");
+                Console.ResetColor();
+                return false;
             }
             catch(Exception ex) {
                 Console.WriteLine(ex.ToString());

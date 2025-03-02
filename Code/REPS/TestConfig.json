@@ -18,7 +18,7 @@
       "SupportedType": "INT",
       "Host": "localhost",
       "RoutingKey": 0,
-      "Topic": "fist"
+      "Topic": "first"
     }
   ],
 
@@ -29,6 +29,8 @@
       "EventNodes": [],
       "ReportTopic": "testEventNode",
       "SupportedType": "INT",
+      "Host": "localhost",
+      "RoutingKey" :  0,
       "Model": {
         "ID": 0,
         "Type": "Simple",
