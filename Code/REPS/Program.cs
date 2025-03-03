@@ -7,12 +7,13 @@ using REPS.Structs;
 public class Program {
     private static List<INode> nodes = new List<INode> ();
     private static JSONInterpreter? interpreter;
-
+    private static int i = 0;
 
     private static void start(string path, string filename) {
         interpreter = new JSONInterpreter(path, filename);
         interpreter.init();
         nodes = interpreter.GetNodes();
+        NodeController.init(nodes);
         while(true) {
             process();
         }
@@ -23,6 +24,7 @@ public class Program {
         
         foreach(INode node in nodes) {
             if(node.GetType() == typeof(SensorNode)) {
+                ((SensorNode)node).OverrideMessage($"{i++}");
                 Task sensorProcess = node.Process();
                 tasks.Add(sensorProcess);
             }

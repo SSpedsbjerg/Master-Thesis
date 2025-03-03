@@ -15,7 +15,8 @@ namespace REPS.Nodes {
         private int id;
         private string name;
         private SuportedTypes type;
-        private List<int> nodeIDs;
+        private List<int> sensorNodeIDs;
+        private List<int> eventNodeIDs;
         private IModel model;
         private string modelType;
         private string reportTopic;
@@ -35,8 +36,10 @@ namespace REPS.Nodes {
             this.modelConfig = config.modelConfig;
             this.reportTopic = config.reportTopic;
             this.modelType = config.modelType;
-            this.nodeIDs = config.nodeIDs;
+            this.sensorNodeIDs = config.sensorNodeIDs;
+            this.eventNodeIDs = config.eventNodeIDs;
             this.client = new Client(config.host);
+            this.nodes = new List<INode>();
             string[] topics = { this.reportTopic };
             this.connectionTask = client.CreateConnectionAsync(topics, config.routingKey);
             switch(config.modelConfig.modelType.ToLower()) {
@@ -70,6 +73,7 @@ namespace REPS.Nodes {
 
         private async Task<bool> initAsync() {
             this.connection = await connectionTask;
+            this.initiated = true;
             connectionTask.Dispose();
             if(this.modelType == "simple") {
                 model = new SimpleModel(config: modelConfig);
@@ -89,6 +93,13 @@ namespace REPS.Nodes {
                 Console.WriteLine("Event Nodes ModelType is invalid or non existent");
                 Console.ResetColor();
             }
+            foreach(int id in sensorNodeIDs) {
+                this.nodes.Add(NodeController.GetNodeByID<SensorNode>(id));
+            }
+            foreach(int id in eventNodeIDs) {
+                this.nodes.Add(NodeController.GetNodeByID<EventNode>(id));
+            }
+            
             return true;
         }
 
@@ -97,8 +108,10 @@ namespace REPS.Nodes {
                 _ = await initAsync();
             }
             else {
+                int i = 0;
                 foreach(string parameter in modelConfig.parameters) {
-                    model.UpdateValue(parameter, 2); //TODO: the int is just a testing value, replace with a proper value gained from a another Node
+                    model.UpdateValue(parameter, nodes[i].Output);
+                    i++;
                 }
                 if(await model.Process()) {
                     return;

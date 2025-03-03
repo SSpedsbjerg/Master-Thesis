@@ -100,17 +100,14 @@ namespace REPS {
                     eventConfig.id = (int)eventNode.GetValue("ID");
                     switch(eventNode.GetValue("SupportedType").ToString().ToLower()) {
                         case "int":
-                        eventConfig.type = Enums.SuportedTypes.INT;
-                        break;
+                            eventConfig.type = Enums.SuportedTypes.INT;
+                            break;
                         default:
-                        _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
-                        break;
+                            _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
+                            break;
                     }
-                    var n = eventNode.Value<JArray>("SensorNodes");
-                    var ni = eventNode.Values<JArray>("SensorNodes").Children();
-
-                    eventConfig.nodeIDs = eventNode.Value<JArray>("SensorNodes").ToObject<int[]>().ToList();
-                    eventConfig.nodeIDs.AddRange(eventNode.Value<JArray>("EventNodes").ToObject<int[]>().ToList());
+                    eventConfig.sensorNodeIDs = eventNode.Value<JArray>("SensorNodes").ToObject<int[]>().ToList();
+                    eventConfig.eventNodeIDs = eventNode.Value<JArray>("EventNodes").ToObject<int[]>().ToList();
                     eventConfig.modelConfig = ToModel(eventNode.Value<JObject>("Model"));
                     eventConfig.reportTopic = eventNode.GetValue("ReportTopic").ToString();
                     eventConfig.host = eventNode.GetValue("Host").ToString();

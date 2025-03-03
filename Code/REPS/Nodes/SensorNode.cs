@@ -17,7 +17,8 @@ namespace REPS.Nodes {
         private SuportedTypes type;
         private Task<Connection> connectionTask;
         private Connection connection;
-        private string predeterminedMessage;
+        private string preProcessedMessage;
+        private bool overriddenMessage = false;
 
         private object output; 
 
@@ -29,6 +30,15 @@ namespace REPS.Nodes {
             id = config.id;
             Client client = new Client(host);
             connectionTask = client.CreateConnectionAsync(Enumerable.Repeat(topic, 1).ToArray(), routingKey);
+        }
+
+        public void OverrideMessage(string message) {
+            this.preProcessedMessage = message;
+            this.overriddenMessage = true;
+        }
+
+        public void ClearOverride() {
+            this.overriddenMessage = false;
         }
 
         public object Output {
@@ -51,16 +61,18 @@ namespace REPS.Nodes {
             if(connection is null) {
                 _ = await initAsync();
             }
-            if(connection.Message is null) {
+            if(connection.Message is null && !overriddenMessage) {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Connection message was null, sensor node: {id}");
                 Console.ResetColor();
                 return;
             }
-            predeterminedMessage = connection.Message;
-            Console.WriteLine($"SensorNode {id} have recieved {predeterminedMessage}");
+            if(!overriddenMessage) {
+                preProcessedMessage = connection.Message;
+            }
+            Console.WriteLine($"SensorNode {id} have recieved {preProcessedMessage}");
             try {
-                this.output = Convert.GetValue(predeterminedMessage);
+                this.output = Convert.GetValue(preProcessedMessage);
             }
             catch(InvalidCastException ex) {
                 _ = Log.Error(ex, "SensorNode", "Attempted to cast message to correct type");

@@ -35,10 +35,10 @@
         "ID": 0,
         "Type": "Simple",
         "SupportedType": "INT",
-        "Function": "a*b+c",
-        "Parameters": [ "a", "b", "c" ],
+        "Function": "a*b",
+        "Parameters": [ "a", "b"],
         "TestValue": 5,
-        "TestParameterValues": [ 2, 2, 1 ],
+        "TestParameterValues": [ 2, 2 ],
         "TestTopic": "NONE"
       }
     }

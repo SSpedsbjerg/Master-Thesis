@@ -100,7 +100,19 @@ namespace REPS.Models {
             for (int i = 0; i < testParameterValues.Count(); i++) {
                 if(type == SuportedTypes.INT) {
                     int intValue = (int)testParameterValues[i];
-                    parameters[parametersNames[i]] = intValue;
+                    try {
+                        parameters[parametersNames[i]] = intValue;
+                    }
+                    catch(ArgumentOutOfRangeException aoore) {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"{aoore.Message} : Do you have more TestParameterValues than parameters?");
+                        Console.ResetColor();
+                    }
+                    catch(Exception ex) {
+                        Console.ForegroundColor= ConsoleColor.Red;
+                        Console.WriteLine(ex.Message);
+                        Console.ResetColor();
+                    }
                 }
             }
             _ = await Process();

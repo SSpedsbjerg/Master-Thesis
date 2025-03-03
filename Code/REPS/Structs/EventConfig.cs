@@ -11,7 +11,8 @@ namespace REPS.Structs {
         public int id;
         public string name;
         public SuportedTypes type;
-        public List<int> nodeIDs;
+        public List<int> sensorNodeIDs;
+        public List<int> eventNodeIDs;
         public ModelConfig modelConfig;
         public string modelType;
         public string reportTopic;

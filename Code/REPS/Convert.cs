@@ -34,6 +34,9 @@ namespace REPS {
 
         public static int GetValue(object input) {
             try {
+                if(input is string) {
+                    return int.Parse(input as string);
+                }
                 return (int)input;
             }
             catch (InvalidCastException ICE) {
