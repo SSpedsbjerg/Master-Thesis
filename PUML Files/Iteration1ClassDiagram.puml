@@ -1,0 +1,236 @@
+@startuml
+
+circle RabbitMQ
+circle SensorBroker
+
+
+
+package REPS {
+        +class Program{
+            - static List<INode> nodes = new List<INode>()
+            - static JSONInterpreter? interpreter
+            - static int i
+            - static void start(string path, string fileName)
+            - static async void process()
+            + static async Task<void> run(Client client)
+            + static void Main(string[] args)
+        }
+
+    package Interfaces {
+        +interface INode {
+            - object Output
+            + Task<void> Process()
+        }
+
+        +interface IModel{
+            + object Output
+            + int numberOfInputs
+            + Task<bool> Process()
+            + Task<bool> Test()
+            + public bool UpdateValue(string valueID, object value)
+        }
+    }
+
+    package Structs {
+        struct EventConfig {
+            public int id
+            public string name
+            public SupportedTypes typs
+            public List<int> sensorNodeIDs
+            public List<int> eventNodeIDs
+            public ModelConfig modelConfig
+            public string modelType
+            public string reportTopic
+            public string host
+            public strign routingKey
+        }
+
+        struct ModelConfig {
+            public int id
+            public SupportedTypes type
+            public string function
+            public List<string> parameters
+            public object testvalue
+            public List<double> TestParameterValues
+            public string testTopic
+            public string modelType 
+        }
+
+        struct SensorConfig {
+            public int id
+            public string host
+            public string routingKey
+            public string topic
+            public SupportedTypes type
+        }
+
+        EventConfig --> ModelConfig : "has"
+    }
+
+    package Enums {
+        +enum State {
+            Stable
+            Low
+            Medium
+            High
+        }
+
+        +enum SupportedTypes{
+            INT
+        } 
+
+        +enum UpdateRate {
+            Fast
+            Sequencial
+        }
+    }
+
+    package Connections{
+        +class Client{
+            - string hostname
+            - ConnectionFactory factory
+            - List<Connection> connections
+            - int id
+            + Client(string hostname)
+            + string Hostname
+            + async Task<Connection> CreateConnectionAsync(string[] topics, string routingKey)
+        }
+
+        +class Connection{
+            - string[] topics
+            - IConnection? connection
+            - IChannel? channel
+            - string routingKey
+            - int id
+            - string returnMessage
+
+            + Connection(int id, string[] topics, string routingKey)
+            + int ID
+            + string Message
+            + async Task<bool> CreateConnectionAsync(ConnectionFactory factory)
+            + async Task<bool> CloseConnectionAsync()
+            + async Task<bool> SendMessageAsync(string message)
+            + async void Subscribe(string topic)
+        }
+    }
+
+    package Models {
+        +class SimpleModel{
+            int id
+            SupportedTypes type
+            string function
+            object output
+            - object testValue
+            - List<double> testParameterValues
+            - string testTopic
+            + Dictionary<string, object> parameters
+
+            + object Output
+            + int NumberOfInputs
+            + void UpdateValue(string parameter object value)
+            - async Task<Func<List<int>, int>> CompileFunctionAsync(string function, List<string> parameters)
+            + async Task<bool> Process()
+            + async Task<bool> Test()
+            + bool UpdateValue(string valueID, object value)
+        }
+    }
+
+    package Nodes{
+        +class SensorNode {
+            - int id
+            - string host
+            - string routingKey
+            - string topic
+            - SupportedTypes type
+            - Task<Connection> connectionTask
+            - Connection connection
+            - string preProcessedMessage
+            - bool overriddenMessage
+            - object output
+            + SensorNode(SensorConfig config)
+            + void OverrideMessage(string message)
+            + void ClearOverride()
+            + object Output
+            + int ID
+            - async Task<bool> initAsync()
+            + async Task Process()
+            + Task<void> Process()
+        }
+
+        +class EventNode {
+            - int id
+            - string name
+            - SupportedTypes type
+            - List<int> sensorNodeIDs
+            - List<int> eventNodeIDs
+            - IModel model
+            - string modelType
+            - string reportTopic
+            - Client client
+            - Task<Connection> connectionTask
+            - object output
+            - Connection connection
+            - List<INode> nodes
+            - State state
+            - ModelConfig modelConfig
+            - bool initiated
+
+            + object Output
+            + int ID
+            + bool AssignNodes(List<INode> nodes)
+            + bool AddNodes(List<INode> nodes)
+            - async Task<bool> initAsync()
+            + async Task Process()
+        }
+    }
+
+    +class JSONInterpreter {
+        - string fileName
+        - string path
+        - List<INode> nodes
+        + string NotificationBroker
+        + string NotificationTopic
+        + string ReportBroker
+        + UpdateRate updateRate
+
+        + (rstring path, string fileName)
+        - void SetConfigValues(JObject config)
+        - List<SensorConfig> ReadSensorConfigs(JObject config)
+        - List<EventConfig> ReadEventConfigs(JObject config)
+        - ModelConfig ToModel(JObject config)
+        + bool init()
+        + List<INode> GetNodes()
+    }
+
+    +class Log{
+        + static string Broker
+        + static async Task<bool> Error(Exception exception, string className, string description)
+        + static async Task<bool> Warning(string warning, string className, string description)
+        + static async Task<NotifyBroker(string message, string topic)
+    }
+
+    +class NodeController{
+        - static List<SensorNode> sensorNodes
+        - static List<EventNode> eventNodes
+
+        + static void init(List<INode> nodes)
+        + static INode? GetNodeByID<T>(int id)
+    }
+}
+
+
+
+SensorNode -left-|> INode : Implements
+EventNode -up-|> INode : Implements
+JSONInterpreter -right-> INode : Initializes
+JSONInterpreter *-down- IModel : Initializes
+SimpleModel --|> IModel : Implements
+EventNode -- State : uses
+JSONInterpreter ..|> SimpleModel : Defines
+EventNode o-left- SimpleModel : Has
+EventNode o-up- INode : has
+
+EventNode -- RabbitMQ : publishes
+SensorNode -- SensorBroker : Subscribe
+
+@enduml

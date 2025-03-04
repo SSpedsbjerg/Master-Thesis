@@ -38,7 +38,7 @@
         "Function": "a*b",
         "Parameters": [ "a", "b"],
         "TestValue": 5,
-        "TestParameterValues": [ 2, 2 ],
+        "TestParameterValues": [ 2, 3 ],
         "TestTopic": "NONE"
       }
     }

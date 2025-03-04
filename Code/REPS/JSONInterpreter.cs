@@ -59,7 +59,7 @@ namespace REPS {
                     sensorConfig.host = sensorNode.GetValue("Host").ToString();
                     switch(sensorNode.GetValue("SupportedType").ToString().ToLower()) {
                         case "int":
-                        sensorConfig.type = Enums.SuportedTypes.INT;
+                        sensorConfig.type = Enums.SupportedTypes.INT;
                         break;
                         default:
                         _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
@@ -100,7 +100,7 @@ namespace REPS {
                     eventConfig.id = (int)eventNode.GetValue("ID");
                     switch(eventNode.GetValue("SupportedType").ToString().ToLower()) {
                         case "int":
-                            eventConfig.type = Enums.SuportedTypes.INT;
+                            eventConfig.type = Enums.SupportedTypes.INT;
                             break;
                         default:
                             _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
@@ -135,7 +135,7 @@ namespace REPS {
                 modelConfig.id = (int)config.GetValue("ID");
                 switch(config.GetValue("SupportedType").ToString().ToLower()) {
                     case "int":
-                    modelConfig.type = Enums.SuportedTypes.INT;
+                    modelConfig.type = Enums.SupportedTypes.INT;
                     break;
                     default:
                     _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");

@@ -11,6 +11,6 @@ namespace REPS.Structs {
         public string host;
         public string routingKey;
         public string topic;
-        public SuportedTypes type;
+        public SupportedTypes type;
     }
 }

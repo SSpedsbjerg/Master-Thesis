@@ -13,7 +13,7 @@ using System.Reflection;
 namespace REPS.Models {
     class SimpleModel : IModel {
         int id;
-        SuportedTypes type;
+        SupportedTypes type;
         object output;
         string function;
         public List<string> parametersNames;
@@ -47,7 +47,7 @@ namespace REPS.Models {
         }
 
         private async Task<Func<List<int>, int>> CompileFunctionAsync(string function, List<string> parameters) {
-            if(type == SuportedTypes.INT) {
+            if(type == SupportedTypes.INT) {
                 string code = $@"
                 using System;
 
@@ -86,7 +86,7 @@ namespace REPS.Models {
 
         public async Task<bool> Process() {
             var _func = CompileFunctionAsync(function, parametersNames);
-            if(type == SuportedTypes.INT) {
+            if(type == SupportedTypes.INT) {
                 List<int> inputs = parameters.Values.Cast<int>().ToList(); //get the values from the dictionary
                 var func = await _func;
                 output = func(inputs);
@@ -98,7 +98,7 @@ namespace REPS.Models {
 
         public async Task<bool> Test() {
             for (int i = 0; i < testParameterValues.Count(); i++) {
-                if(type == SuportedTypes.INT) {
+                if(type == SupportedTypes.INT) {
                     int intValue = (int)testParameterValues[i];
                     try {
                         parameters[parametersNames[i]] = intValue;
@@ -116,7 +116,7 @@ namespace REPS.Models {
                 }
             }
             _ = await Process();
-            if(type == SuportedTypes.INT) {
+            if(type == SupportedTypes.INT) {
                 _ = Log.NotifyBroker($"Model {id} has processed with value of: {(int)output == (int)testValue}", testTopic);
             }
             return true;

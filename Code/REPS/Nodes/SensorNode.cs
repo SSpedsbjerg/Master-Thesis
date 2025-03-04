@@ -14,7 +14,7 @@ namespace REPS.Nodes {
         private string host;
         private string routingKey;
         private string topic;
-        private SuportedTypes type;
+        private SupportedTypes type;
         private Task<Connection> connectionTask;
         private Connection connection;
         private string preProcessedMessage;

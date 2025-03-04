@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace REPS.Enums {
-    public enum SuportedTypes {
+    public enum SupportedTypes {
         INT
     }
 }

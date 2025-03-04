@@ -62,18 +62,16 @@ public class Program {
         //await connection.CloseConnectionAsync();
     }
 
-    private 
-
-    static void Main(string[] args) {
+    public static void Main(string[] args) {
         //start(args[0], args[1]);
         Client client = new Client("localhost");
 
-        /*
+        
         SensorConfig sensorConfig = new SensorConfig();
         sensorConfig.id = 0;
         sensorConfig.topic = "test";
         sensorConfig.host = "localhost";
-        sensorConfig.type = REPS.Enums.SuportedTypes.INT;
+        sensorConfig.type = REPS.Enums.SupportedTypes.INT;
         sensorConfig.routingKey = string.Empty;
         SensorNode sensor = new SensorNode(sensorConfig);
         Task task = sensor.Process();
@@ -85,7 +83,7 @@ public class Program {
         task.Wait();
         Console.WriteLine(sensor.Output);
         Console.ReadLine();
-        */
+        
 
         start("C:/Users/simon/Documents/GitHub/Master-Thesis/Code/REPS/", "TestConfig.json");//real test starts here
     }

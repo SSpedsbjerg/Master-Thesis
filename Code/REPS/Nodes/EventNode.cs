@@ -14,7 +14,7 @@ namespace REPS.Nodes {
 
         private int id;
         private string name;
-        private SuportedTypes type;
+        private SupportedTypes type;
         private List<int> sensorNodeIDs;
         private List<int> eventNodeIDs;
         private IModel model;

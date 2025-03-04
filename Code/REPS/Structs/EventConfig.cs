@@ -10,7 +10,7 @@ namespace REPS.Structs {
     public struct EventConfig {
         public int id;
         public string name;
-        public SuportedTypes type;
+        public SupportedTypes type;
         public List<int> sensorNodeIDs;
         public List<int> eventNodeIDs;
         public ModelConfig modelConfig;
