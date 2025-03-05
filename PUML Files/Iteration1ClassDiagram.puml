@@ -1,20 +1,20 @@
 @startuml
 
-circle RabbitMQ
-circle SensorBroker
-
-
-
 package REPS {
-        +class Program{
-            - static List<INode> nodes = new List<INode>()
-            - static JSONInterpreter? interpreter
-            - static int i
-            - static void start(string path, string fileName)
-            - static async void process()
-            + static async Task<void> run(Client client)
-            + static void Main(string[] args)
-        }
+    +class Program{
+        - static List<INode> nodes = new List<INode>()
+        - static JSONInterpreter? interpreter
+        - static int i
+        - static void start(string path, string fileName)
+        - static async void process()
+        + static async Task<void> run(Client client)
+        + static void Main(string[] args)
+    }
+
+    +class Convert{
+        - static void HandleException(Exception exception)
+        + static int GetValue(object input)
+    }
 
     package Interfaces {
         +interface INode {
@@ -218,19 +218,39 @@ package REPS {
     }
 }
 
-
-
 SensorNode -left-|> INode : Implements
-EventNode -up-|> INode : Implements
-JSONInterpreter -right-> INode : Initializes
+JSONInterpreter -right--> INode : Initializes
 JSONInterpreter *-down- IModel : Initializes
 SimpleModel --|> IModel : Implements
 EventNode -- State : uses
 JSONInterpreter ..|> SimpleModel : Defines
 EventNode o-left- SimpleModel : Has
-EventNode o-up- INode : has
 
-EventNode -- RabbitMQ : publishes
-SensorNode -- SensorBroker : Subscribe
+EventNode -up-> NodeController : Requests child nodes
+EventNode o-right--|> INode : Implements & has
+
+Client o-down- Connection : Has 1 or more connections
+SensorNode o-down- Client : Recieves data
+EventNode o-down- Client : Sends State
+SensorNode -up-> Convert : Converts to specified datatype
+EventNode -up-> Convert : Converts to specified datatype
+
+Log -down-- Nodes : Writes warnings and errors
+Log -down-- Models : Writes warnings and errors
+Log -down-- Connections : Writes warnings and errors
+
+JSONInterpreter .down.> Nodes : Implements
+EventNode ..> Models : Implements
+
+Program -- NodeController : relay existing nodes
+Program --> JSONInterpreter : Start
+Program -- UpdateRate : uses to determine how to operate its updaterate for INodes
+
+JSONInterpreter .right.> SensorConfig : Instantiate
+JSONInterpreter .right.> EventConfig : Instantiate
+JSONInterpreter .right.> ModelConfig : Instantiate
+
+INode *-- SupportedTypes : Has a set of supported types
+IModel *-- SupportedTypes : Has a set of supported types
 
 @enduml

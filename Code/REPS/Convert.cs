@@ -32,24 +32,88 @@ namespace REPS {
             }
         }
 
-        public static int GetValue(object input) {
-            try {
-                if(input is string) {
-                    return int.Parse(input as string);
-                }
-                return (int)input;
-            }
-            catch (InvalidCastException ICE) {
-                HandleException(ICE);
-                return -1;
-            }
-            catch (NullReferenceException NRE) {
-                HandleException(NRE);
-                return -1;
-            }
-            catch (Exception e) {
-                HandleException(e);
-                return -1;
+        public static T GetValue<T>(object input) {
+            switch(typeof(T)) {
+                case (typeof(int)):
+                    try {
+                        if(input is string) {
+                            return int.Parse(input as string);
+                        }
+                        return (int)input;
+                    }
+                    catch(InvalidCastException ICE) {
+                        HandleException(ICE);
+                        return -1;
+                    }
+                    catch(NullReferenceException NRE) {
+                        HandleException(NRE);
+                        return -1;
+                    }
+                    catch(Exception e) {
+                        HandleException(e);
+                        return -1;
+                    }
+                    break;
+                case (typeof(double)):
+                    try {
+                    if(input is string) {
+                        return double.Parse(input as string);
+                        }
+                    return (double)input;
+                    }
+                    catch(InvalidCastException ICE) {
+                        HandleException(ICE);
+                        return -1;
+                    }
+                    catch(NullReferenceException NRE) {
+                        HandleException(NRE);
+                        return -1;
+                    }
+                    catch (Exception e) {
+                        HandleException(e);
+                        return -1;
+                    }
+                    break;
+                case (typeof(float)):
+                    try {
+                        if(input is string) {
+                            return float.Parse(input as string);
+                        }
+                        return (float)input;
+                    }
+                    catch(InvalidCastException ICE) {
+                        HandleException(ICE);
+                        return -1;
+                    }
+                    catch(NullReferenceException NRE) {
+                        HandleException(NRE);
+                        return -1;
+                    }
+                    catch(Exception e) {
+                        HandleException(e);
+                        return -1;
+                    }
+                    break;
+                case (typeof(bool)):
+                    try {
+                        if(input is string) {
+                            return bool.Parse(input as string);
+                        }
+                        return (bool)input;
+                    }
+                    catch(InvalidCastException ICE) {
+                        HandleException(ICE);
+                        return -1;
+                    }
+                    catch(NullReferenceException NRE) {
+                        HandleException(NRE);
+                        return -1;
+                    }
+                    catch(Exception e) {
+                        HandleException(e);
+                        return -1;
+                    }
+                    break;
             }
         }
     }
