@@ -156,3 +156,22 @@ The await function releases current thread and allows for the REPS model to oper
 I will have to figure out how to ensure that it actually can become a graph and not a tree. Bit like circular definations.
 
 Going to differentiate between the target broker and the broker which the sensors get their data, as I want that modifiability, but also I need to be sure that I have the features from rabbitMQ to post priority notifications.
+
+# Iteration 1
+The development of the first iteration was a success as most of the important features has been developed, what is missing is futher development on the model and making the trigger feature. To get an overview of the current build, plz compile './PUML Files/Iteration1ClassDiagram.puml'.
+
+# Iteration 2
+## Analysis
+A quick analysis and disucssion with supervisor, I will be working on 3 features for this iteration:
+ - Graphical User Interface to speed up development and testing, the idea is that I will have to create several models throughout this project and to speed up the process of creating the JSON file which determines the behaviour of REPS. It will also allow me in future to add the feature of an user viewing the nodes and their state in run time, this is for a future iteration.
+ - Better models to have a more complete project
+ - Trigger feature, as this is a must have feature.
+
+For the GUI I would like it to be able to run in a Linux environment because I believe REPS would likely be used in such an environment, but this is not a hard requirement. It would have to be able to read some of the struct files which I already have written. Therefore I will have to use a C# GUI library, I've found the following 4:
+ - WinUI : Moderen UI with GPU & DirectX support but can only be run in Windows environments, uses XML and a bit complex to implement. (I have no experience using WinUI)
+ - WindowsForms : More oldschool and simpler but also slower and not native support for Linux, to run it on Linux, a user would have use Wine. WindowsForms is easy to implement. (I have some experience using WindowsForms)
+ - MAUI : alot like WinUI, slower but has Linux support (I have no experience using MAUI)
+ - Blazor : Browser based and simpler to implement but not as optimised, but it can be run on linux. (I have moderate experience using Blazor)
+
+For the GUI I will be developing it in Blazor.
+A updated class diagram can be found './PUML Files/Iteration2ClassDiagramAnalysis.puml'

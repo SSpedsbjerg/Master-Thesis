@@ -1,0 +1,116 @@
+﻿@page "/json"
+@using REPS.Enums
+@using REPS.Structs
+@using System.Reflection
+@rendermode InteractiveWebAssembly
+
+
+
+<PageTitle>JSON</PageTitle>
+
+<h3>JSONConverter</h3>
+
+<button @onclick="AddSensorNode" class="btn btn-primary">Add Sensor Node</button>
+<button @onclick="AddEventNode" class="btn btn-primary">Add Event Node</button>
+
+<div>
+    @thisForm
+    @formData.Count
+</div>
+
+<button @onclick="ToJSON" class="btn">To JSON</button>
+
+@code {
+    private MarkupString thisForm = new("This:");
+    private string markup = "";
+
+    Type[] fieldsTypes = { typeof(SensorConfig), typeof(EventConfig), typeof(ModelConfig) };
+
+    private Dictionary<string, string> formData = new();
+
+    private void HandleInput(ChangeEventArgs args, string fieldName){
+        formData[fieldName] = args.Value?.ToString() ?? "NULL";
+    }
+
+    private void ToJSON(){
+
+    }
+
+    private void AddSensorNode() {
+        markup = "<div>Sensor:</div><div>" + CreateForm<SensorConfig>() + "</div>";
+        thisForm = new MarkupString(markup);
+        return;
+    }
+
+    private void AddEventNode(){
+        markup = "<div>Event:</div><div>" + CreateForm<EventConfig>() + "</div>";
+        thisForm = new MarkupString(markup);
+        return;
+    }
+
+    private string CreateForm<T>() {
+        List<(string, string)> values = GetTypes<T>();
+
+        foreach((string, string) value in values) {
+            if(value.Item1 != "") {
+                markup += $"<label> {value.Item1} : </label>";
+                @switch(value.Item2.ToLower()) {
+                    case "string":
+                    markup += $" <input type='text' id='{value.Item1}' @onchange='(e=>HandleInput(e, {value.Item1}))' />";
+                    break;
+                    case "int32":
+                    markup += $"<input type='number' id='{value.Item1}' />";
+                    break;
+                    case "float":
+                    markup += $"<input type='number' id='{value.Item1}' step='0.01' />";
+                    break;
+                    case "double":
+                    markup += $"<input type='number' id='{value.Item1} step='0.001' />";
+                    break;
+                    case "bool":
+                    markup += $"<input type='checkbox' id='{value.Item1}' />";
+                    break;
+                    case "supportedtypes":
+                    markup += "<select id='SupportType' name='SupportType'>";
+                    markup += "    <option value='BOOL'>Boolean</option>";
+                    markup += "    <option value='INT'>Integer</option>";
+                    markup += "    <option value='FLOAT'>Float</option>";
+                    markup += "    <option value='DOUBLE'>Double</option>";
+                    markup += "    <option value='STRING'>String</option>";
+                    markup += "</select>";
+                    break;
+                    case "list`1":
+                    markup += $"<input type='text' id='{value.Item1}' value='Comma seperated' />";
+                    break;
+                    default:
+                    markup += $"{value.Item2}";
+                    break;
+                }
+            }
+            markup += "<br />";
+        }
+        return markup;
+    }
+
+    public List<(string, string)> GetTypes<T>() {
+        List<(string, string)> types = new(); // I did not use dictionary to avoid the risk of macthing keys
+        if(typeof(T) == typeof(SensorConfig)) {
+            types.Clear();
+            foreach(FieldInfo? field in fieldsTypes[0].GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+                types.Add((field.Name, field.FieldType.Name));
+            }
+        }
+        else if(typeof(T) == typeof(EventConfig)) {
+            foreach(FieldInfo? field in fieldsTypes[1].GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+                types.Add((field.Name, field.FieldType.Name));
+            }
+        }
+        else if(typeof(T) == typeof(ModelConfig)) {
+            foreach(FieldInfo? field in fieldsTypes[2].GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+                types.Add((field.Name, field.FieldType.Name));
+            }
+        }
+        return types;
+    }
+
+}
