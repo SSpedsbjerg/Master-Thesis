@@ -57,6 +57,7 @@ namespace REPS {
                     SensorConfig sensorConfig = new SensorConfig();
                     sensorConfig.id = (int)sensorNode.GetValue("ID");
                     sensorConfig.host = sensorNode.GetValue("Host").ToString();
+                    sensorConfig.name = sensorNode.GetValue("Name").ToString();
                     switch(sensorNode.GetValue("SupportedType").ToString().ToLower()) {
                         case "int":
                         sensorConfig.type = Enums.SupportedTypes.INT;
@@ -111,6 +112,7 @@ namespace REPS {
                     eventConfig.modelConfig = ToModel(eventNode.Value<JObject>("Model"));
                     eventConfig.reportTopic = eventNode.GetValue("ReportTopic").ToString();
                     eventConfig.host = eventNode.GetValue("Host").ToString();
+                    eventConfig.name = eventNode.GetValue("Name").ToString();
                     eventConfigs.Add(eventConfig);
                 }
                 catch(InvalidCastException ICE) {
@@ -146,6 +148,8 @@ namespace REPS {
                 modelConfig.testvalue = (int)config.GetValue("TestValue");
                 modelConfig.TestParameterValues = config.Value<JArray>("TestParameterValues").ToObject<double[]>().ToList();
                 modelConfig.testTopic = config.GetValue("TestTopic").ToString();
+                modelConfig.triggerFunction = config.GetValue("TriggerFunction").ToString();
+                modelConfig.name = config.GetValue("Name").ToString();
                 switch(config.GetValue("Type").ToString().ToLower()) {
                     case "simple":
                         modelConfig.modelType = "simple";

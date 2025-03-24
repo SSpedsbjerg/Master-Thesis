@@ -98,8 +98,16 @@ From this point on, it will be going into the development phase based on the bac
 Here, weekly goals will be written down to document the work.
 | Week | Goals | Comments |
 | :--: | :---: | :------: |
-| 6 | Analysis of the system in forms of requirements and technology; modify or find a system which REPS can fully encompass | Unsure about the second goal, whether it is achieveable this week |
+| 6-7 | Analysis of the system in forms of requirements and technology; modify or find a system which REPS can fully encompass | Unsure about the second goal, whether it is achieveable this week |
+| 8-9 | First iteration, develop most of the MVP for the system achieve at minimum the basic parts of the system | This should be possible |
+| 10-11 | Develop a GUI aswell as the trigger function to achieve MVP | Bit unsure about the work with the GUI |
+| 13-14 | Develop a better model aswell as allowing for the dynamic learning for the system | This is without a doubt possible to achieve, the question is just the quality
+| 15-16 | | |
+| 17-18 | | |
 
+
+## Notes
+Week 10-11 has been delayed with one week due to sickness
 
 # Analysis Phase
 This is the start of the software development process, I will descripe any requirements found, the technology needed to fulfill these requirements and a general design of the system based on these requirements and technology.
@@ -175,3 +183,9 @@ For the GUI I would like it to be able to run in a Linux environment because I b
 
 For the GUI I will be developing it in Blazor.
 A updated class diagram can be found './PUML Files/Iteration2ClassDiagramAnalysis.puml'
+
+## Conclusion
+The development of the second iteration halted with one week due to sickness as well as I didn't finish the GUI and there is still bugs with the GUI which I will take a better look at it later if time allows.
+
+# Iteration 3
+This Iteration I expect to make a better model aswell as having it able to update its values based on events that occur and the ones which dosen't when it was expected.

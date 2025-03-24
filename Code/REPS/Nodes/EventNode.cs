@@ -110,7 +110,7 @@ namespace REPS.Nodes {
             else {
                 int i = 0;
                 foreach(string parameter in modelConfig.parameters) {
-                    model.UpdateValue(parameter, nodes[i].Output);
+                    model.UpdateValue(parameter, nodes[i].Output); //There is an error here which can eccour due to lack of nodes
                     i++;
                 }
                 if(await model.Process()) {

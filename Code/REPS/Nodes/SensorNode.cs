@@ -19,6 +19,7 @@ namespace REPS.Nodes {
         private Connection connection;
         private string preProcessedMessage;
         private bool overriddenMessage = false;
+        private string name;
 
         private object output; 
 
@@ -28,6 +29,7 @@ namespace REPS.Nodes {
             routingKey = config.routingKey;
             type = config.type;
             id = config.id;
+            name = config.name;
             Client client = new Client(host);
             connectionTask = client.CreateConnectionAsync(Enumerable.Repeat(topic, 1).ToArray(), routingKey);
         }
@@ -72,7 +74,9 @@ namespace REPS.Nodes {
             }
             Console.WriteLine($"SensorNode {id} have recieved {preProcessedMessage}");
             try {
-                this.output = Convert.GetValue(preProcessedMessage);
+                if(this.type == SupportedTypes.INT) {
+                    this.output = Convert.GetValue<int>(preProcessedMessage);
+                }                
             }
             catch(InvalidCastException ex) {
                 _ = Log.Error(ex, "SensorNode", "Attempted to cast message to correct type");

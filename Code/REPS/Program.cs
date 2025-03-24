@@ -82,7 +82,6 @@ public class Program {
         task = sensor.Process();
         task.Wait();
         Console.WriteLine(sensor.Output);
-        Console.ReadLine();
         
 
         start("C:/Users/simon/Documents/GitHub/Master-Thesis/Code/REPS/", "TestConfig.json");//real test starts here

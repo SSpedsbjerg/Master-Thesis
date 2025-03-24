@@ -1,0 +1,515 @@
+﻿@page "/json"
+@using REPS.Enums
+@using REPS.Structs
+@using System.Reflection
+@rendermode InteractiveWebAssembly
+@using Newtonsoft.Json.Linq;
+
+
+
+<PageTitle>JSON</PageTitle>
+
+<h3>JSONConverter</h3>
+
+<button @onclick="AddSensorNode" class="btn btn-primary">Add Sensor Node</button>
+<button @onclick="AddEventNode" class="btn btn-primary">Add Event Node</button>
+<button @onclick="AddModelConfig" class="btn btn-primary">Add Model Config</button>
+
+<form id="main">
+    @dynamicContent
+</form>
+
+
+<button @onclick="ToJSON" class="btn">To JSON</button>
+
+@code {
+
+    private RenderFragment? dynamicContent;
+
+    int sequence = 0;
+    int configNumber = 0;
+
+    private string markup = "";
+
+    Type[] fieldsTypes = { typeof(SensorConfig), typeof(EventConfig), typeof(ModelConfig) };
+
+    List<object> configs = new();
+
+    private Dictionary<Guid, (object, string, int)> formData = new();
+
+    private List<(string, string, Guid, int)> formsInfo = new List<(string, string, Guid, int)>();
+
+    private void HandleStringInput(ChangeEventArgs args, string fieldName, Guid guid, int id) {
+        formData[guid] = (args.Value?.ToString(), fieldName, id);
+    }
+
+    //The configID is used to get the correct key, the reason is to ensure that we do not grab a key which really belongs to another config
+    private SensorConfig ParseSensorConfig(SensorConfig config, int id) {
+        List<Guid> guis = ids[id];
+        Console.WriteLine("guis Count: " + guis.Count);
+        foreach(var idy in formData){
+            Console.WriteLine("Available Key in FormData:" + idy.Key);
+        }
+        foreach (var idy in ids[id]) {
+            Console.WriteLine("Available Key in sets:" + idy);
+        }
+        foreach(Guid guid in guis){
+            Console.WriteLine(guid);
+            if(formData.ContainsKey(guid)){
+                switch (formData[guid].Item2) {
+                    case "name":
+                        config.name = (string)formData[guid].Item1;
+                        Console.WriteLine("FOUND NAME");
+                        break;
+                }
+            }
+            else {
+                Console.WriteLine("Failed GUID:" + guid);
+            }
+        }
+        config.name = (string)formData.FirstOrDefault(e => e.Value.Item3 == id && e.Value.Item2.Contains("name")).Value.Item1;
+        config.host = (string)formData.FirstOrDefault(e => e.Value.Item3 == id && e.Value.Item2.Contains("host")).Value.Item1;
+        config.topic = (string)formData.FirstOrDefault(e => e.Value.Item3 == id && e.Value.Item2.Contains("topic")).Value.Item1;
+        //config.id = int.Parse((string)formData.FirstOrDefault(e => e.Value.Item3 == id & e.Value.Item2.Contains("id")).Value.Item1);
+        config.routingKey = (string)formData.FirstOrDefault(e => e.Value.Item3 == id & e.Value.Item2.Contains("routingKey")).Value.Item1;
+        Console.WriteLine($"The name is {config.name} & routingKey is {config.routingKey}");
+        return config;
+        foreach (var value in formData){
+            if (value.Value.Item2 == "FileName" || value.Value.Item2 == "NotificationBroker" || value.Value.Item2 == "NotificationTopic" || value.Value.Item2 == "ReportBroker") {
+                continue;
+            }
+            else {
+
+                if(value.Value.Item3 == id){
+
+
+                    foreach (FieldInfo? field in fieldsTypes[0].GetFields(BindingFlags.Public | BindingFlags.Instance)){
+
+                        try{
+                            field.SetValue(config, value.Value.Item1);
+                            Console.WriteLine($"Set {value.Value.Item1} : {id}");
+                            Console.WriteLine($"Sensor Config : {config.id}, {config.name}, {config.routingKey}");
+                        }
+                        catch (ArgumentException ae){
+                            try{
+                                field.SetValue(config, int.Parse(value.Value.Item1 as string));
+                            }
+                            catch (FormatException fe){
+                                if (field.Name.ToLower().Contains("string")){
+                                    throw new NotImplementedException();
+                                    //field.SetValue(configs[i], SupportedTypes)
+                                }
+                                else if (field.Name.ToLower().Contains("integer")){
+                                    field.SetValue(config, SupportedTypes.INT);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Console.WriteLine($"Sensor Config : {config.id}, {config.name}, {config.routingKey}");
+        return config;
+    }
+
+    private EventConfig ParseEventConfig(EventConfig config, int configID) {
+        /*
+        foreach (var value in formData) {
+        if (value.Value.Item2 == "FileName" || value.Value.Item2 == "NotificationBroker" || value.Value.Item2 == "NotificationTopic" || value.Value.Item2 == "ReportBroker") {
+                continue;
+                }
+                else {
+                string[] formatted = value.Key.Split("-");
+                if (int.Parse(formatted[1]) == configID) {
+                foreach (FieldInfo? field in fieldsTypes[1].GetFields(BindingFlags.Public | BindingFlags.Instance)){
+                                    if (field.Name.ToLower().Contains(formatted[0].ToLower())) {
+                                try {
+                                field.SetValue(config, value.Value);
+                                }
+                                catch (ArgumentException ae) {
+                                try {
+                                field.SetValue(config, int.Parse(value.Value.Item1 as string));
+                                }
+                                catch (FormatException fe) {
+                                if (field.Name.ToLower().Contains("string")) {
+                                throw new NotImplementedException();
+                                //field.SetValue(configs[i], SupportedTypes)
+                                }
+                                else if (field.Name.ToLower().Contains("integer")) {
+                                    field.SetValue(config, SupportedTypes.INT);
+    }
+    }
+    }
+    return config;
+    }
+    }
+    }
+    }
+    }*/
+        return config;
+    }
+
+    private ModelConfig ParseModelConfig(ModelConfig config, int configID){
+        /*
+        foreach (var value in formData) {
+        if (value.Key == "FileName" || value.Key == "NotificationBroker" || value.Key == "NotificationTopic" || value.Key == "ReportBroker") {
+                continue;
+                }
+                else {
+                string[] formatted = value.Key.Split("-");
+                if (int.Parse(formatted[1]) == configID) {
+                foreach (FieldInfo? field in fieldsTypes[2].GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+                                    if (field.Name.ToLower().Contains(formatted[0].ToLower())) {
+                                try {
+                                field.SetValue(config, value.Value);
+                                }
+                                catch (ArgumentException ae) {
+                                try {
+                                field.SetValue(config, int.Parse(value.Value.Item1 as string));
+                                }
+                                catch (FormatException fe) {
+                                if (field.Name.ToLower().Contains("string")) {
+                                throw new NotImplementedException();
+                                //field.SetValue(configs[i], SupportedTypes)
+                                }
+                                else if (field.Name.ToLower().Contains("integer")) {
+                                    field.SetValue(config, SupportedTypes.INT);
+    }
+    }
+    }
+    return config;
+    }
+    }
+    }
+    }
+    }*/
+        return config;
+    }
+
+    private EventConfig CombineEventWithModel(EventConfig config, List<ModelConfig> models){/*
+    int modelID = -1;
+    int model = -1;
+    ModelConfig finalModel = new ModelConfig();
+    foreach(var value in formData){
+    if(value.Key.Contains("modelConfig")){
+    modelID = int.Parse(value.Value.Item1 as string);
+    }
+    }
+    foreach(var value in formData){
+    if(value.Key.Contains("Model")){
+    if (modelID == int.Parse(value.Value.Item1 as string)){
+    model = int.Parse(value.Key.Split("-")[1]);
+    }
+    }
+    }
+    foreach(var value in formData){
+    if(value.Key.Contains("id")){
+    if(model == int.Parse(value.Key.Split("-")[1])){
+    finalModel = models.FirstOrDefault(e => e.id == model);
+    }
+    }
+    }
+    config.modelConfig = finalModel;*/
+        return config;
+    }
+
+    private void ToJSON() {
+        List<SensorConfig> sensors = new List<SensorConfig>();
+        List<EventConfig> events = new List<EventConfig>();
+        List<ModelConfig> models = new List<ModelConfig>();
+        //start of by creating each of the configs and add them to their correct type
+        for (int i = 0; i < configs.Count(); i++) {
+            if (configs[i] is SensorConfig) sensors.Add(ParseSensorConfig((SensorConfig)configs[i], i));
+            else if (configs[i] is EventConfig) events.Add(ParseEventConfig((EventConfig)configs[i], i));
+            else if (configs[i] is ModelConfig) models.Add(ParseModelConfig((ModelConfig)configs[i], i));
+        }
+
+        List<EventConfig> finalEvents = new List<EventConfig>();
+        foreach(EventConfig config in events){
+            finalEvents.Add(CombineEventWithModel(config, models));
+        }
+        events = finalEvents;
+
+        //To Json
+        JObject json = new JObject();
+        JObject info = new JObject();
+        /*
+        try {
+        info.Add("NotificationBroker", JToken.FromObject(formData["NotificationBroker"]));
+        info.Add("NotificationTopic", JToken.FromObject(formData["NotificationTopic"]));
+        info.Add("ReportBroker", JToken.FromObject(formData["ReportBroker"]));
+    }
+    catch(KeyNotFoundException knfe){
+        //TODO: Implement some warning about the missing fields
+    }*/
+
+        json["BrokerInfo"] = info;
+        JArray jsensors = new JArray();
+        JArray jevents = new JArray();
+        //JArray models = new JArray();
+        configs.Remove(configs.Count - 1);
+        foreach(object config in configs){
+            if(config is SensorConfig){
+                jsensors.Add(JObject.FromObject((SensorConfig)config));
+            }
+            else if(config is EventConfig){
+                jevents.Add(JObject.FromObject((EventConfig)config));
+            }
+            /*
+            else if(config is ModelConfig){
+                models.Add(JObject.FromObject((ModelConfig)config));
+            }*/
+            //Console.WriteLine(sensors.ToString());
+            json["SensorNodes"] = jsensors;
+            json["EventNodes"] = jevents;
+            //json["Models"] = models;
+        }
+        //Console.WriteLine(json.ToString());
+    }
+
+    private void AddSensorNode() {
+        dynamicContent += SensorBuilder();
+        configNumber++;
+    }
+    private void AddEventNode() {
+        dynamicContent += EventBuilder();
+        configNumber++;
+    }
+    private void AddModelConfig(){
+        dynamicContent += ModelBuilder();
+        configNumber++;
+    }
+
+    protected override void OnInitialized() {
+        dynamicContent += BrokerInfo();
+    }
+
+    private RenderFragment BrokerInfo() => builder => {
+        builder.OpenElement(sequence++, "form");
+        builder.AddAttribute(sequence++, "id", "BrokerInfoForm");
+
+        builder.OpenElement(sequence++, "input");
+        builder.AddAttribute(sequence++, "type", "text");
+        builder.AddAttribute(sequence++, "id", "FileName");
+        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, "FileName", new Guid(), -1)));
+        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(new Guid()));
+        builder.CloseElement();
+
+        builder.OpenElement(sequence++, "input");
+        builder.AddAttribute(sequence++, "type", "text");
+        builder.AddAttribute(sequence++, "id", "NotificationBroker");
+        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, "NotificationBroker", new Guid(), -1)));
+        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(new Guid()));
+        builder.CloseElement();
+
+        builder.OpenElement(sequence++, "input");
+        builder.AddAttribute(sequence++, "type", "text");
+        builder.AddAttribute(sequence++, "id", "NotificationTopic");
+        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, "NotificationTopic", new Guid(), -1)));
+        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(new Guid()));
+        builder.CloseElement();
+
+        builder.OpenElement(sequence++, "input");
+        builder.AddAttribute(sequence++, "type", "text");
+        builder.AddAttribute(sequence++, "id", "ReportBroker");
+        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, "ReportBroker", new Guid(), -1)));
+        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(new Guid()));
+        builder.CloseElement();
+
+        builder.CloseElement();
+    };
+
+    private RenderFragment SensorBuilder() => builder => {
+        builder.OpenElement(sequence++, "div");
+        builder.AddContent(sequence++, "Sensor: ");
+        builder.AddContent(sequence++, CreateForm<SensorConfig>());
+        builder.CloseElement();
+    };
+
+    private RenderFragment EventBuilder() => builder => {
+        builder.OpenElement(sequence++, "div");
+        builder.AddContent(sequence++, "Event: ");
+        builder.AddContent(sequence++, CreateForm<EventConfig>());
+        builder.CloseElement();
+    };
+
+    private RenderFragment ModelBuilder() => builder => {
+        builder.OpenElement(sequence++, "div");
+        builder.AddContent(sequence++, "Model: ");
+        builder.AddContent(sequence++, CreateForm<ModelConfig>());
+        builder.CloseElement();
+    };
+
+    private List<(string, string, Guid, int)> values = new List<(string, string, Guid, int)>();
+
+    private RenderFragment CreateForm<T>() => builder => {
+        Console.WriteLine("-----------");
+        foreach((string, string, Guid, int) value in values){
+            Console.WriteLine(value.Item1 + ":" + value.Item2 + ":" + value.Item3);
+        }
+        int i = values.Count;
+        values = GetTypes<T>();
+        formsInfo.AddRange(values);
+        bool model = false;
+        foreach (var value in values) {
+
+            if (typeof(T) == typeof(ModelConfig) && model == false) {
+                configs.Add(new ModelConfig());
+                builder.OpenElement(sequence++, "input");
+                builder.AddAttribute(sequence++, "type", "text");
+                builder.AddAttribute(sequence++, "id", value.Item3);
+                builder.AddAttribute(sequence++, "value", "Assign Model Config ID");
+                builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                builder.CloseElement();
+                model = true;
+            }
+            else if (typeof(T) == typeof(SensorConfig)){
+                configs.Add(new SensorConfig());
+            }
+            else if (typeof(T) == typeof(EventConfig)){
+                configs.Add(new EventConfig());
+            }
+            if (value.Item1 != "") {
+                builder.OpenElement(sequence++, "label");
+                builder.AddContent(sequence++, $" {value.Item1} : ");
+                builder.CloseElement();
+                switch (value.Item2.ToLower()) {
+                    case "string":
+                        builder.OpenElement(sequence++, "input");
+                        builder.AddAttribute(sequence++, "type", "text");
+                        builder.AddAttribute(sequence++, "id", value.Item3);
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(value.Item3));
+                        builder.CloseElement();
+                        break;
+
+                    case "int32":
+                        builder.OpenElement(sequence++, "input");
+                        builder.AddAttribute(sequence++, "type", "number");
+                        builder.AddAttribute(sequence++, "id", value.Item3);
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(value.Item3));
+                        builder.CloseElement();
+                        break;
+                    case "float":
+                        builder.OpenElement(sequence++, "input");
+                        builder.AddAttribute(sequence++, "type", "number");
+                        builder.AddAttribute(sequence++, "id", value.Item3);
+                        builder.AddAttribute(sequence++, "step", "0.01");
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(value.Item3));
+                        builder.CloseElement();
+                        break;
+                    case "double":
+                        builder.OpenElement(sequence++, "input");
+                        builder.AddAttribute(sequence++, "type", "number");
+                        builder.AddAttribute(sequence++, "id", value.Item3);
+                        builder.AddAttribute(sequence++, "step", "0.01");
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(value.Item3));
+                        builder.CloseElement();
+                        break;
+                    case "bool":
+                        builder.OpenElement(sequence++, "input");
+                        builder.AddAttribute(sequence++, "type", "checkbox");
+                        builder.AddAttribute(sequence++, "id", value.Item3);
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(value.Item3));
+                        builder.CloseElement();
+                        break;
+                    case "supportedtypes":
+                        builder.OpenElement(sequence++, "select");
+                        builder.AddAttribute(sequence++, "id", "SupportType");
+                        builder.AddAttribute(sequence++, "name", "SupportType");
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+
+                        builder.OpenElement(sequence++, "option");
+                        builder.AddAttribute(sequence++, "value", "BOOL");
+                        builder.AddContent(sequence++, "Boolean");
+                        builder.CloseElement();
+
+                        builder.OpenElement(sequence++, "option");
+                        builder.AddAttribute(sequence++, "value", "INT");
+                        builder.AddContent(sequence++, "Integer");
+                        builder.CloseElement();
+
+                        builder.OpenElement(sequence++, "option");
+                        builder.AddAttribute(sequence++, "value", "FLOAT");
+                        builder.AddContent(sequence++, "Float");
+                        builder.CloseElement();
+
+                        builder.OpenElement(sequence++, "option");
+                        builder.AddAttribute(sequence++, "value", "DOUBLE");
+                        builder.AddContent(sequence++, "Double");
+                        builder.CloseElement();
+
+                        builder.OpenElement(sequence++, "option");
+                        builder.AddAttribute(sequence++, "value", "STRING");
+                        builder.AddContent(sequence++, "String");
+                        builder.CloseElement();
+                        builder.CloseElement();
+                        break;
+                    case "list`1":
+                        builder.OpenElement(sequence++, "input");
+                        builder.AddAttribute(sequence++, "type", "text");
+                        builder.AddAttribute(sequence++, "id", value.Item3);
+                        builder.AddAttribute(sequence++, "value", "Comma seperated");
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(value.Item3));
+                        builder.CloseElement();
+                        break;
+                    case "modelconfig":
+                        builder.OpenElement(sequence++, "input");
+                        builder.AddAttribute(sequence++, "type", "number");
+                        builder.AddAttribute(sequence++, "id", value.Item3);
+                        builder.AddAttribute(sequence++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => HandleStringInput(e, value.Item1, value.Item3, value.Item4)));
+                        builder.AddAttribute(sequence++, "value", formData.GetValueOrDefault(value.Item3));
+                        builder.CloseElement();
+                        break;
+                    default:
+                        builder.OpenElement(sequence++, "div");
+                        builder.AddContent(sequence++, value.Item2);
+                        builder.CloseElement();
+                        break;
+                }
+            }
+        }
+    };
+    private Dictionary<int, List<Guid>> ids = new();
+    private int typeID = 0;
+
+    void AddGuidToKey(int key, Guid guid){
+        if (!ids.ContainsKey(key)) {
+            ids[key] = new List<Guid>();
+        }
+        ids[key].Add(guid);
+    }
+
+    public List<(string, string, Guid, int)> GetTypes<T>() {
+        List<(string, string, Guid, int)> types = new(); // I did not use dictionary to avoid the risk of macthing keys
+
+        if (typeof(T) == typeof(SensorConfig)) {
+            foreach (FieldInfo? field in fieldsTypes[0].GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+                Guid guid = Guid.NewGuid();
+
+                AddGuidToKey(configNumber, guid);
+                Console.WriteLine("Added GUID:" + guid);
+                types.Add((field.Name, field.FieldType.Name, guid, configNumber));
+            }
+        }
+        else if (typeof(T) == typeof(EventConfig)) {
+            foreach (FieldInfo? field in fieldsTypes[1].GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+                types.Add((field.Name, field.FieldType.Name, Guid.NewGuid(), configNumber));
+            }
+        }
+        else if (typeof(T) == typeof(ModelConfig)) {
+            foreach (FieldInfo? field in fieldsTypes[2].GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+                types.Add((field.Name, field.FieldType.Name, Guid.NewGuid(), configNumber));
+            }
+        }
+        Console.WriteLine(types[0].Item1);
+        //configNumber++;
+        Console.WriteLine(configNumber);
+        return types;
+    }
+}

@@ -84,7 +84,17 @@ namespace REPS.Connections {
 
 
         public async void Subscribe(string topic) {
-            QueueDeclareOk queueDeclareResult = await channel.QueueDeclareAsync();
+            QueueDeclareOk queueDeclareResult = null;
+            try {
+                queueDeclareResult = await channel.QueueDeclareAsync();
+            }
+            catch(NullReferenceException ex) {
+                _=Log.Error(ex, "Connection", "Did you forget to startup the docker");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Unable to create connection to the broker, did you remeber to start the broker up? If so, start broker and restart this program");
+                Console.ResetColor();
+                return;
+            }
             string queueName = queueDeclareResult.QueueName;
             //TODO: test running multiple topics
             await channel.QueueBindAsync(queue: queueName, exchange: topic, routingKey: routingKey);

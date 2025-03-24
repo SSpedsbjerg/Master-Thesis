@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace REPS.Structs {
     public struct ModelConfig {
         public int id;
+        public string name;
         public SupportedTypes type;
         public string function;
         public List<string> parameters; //the value is gathered from the node, the first value from node belongs to the first value of parameters and so on...
@@ -15,5 +16,6 @@ namespace REPS.Structs {
         public List<double> TestParameterValues;
         public string testTopic;
         public string modelType;
+        public string triggerFunction;
     }
 }
