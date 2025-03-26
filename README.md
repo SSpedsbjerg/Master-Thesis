@@ -194,3 +194,7 @@ This Iteration I expect to make a better model aswell as having it able to updat
 Here I will document everything which I find worth documenting from the development of the experiment, such as thoughts and progress.
 
 For future itteration, one should be able to add variables to the Model function so the model may accomedate changes in the system over a certain time periode, example a website which gains more popularity could trigger the function in a bruteforce attack model if not accomedated for.
+
+Add Support for text analysis
+
+I will be creating a simulator, which job is to make requests or anything else which could simulator a scenario. I will program it so it takes a seed and a time to live, so it will make the scenarioes the same way everytime within the given time frame.
