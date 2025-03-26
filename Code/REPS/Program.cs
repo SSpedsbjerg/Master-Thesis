@@ -62,28 +62,21 @@ public class Program {
         //await connection.CloseConnectionAsync();
     }
 
-    public static void Main(string[] args) {
+    static void Main(string[] args) {
+        DirectoryInfo info = new DirectoryInfo("./");
+        FileInfo[] files = info.GetFiles();
+        foreach(FileInfo file in files) {
+            Console.WriteLine(file.FullName);
+        }
         //start(args[0], args[1]);
-        Client client = new Client("localhost");
+        if(args.Length == 0) {
+            Console.WriteLine("No arguments given");
+            start("C:/Users/simon/Documents/GitHub/Master-Thesis/Code/REPS/", "TestConfig.json");
+        }
+        else {
+            Console.WriteLine($"Arguments: {args[0]} {args[1]}");
+            start(args[0], args[1]);
+        }
 
-        
-        SensorConfig sensorConfig = new SensorConfig();
-        sensorConfig.id = 0;
-        sensorConfig.topic = "test";
-        sensorConfig.host = "localhost";
-        sensorConfig.type = REPS.Enums.SupportedTypes.INT;
-        sensorConfig.routingKey = string.Empty;
-        SensorNode sensor = new SensorNode(sensorConfig);
-        Task task = sensor.Process();
-        task.Wait();
-        run(client).Wait();
-        Console.WriteLine("Waiting...");
-        Thread.Sleep(10000);
-        task = sensor.Process();
-        task.Wait();
-        Console.WriteLine(sensor.Output);
-        
-
-        start("C:/Users/simon/Documents/GitHub/Master-Thesis/Code/REPS/", "TestConfig.json");//real test starts here
     }
 }

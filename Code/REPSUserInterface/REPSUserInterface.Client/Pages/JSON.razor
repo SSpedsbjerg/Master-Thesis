@@ -482,6 +482,7 @@
         if (!ids.ContainsKey(key)) {
             ids[key] = new List<Guid>();
         }
+        if (fieldsTypes[0].GetFields(BindingFlags.Public | BindingFlags.Instance).Count() == ids[key].coun)
         ids[key].Add(guid);
     }
 

@@ -30,7 +30,7 @@
 		\IEEEauthorblockA{\textit{MMMI} \\
 			\textit{SDU}\\
 			Odense, Denmark \\
-			sispe20@student.sdu.dk}
+			{Simon dos Reis Spedsbjerg : sispe20@student.sdu.dk\\ {\small Advisor: Aslak Johansen : asjo@mmmi.sdu.dk}}}
 	}
 	
 	\maketitle
@@ -61,16 +61,22 @@
 			\item \textbf{Trigger} An event is triggered when the change of state occurs. When an event is triggered, it emits a boolean value.
 		\end{itemize}
 		
+	\section{Methods}
+		\subsection{Iterations}
+			For this project I have been using some SCRUM tactics, I wanted to keep each iteration within 2 weeks and analyse the state of the project after each iteration. I did this because I believe this is what would give me the best overview of this project and best allow for required change of requirements. The first day of each iteration will be used for writing, taking notes of thoughts about previous iteration. I will also update the class diagram to support the overview of the project as well as giving a feeling of progression. I have also found that a good overview of the system allows me to question some of the ways which I have implemented the system and change the implementation before it becomes a problem.
+		\subsection{Tools}
+			I will make use of tools that allows me to see the memory and CPU usage so I can discover problems or bottlenecks early. I will also develop/use tools to speed up testing, experimentation. I developed a \gls{gui} to speed up testing so I can have a varied set of cases easily deployed. I make use of docker for deployment of the experiments, docker will also allow me to record CPU, memory and network usage.
+			
 	\section{Implementation}
 		The \gls{reps} is split up in 2 parts, the system itself and then a \gls{gui}. 
 		\subsection{REPS}\label{Reps:Imp}
-			It starts of loading a config file, this file is in a form of JSON. JSON was used due to how easy it is to modify between tests as well as it being a type which can function with other systems such as the \gls{gui}. It will create the different nodes from this JSON config, these configs are structs containing all of the data for their respective nodes. A sensor node receives data from a sensor or through another communication method. The nodes makes use of publish subscribe pattern, and I used RabbitMQ for all communication due to it supporting priority queuing. A Event node retrieves the data from the sensor nodes to then use in their model, the output of this model is then made available to other nodes. A Event node also has a Trigger function which is used to determine severity of the ongoing event.
+			\gls{reps} starts of loading a config file, this file is in a form of JSON. JSON was used due to how easy it is to modify between tests as well as it being a type which can function with other systems such as the \gls{gui}. It will create the different nodes from this JSON config, these configs are structs containing all of the data for their respective nodes. A sensor node receives data from a sensor or through another communication method. It was determined that the nodes should make use of publish subscribe pattern as this fits with the dynamic nature of the nodes. I used RabbitMQ for all communication due to it supporting priority queuing. A Event node retrieves the data from the sensor nodes to then use in their model, the output of this model is then made available to other nodes. A Event node also has a Trigger function which is used to determine severity of the ongoing event.
 			
-			Each Node will make a connection to the MQTT broker with a specific topic which it either publishes to or retrieves data from.
+			Each Node will make a connection to the MQTT broker with a specific topic which it either publishes to or retrieves data from. An Event node publishes to the broker depending on the severity of the event and user preferences.
 			
 			
 			\subsubsection{Models}
-				Models uses C\# Rosalyns compiler to compile code during run time, this will allow for a custom functions to make determinations. Using Rosalyns compiler during runtime allow for full customization without have the need to implement own interpreter. This increases the complexity for the user as they have to write their function in a C\# syntax and it gives a risk of arbitrary code execution.
+				Models uses C\# Roslyns compiler to compile code during run time, this will allow for a custom functions to make determinations. Using Roslyns compiler during runtime allow for full customization without have the need to implement own interpreter. This increases the complexity for the user as they have to write their function in a C\# syntax and it gives a risk of arbitrary code execution.
 				
 				
 				Each Event node contains a model which it uses to determine a output, the model can vary between their complexity, a simple model can take a math function in a C\# syntax and generate an output from that.
@@ -83,14 +89,12 @@
 				Each node can run within its own threads, avoiding the problem of them having to wait for one another, the problem with this is the faster nodes may reuse data from other nodes which hasn't finished. This is accepted thinking that each data point is not necessary to determine events.
 	
 		\subsection{\gls{gui}}
-			The \gls{gui} is developed to help during testing and experimentation. It is just as much a development tool as it is part of the final product for the user. The \gls{gui} is developed in C\#'s blazor as it supports linux platform which other C\# platforms doesn't. It being C\# allows for the system to use the config files implemented in the REPS mentioned in section \ref{Reps:Imp}. As it is a development tool I do not intend to make updates to it when I update the REPS, so having it dynamically change depending on config files will ease development and testing.
+			The \gls{gui} is developed to help during testing and experimentation. It is just as much a development tool as it is part of the final product for the user. The \gls{gui} is developed in C\#'s blazor as it supports linux platform which other C\# platforms doesn't and it is the frameworks that I have most experience with. It being same language as the REPS allows for the system to use the config files implemented in the REPS mentioned in section \ref{Reps:Imp}. As it is a development tool I do not intend to make updates to it when I update the REPS, so having it dynamically change depending on config files will ease development and testing. The \gls{gui} will decrease the amount of misconfigurations and increase the speed of which new configurations can be made. The \gls{gui} will create a json file which can be used to launch a \gls{reps}.
 			
 			Blazor was also chosen for being component based, I can easily add new pages or reuse components if the need arises.
+			Other frameworks which could be used to develop a \gls{gui} is WinUI, WindowsForms \& Maui, the problem with all of these is I lack experience with them or they do not support Linux.
 			
 			%TODO: Hvis jeg formår at lave det, skriv om visning af noderne i grafisk her.
-	
-	\section{Lipsum}
-		\loremlines{50}
 	
 	\subsection{Authors and Affiliations}
 		\loremlines{15}

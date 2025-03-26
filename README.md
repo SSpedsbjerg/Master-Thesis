@@ -101,7 +101,7 @@ Here, weekly goals will be written down to document the work.
 | 6-7 | Analysis of the system in forms of requirements and technology; modify or find a system which REPS can fully encompass | Unsure about the second goal, whether it is achieveable this week |
 | 8-9 | First iteration, develop most of the MVP for the system achieve at minimum the basic parts of the system | This should be possible |
 | 10-11 | Develop a GUI aswell as the trigger function to achieve MVP | Bit unsure about the work with the GUI |
-| 13-14 | Develop a better model aswell as allowing for the dynamic learning for the system | This is without a doubt possible to achieve, the question is just the quality
+| 13-14 | Develop a better model aswell as allowing for the dynamic learning for the system, I also need to setup an environment where I can make tests | This is without a doubt possible to achieve, the question is just the quality
 | 15-16 | | |
 | 17-18 | | |
 
@@ -188,4 +188,9 @@ A updated class diagram can be found './PUML Files/Iteration2ClassDiagramAnalysi
 The development of the second iteration halted with one week due to sickness as well as I didn't finish the GUI and there is still bugs with the GUI which I will take a better look at it later if time allows.
 
 # Iteration 3
-This Iteration I expect to make a better model aswell as having it able to update its values based on events that occur and the ones which dosen't when it was expected.
+This Iteration I expect to make a better model aswell as having it able to update its values based on events that occur and the ones which dosen't when it was expected. I also want to set up the environment needed to start experiments. This is due to having the MVP ready and comparing this version with any future additions would.
+
+## Experiment
+Here I will document everything which I find worth documenting from the development of the experiment, such as thoughts and progress.
+
+For future itteration, one should be able to add variables to the Model function so the model may accomedate changes in the system over a certain time periode, example a website which gains more popularity could trigger the function in a bruteforce attack model if not accomedated for.

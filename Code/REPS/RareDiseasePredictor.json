@@ -1,0 +1,139 @@
+﻿{
+  "BrokerInfo": {
+    "NotificationBroker": "NULL",
+    "NotificationTopic": "Notification",
+    "ReportBroker": "NULL"
+  },
+
+  "SensorNodes": [
+    {
+      "ID": 0,
+      "Name": "LoginActivitySensor",
+      "SupportedType": "INT",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Topic": "LoginActivity"
+    },
+    {
+      "ID": 1,
+      "Name": "RequestAcitivitySensor",
+      "SupportedType": "INT",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Topic": "RequestActivity"
+    },
+    {
+      "ID": 2,
+      "Name": "AccountCreationActivitySensor",
+      "SupportedType": "INT",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Topic": "AccountCreationActivity"
+    },
+    {
+      "ID": 3,
+      "Name": "AccountCreationNameSensor",
+      "SupportedType": "STRING",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Topic": "AccountCreationName"
+    },
+    {
+      "ID": 4,
+      "Name": "AccountCreationEmailSensor",
+      "SupportedType": "STRING",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Topic": "AccountCreationEmail"
+    }
+  ],
+
+  "EventNodes": [
+    {
+      "ID": 0,
+      "Name": "BruteForceAttack",
+      "SensorNodes": [ 0 ],
+      "EventNodes": [],
+      "ReportTopic": "CyberAttack",
+      "SupportedType": "BOOLEAN",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Model": {
+        "ID": 0,
+        "Type": "Simple",
+        "Name": "BruteForceAttackModel",
+        "SupportedType": "BOOLEAN",
+        "Function": "a > 500",
+        "Parameters": [ "a" ],
+        "TestValue": 0,
+        "TestParameters": [ 0 ],
+        "TestTopic": "NONE",
+        "TriggerFunction": "if(value == true) return 3; else return 0;"
+      }
+    },
+    {
+      "ID": 1,
+      "Name": "DOSAttack",
+      "SensorNodes": [ 0, 1 ],
+      "EventNodes": [],
+      "SupoortedType": "BOOLEAN",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "ReportTopic": "CyberAttack",
+      "Model": {
+        "ID": 1,
+        "Type": "Simple",
+        "Name": "DOSAttackModel",
+        "SupportedType": "BOOLEAN",
+        "Function": "a > 500 || b > 500",
+        "Parameters": [ "a", "b" ],
+        "TestValue": 0,
+        "TestParameters": [ 0 ],
+        "TestTopic": "NONE",
+        "TriggerFunction": "if(value == true) return 3; else return 0;"
+      }
+    },
+    {
+      "ID": 2,
+      "Name": "BotCreation",
+      "SensorNodes": [ 2, 3, 4 ],
+      "EventNodes": [],
+      "SupportedType": "INT",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Model": {
+        "ID": 2,
+        "Type": "Simple",
+        "Name": "BotCreationModel",
+        "SupportedType": "INT",
+        "Function": "a",
+        "Parameters": [ "a" ],
+        "TestValue": 0,
+        "TestParameters": [ 0 ],
+        "TestTopic": "NONE",
+        "TriggerFunction": "if(value == 100) return 3; else return 0;"
+      }
+    },
+    {
+      "ID": 3,
+      "Name": "BotPrivligeEscalation",
+      "SensorNodes": [],
+      "EventNodes": [ 0, 2 ],
+      "SupportedType": "BOOLEAN",
+      "Host": "NULL",
+      "RoutingKey": 0,
+      "Model": {
+        "ID": 3,
+        "Type": "Simple",
+        "Name": "PrivligeEscalationModel",
+        "SupportedType": "BOOLEAN",
+        "Function": "if(a == true) b; else 0;",
+        "Parameters": [ "a", "b" ],
+        "TestValue": 0,
+        "TestParameters": [ 0 ],
+        "TestTopic": "NONE",
+        "TriggerFunction": "if(value > 1) return 3; else return 0;"
+      }
+    }
+  ]
+}

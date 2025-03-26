@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+   REPS:
+      build: .
+      ports:
+        - "57693:57693"
