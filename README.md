@@ -4,6 +4,7 @@ The readme contains work which is not in the final document but is used to show 
 
 This will be updated as the project progress'
 
+Terms:
 Relational Event Prediction System (REPS)
 
 I present REPS, a graph-based real-time analysis tool which developers themselves can design to fit their use case while making use of many state-of-the-art machine learning models. REPS operates by processing input data, which is likely will be sensor data which will pass through nodes called "event nodes". Each node processes inputs from one or more sources (a sensor or event node) and generates a result that can be used on one or multiple downstream nodes. This system enables	real-time decision-making across interconnected components.
@@ -198,3 +199,5 @@ For future itteration, one should be able to add variables to the Model function
 Add Support for text analysis
 
 I will be creating a simulator, which job is to make requests or anything else which could simulator a scenario. I will program it so it takes a seed and a time to live, so it will make the scenarioes the same way everytime within the given time frame.
+
+I've decided to use one of my other projects to run the test on, I will be modifying it abit so it sends data to the MQTT, and then from which the REPS will pick it up. The simulator will be targeting the side project

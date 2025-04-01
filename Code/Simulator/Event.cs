@@ -26,8 +26,9 @@ namespace Simulator {
         }
 
         public override async void Start() {
+            Console.WriteLine("Started WebSiteRequestEvent");
             for(int i = 0; i < numberOfAttacks; i++) {
-                _ = await client.GetStringAsync(this.site);
+                Console.WriteLine(await client.GetStringAsync(this.site));
             }
         }
     }
@@ -39,8 +40,10 @@ namespace Simulator {
         }
 
         public override async void Start() {
+            Console.WriteLine("Started WebSiteActionEvent");
             for(int i = 0; i < numberOfAttacks; i++) {
-                _ = await client.PostAsync(site, new StringContent(message.ToString()));
+                Console.WriteLine($"Sending message: {message.ToString()}");
+                Console.WriteLine((await client.PostAsync(site, new StringContent(message.ToString(), Encoding.UTF8, "application/json"))).ToString());
             }
         }
     }
@@ -52,6 +55,7 @@ namespace Simulator {
         }
 
         public override async void Start() {
+            Console.WriteLine("Started WebSiteLoginEvent");
             for(int j = 0; j < numberOfAttacks; j++) {
                 string name = "";
                 string password = "";
@@ -64,7 +68,8 @@ namespace Simulator {
                 }
                 this.message["username"] = name;
                 this.message["password"] = password;
-                _ = await client.PostAsync(site, new StringContent(message.ToString()));
+                Console.WriteLine($"Sending message: {message.ToString()}");
+                Console.WriteLine((await client.PostAsync(site + "/login", new StringContent(message.ToString(), Encoding.UTF8, "application/json"))).ToString());
             }
         }
     }
@@ -82,9 +87,9 @@ namespace Simulator {
             emails = new string[maximumRequests];
             passwords = new string[maximumRequests];
 
-            for(int j = 0; maximumRequests > 0; j++) {
+            for(int j = 0; maximumRequests > j; j++) {
                 int nameLength = random.Next(10) + 2;
-                for(int i = 0; nameLength > 0; i++) {
+                for(int i = 0; nameLength > i; i++) {
                     names[j] += letters[random.Next(letters.Length)];
                 }
                 for(int i = 0; i < 20; i++) {
@@ -95,12 +100,18 @@ namespace Simulator {
         }
 
         public override async void Start() {
+            Console.WriteLine("Started WebSiteBotCreationEvent");
             for(int i = 0; i < this.numberOfAttacks; i++) {
                 this.message["username"] = names[i];
                 this.message["email"] = emails[i];
                 this.message["password"] = passwords[i];
-
-                _ = await client.PostAsync(site, new StringContent(message.ToString()));
+                Console.WriteLine($"Sending message: {message.ToString()}");
+                try {
+                    Console.WriteLine((await client.PostAsync(site + "/Register", new StringContent(message.ToString(), Encoding.UTF8, "application/json"))).ToString());
+                }
+                catch(HttpRequestException e) {
+                    Console.WriteLine(e.ToString());
+                }
             }
         }
     }

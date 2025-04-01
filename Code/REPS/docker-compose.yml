@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-   REPS:
+   reps:
       build: .
       ports:
         - "57693:57693"
