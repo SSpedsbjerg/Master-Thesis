@@ -17,5 +17,7 @@ namespace REPS.Structs {
         public string testTopic;
         public string modelType;
         public string triggerFunction;
+        public float updatePercentage; //between 0 and 1
+        public float QuantileCutoff; //should be between 0 and 0.5
     }
 }

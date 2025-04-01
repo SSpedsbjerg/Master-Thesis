@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 using System.Reflection;
 
 namespace REPS.Models {
-    class SimpleModel : IModel {
+    public class SimpleModel : IModel {
         int id;
-        SupportedTypes type;
-        object output;
-        string function;
-        string triggerFunction = "if(value > 40) return 3; else if (value > 30) return 2; else if (value > 20) return 1; else if (value > 10) return 0;";
+        protected SupportedTypes type;
+        protected object output;
+        protected string function;
+        protected string triggerFunction = "if(value > 40) return 3; else if (value > 30) return 2; else if (value > 20) return 1; else if (value > 10) return 0;";
         public List<string> parametersNames;
-        private object testValue;
-        private List<double> testParameterValues;
-        private string testTopic;
+        protected object testValue;
+        protected List<double> testParameterValues;
+        protected string testTopic;
         public Dictionary<string, object> parameters;
-        private string name;
+        protected string name;
 
 
         public SimpleModel(ModelConfig config) {
@@ -50,7 +50,7 @@ namespace REPS.Models {
             parameters[parameter] = value;
         }
 
-        private async Task<Func<List<int>, int>> CompileFunctionAsync(string function, List<string> parameters) {
+        protected virtual async Task<Func<List<int>, int>> CompileFunctionAsync(string function, List<string> parameters) {
             if(type == SupportedTypes.INT) {
                 string code = $@"
                 using System;
@@ -89,7 +89,7 @@ namespace REPS.Models {
         }
 
         //I would make use of Enums.State, but I think it is better to convert it later
-        private async Task<Func<object, int>> CompileTrigger(string function) {
+        protected virtual async Task<Func<object[], object>> CompileTrigger(string function) {
             if(type == SupportedTypes.INT) {
                 string code = $@"
                 using System;           
@@ -125,12 +125,12 @@ namespace REPS.Models {
                 Assembly assembly = Assembly.Load(ms.ToArray());
                 Type type = assembly.GetType("DynamicTrigger");
                 MethodInfo method = type.GetMethod("Compute");
-                return args => (int)method.Invoke(null, new object[] { args });
+                return args => (int)method.Invoke(null, args);
             }
             return null;
         }
 
-        public async Task<bool> Process() {
+        public virtual async Task<bool> Process() {
             var _func = CompileFunctionAsync(function, parametersNames);
             var _trigger = CompileTrigger(triggerFunction);
             if(type == SupportedTypes.INT) {
@@ -140,7 +140,7 @@ namespace REPS.Models {
                 Console.WriteLine("Output is :" + output.ToString());
                 var trigger = await _trigger;
                 try {
-                    State state = (State)trigger(output);
+                    State state = (State)trigger(new object[]{ output });
                     if(state == State.Stable) {
                         Console.WriteLine("Stable");
                     }
