@@ -1,4 +1,4 @@
-$containerName = "rarediseasepredicter-backend-1"  # Udskift med dit container-navn
+$containerName = "REPS"
 $csvFile = "test0.csv"
 
 if (!(Test-Path $csvFile)) {

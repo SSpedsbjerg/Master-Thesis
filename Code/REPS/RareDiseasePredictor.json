@@ -1,8 +1,8 @@
 ﻿{
   "BrokerInfo": {
-    "NotificationBroker": "NULL",
+    "NotificationBroker": "localhost",
     "NotificationTopic": "Notification",
-    "ReportBroker": "NULL"
+    "ReportBroker": "localhost"
   },
 
   "SensorNodes": [
@@ -10,7 +10,7 @@
       "ID": 0,
       "Name": "LoginActivitySensor",
       "SupportedType": "INT",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Topic": "LoginActivity"
     },
@@ -18,7 +18,7 @@
       "ID": 1,
       "Name": "RequestAcitivitySensor",
       "SupportedType": "INT",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Topic": "RequestActivity"
     },
@@ -26,7 +26,7 @@
       "ID": 2,
       "Name": "AccountCreationActivitySensor",
       "SupportedType": "INT",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Topic": "AccountCreationActivity"
     },
@@ -34,7 +34,7 @@
       "ID": 3,
       "Name": "AccountCreationNameSensor",
       "SupportedType": "STRING",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Topic": "AccountCreationName"
     },
@@ -42,7 +42,7 @@
       "ID": 4,
       "Name": "AccountCreationEmailSensor",
       "SupportedType": "STRING",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Topic": "AccountCreationEmail"
     }
@@ -56,7 +56,7 @@
       "EventNodes": [],
       "ReportTopic": "CyberAttack",
       "SupportedType": "BOOLEAN",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Model": {
         "ID": 0,
@@ -77,7 +77,7 @@
       "SensorNodes": [ 0, 1 ],
       "EventNodes": [],
       "SupoortedType": "BOOLEAN",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "ReportTopic": "CyberAttack",
       "Model": {
@@ -99,7 +99,7 @@
       "SensorNodes": [ 2, 3, 4 ],
       "EventNodes": [],
       "SupportedType": "INT",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Model": {
         "ID": 2,
@@ -120,7 +120,7 @@
       "SensorNodes": [],
       "EventNodes": [ 0, 2 ],
       "SupportedType": "BOOLEAN",
-      "Host": "NULL",
+      "Host": "localhost",
       "RoutingKey": 0,
       "Model": {
         "ID": 3,
