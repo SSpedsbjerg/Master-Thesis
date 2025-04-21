@@ -168,17 +168,20 @@ namespace REPS {
                     modelConfig.testTopic = config.GetValue("TestTopic").ToString();
                 }
                 catch(Exception e) { Console.WriteLine("TestVariables not defined"); }
-                modelConfig.triggerFunction = config.GetValue("TriggerFunction").ToString();
+                
                 modelConfig.name = config.GetValue("Name").ToString();
                 JToken? value;
                 switch(config.GetValue("Type").ToString().ToLower()) {
                     case "simple":
                         modelConfig.modelType = "simple";
                         modelConfig.function = config.GetValue("Function").ToString();
+                        modelConfig.triggerFunction = config.GetValue("TriggerFunction").ToString();
                         return modelConfig;
+
                     case "adaptiv":
                         modelConfig.modelType = "adaptiv";
                         modelConfig.function = config.GetValue("Function").ToString();
+                        modelConfig.triggerFunction = config.GetValue("TriggerFunction").ToString();
                         config.TryGetValue("UpdatePercentage", out value);
                         if(value is null) {
                             throw new Exception("Missing UpdatePercentage in config");
@@ -190,6 +193,7 @@ namespace REPS {
                         }
                         else modelConfig.QuantileCutoff = float.Parse(value.ToString());
                         return modelConfig;
+
                     case "svm":
                         modelConfig.modelType = "svm";
                         config.TryGetValue("DebugMode", out value);
@@ -197,6 +201,21 @@ namespace REPS {
                             modelConfig.debugMode = false;
                         else modelConfig.debugMode = bool.Parse(value.ToString());
                         return modelConfig;
+
+                    case "forest":
+                        modelConfig.modelType = "forest";
+                        config.TryGetValue("DebugMode", out value);
+                        if(value is null)
+                            modelConfig.debugMode = false;
+                        else
+                            modelConfig.debugMode = bool.Parse(value.ToString());
+                        config.TryGetValue("NumberOfTrees", out value);
+                        if(value is null) {
+                            modelConfig.numberOfTrees = 0;
+                            throw new Exception("Invalid or missing implementation of trees declartion, 'NumberOfTrees': number");
+                        } else modelConfig.numberOfTrees = int.Parse(value.ToString());
+                        return modelConfig;
+
                     default:
                         _ = Log.Error(new Exception("Unable to determine model type"), "JSONInterpreter", "");
                         return modelConfig;

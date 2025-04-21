@@ -36,7 +36,8 @@
       "RoutingKey" :  0,
       "Model": {
         "ID": 0,
-        "Type": "svm",
+        "Type": "forest",
+        "NumberOfTrees": 50,
         "DebugMode": true,
         "Name": "Name",
         "SupportedType": "INT",

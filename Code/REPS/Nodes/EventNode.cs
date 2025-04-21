@@ -73,21 +73,25 @@ namespace REPS.Nodes {
             this.connection = await connectionTask;
             this.initiated = true;
             connectionTask.Dispose();
-            if(this.modelType == "simple") {
-                model = new SimpleModel(config: modelConfig);
+            switch (this.modelType) {
+                case "simple":
+                    model = new SimpleModel(config: modelConfig);
+                    break;
+                case "adaptiv":
+                    model = new AdaptivModel(config: modelConfig);
+                    break;
+                case "svm":
+                    model = new SupportVectorMachineModel(config: modelConfig);
+                    break;
+                case "forest":
+                    model = new RandomForestModel(config: modelConfig);
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Event Nodes ModelType is invalid or non existent");
+                    Console.ResetColor();
+                    break;
             }
-            else if(this.modelType == "adaptiv") {
-                model = new AdaptivModel(config: modelConfig);
-            }
-            else if(this.modelType == "svm") {
-                model = new SupportVectorMachineModel(config: modelConfig);
-            }
-            else {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Event Nodes ModelType is invalid or non existent");
-                Console.ResetColor();
-            }
-
 
             if(await model.Test() | (await model.Process()) == State.Stable) {
                 _ = connection.SendMessageAsync(message: output as string ?? output?.ToString() ?? "null"); //if output is already a string type we avoid casting and the problems that follow that, if it is not a string we cast it, as well as this 

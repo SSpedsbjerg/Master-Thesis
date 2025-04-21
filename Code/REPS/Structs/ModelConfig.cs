@@ -20,6 +20,6 @@ namespace REPS.Structs {
         public float? updatePercentage; //between 0 and 1
         public float? QuantileCutoff; //should be between 0 and 0.5
         public bool? debugMode;
-
+        public int? numberOfTrees;
     }
 }
