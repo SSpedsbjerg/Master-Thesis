@@ -12,8 +12,6 @@ using REPS.Enums;
 //TODO: Update to support more than 2 data vectors
 namespace REPS.Models.SVM {
     public class SupportVectorMachineModel : MachineLearningsModel {
-        Data[] trainingsData = { };
-        MLContext context;
         TransformerChain<BinaryPredictionTransformer<Microsoft.ML.Trainers.LinearBinaryModelParameters>>? model = null;
         PredictionEngine<Data, Prediction>? predictionEngine = null;
 

@@ -14,7 +14,6 @@ namespace REPS.Models {
     class RandomForestModel : MachineLearningsModel {
         TransformerChain<BinaryPredictionTransformer<FastForestBinaryModelParameters>>? model = null;
         PredictionEngine<Data, Prediction>? predictionEngine = null;
-        private int numberOfTrees = 0;
         FastForestBinaryTrainer.Options options;
         public RandomForestModel(ModelConfig config) : base(config) {
             context = new MLContext();

@@ -104,11 +104,11 @@ Here, weekly goals will be written down to document the work.
 | 10-11 | Develop a GUI aswell as the trigger function to achieve MVP | Bit unsure about the work with the GUI |
 | 13-14 | Develop a better model aswell as allowing for the dynamic learning for the system, I also need to setup an environment where I can make tests | This is without a doubt possible to achieve, the question is just the quality
 | 15 | Finish the work from previous itteration, all of it is nearly finished. The problem I ran into and still working on is tech-debt from the first iteration. | I will also move to do reflections and meetings more often |
-| 16 | | |
-| 17 | | |
+| 16 | Took some days of for easter break, still intend to setup a SVM and the general foundation for future machinelearning models | |
+| 17 | Finish SVM, make it support Random Forest and neural networks | |
 | 18 | | |
-| 19 | | |
-| 20 | | |
+| 19 | Fix only minor issues | We're getting closed to the deadline here |
+| 20 | Fix only minor issues | We're getting closed to the deadline here |
 
 ## Notes
 Week 10-11 has been delayed with one week due to sickness
@@ -210,3 +210,9 @@ Didn't get to finish, but is nearly done, I expect that it can be finished withi
 
 # Iteration 4
 Fix tech-debt and deploy features planned from previous iteration.
+
+## Conclusion
+Fixed the tech debt problems, the problem lied mostly in the compilation of the input function, this was due to the function in the JSON being incorrect as it would create casting problems. It now also support more varied type of input and outputs rather than just integers.
+
+# Iteration 5
+Add machine learning support to the program.
