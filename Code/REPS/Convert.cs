@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace REPS {
     public static class Convert {
+        private static Dictionary<SupportedTypes, string> supportedTypesString = new Dictionary<SupportedTypes, string>(); 
         private static void HandleException(Exception exception) {
             if(exception is InvalidCastException) {
                 StackFrame sf = new StackTrace().GetFrame(1);
@@ -30,6 +31,17 @@ namespace REPS {
                 Console.WriteLine(exception.ToString());
                 Console.ResetColor();
             }
+        }
+
+        public static void Init() {
+            supportedTypesString.Add(SupportedTypes.BOOLEAN, "bool");
+            supportedTypesString.Add(SupportedTypes.INT, "int");
+            supportedTypesString.Add(SupportedTypes.STRING, "string");
+        }
+
+        public static string GetStringType(SupportedTypes type) {
+            if (supportedTypesString.ContainsKey(type)) return supportedTypesString[type];
+            else return "object";
         }
 
         public static T GetValue<T>(object input) {

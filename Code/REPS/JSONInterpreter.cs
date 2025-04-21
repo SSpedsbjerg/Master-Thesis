@@ -59,9 +59,15 @@ namespace REPS {
                     sensorConfig.host = sensorNode.GetValue("Host").ToString();
                     sensorConfig.name = sensorNode.GetValue("Name").ToString();
                     switch(sensorNode.GetValue("SupportedType").ToString().ToLower()) {
+                        case "boolean":
+                            sensorConfig.type = Enums.SupportedTypes.BOOLEAN;
+                            break;
                         case "int":
-                        sensorConfig.type = Enums.SupportedTypes.INT;
-                        break;
+                            sensorConfig.type = Enums.SupportedTypes.INT;
+                            break;
+                        case "string":
+                            sensorConfig.type= Enums.SupportedTypes.STRING;
+                            break;
                         default:
                         _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
                         break;
@@ -100,8 +106,14 @@ namespace REPS {
                     EventConfig eventConfig = new EventConfig();
                     eventConfig.id = (int)eventNode.GetValue("ID");
                     switch(eventNode.GetValue("SupportedType").ToString().ToLower()) {
+                        case "boolean":
+                            eventConfig.type = Enums.SupportedTypes.BOOLEAN;
+                            break;
                         case "int":
                             eventConfig.type = Enums.SupportedTypes.INT;
+                            break;
+                        case "string":
+                            eventConfig.type = Enums.SupportedTypes.STRING;
                             break;
                         default:
                             _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
@@ -136,23 +148,54 @@ namespace REPS {
                 ModelConfig modelConfig = new ModelConfig();
                 modelConfig.id = (int)config.GetValue("ID");
                 switch(config.GetValue("SupportedType").ToString().ToLower()) {
+                    case "boolean":
+                        modelConfig.type = Enums.SupportedTypes.BOOLEAN;
+                        break;
                     case "int":
-                    modelConfig.type = Enums.SupportedTypes.INT;
-                    break;
+                        modelConfig.type = Enums.SupportedTypes.INT;
+                        break;
+                    case "string":
+                        modelConfig.type= Enums.SupportedTypes.STRING;
+                        break;
                     default:
                     _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
                     break;
                 }
-                modelConfig.function = config.GetValue("Function").ToString();
                 modelConfig.parameters = config.Value<JArray>("Parameters").ToObject<string[]>().ToList();
-                modelConfig.testvalue = (int)config.GetValue("TestValue");
-                modelConfig.TestParameterValues = config.Value<JArray>("TestParameterValues").ToObject<double[]>().ToList();
-                modelConfig.testTopic = config.GetValue("TestTopic").ToString();
+                try {
+                    modelConfig.testvalue = (int)config.GetValue("TestValue");
+                    modelConfig.TestParameterValues = config.Value<JArray>("TestParameterValues").ToObject<double[]>().ToList();
+                    modelConfig.testTopic = config.GetValue("TestTopic").ToString();
+                }
+                catch(Exception e) { Console.WriteLine("TestVariables not defined"); }
                 modelConfig.triggerFunction = config.GetValue("TriggerFunction").ToString();
                 modelConfig.name = config.GetValue("Name").ToString();
+                JToken? value;
                 switch(config.GetValue("Type").ToString().ToLower()) {
                     case "simple":
                         modelConfig.modelType = "simple";
+                        modelConfig.function = config.GetValue("Function").ToString();
+                        return modelConfig;
+                    case "adaptiv":
+                        modelConfig.modelType = "adaptiv";
+                        modelConfig.function = config.GetValue("Function").ToString();
+                        config.TryGetValue("UpdatePercentage", out value);
+                        if(value is null) {
+                            throw new Exception("Missing UpdatePercentage in config");
+                        }
+                        else modelConfig.updatePercentage = float.Parse(value.ToString());
+                        config.TryGetValue("QuantileCutoff", out value);
+                        if(value is null) {
+                            throw new Exception("Missing QuantileCutoff in config");
+                        }
+                        else modelConfig.QuantileCutoff = float.Parse(value.ToString());
+                        return modelConfig;
+                    case "svm":
+                        modelConfig.modelType = "svm";
+                        config.TryGetValue("DebugMode", out value);
+                        if(value is null)
+                            modelConfig.debugMode = false;
+                        else modelConfig.debugMode = bool.Parse(value.ToString());
                         return modelConfig;
                     default:
                         _ = Log.Error(new Exception("Unable to determine model type"), "JSONInterpreter", "");
@@ -174,7 +217,7 @@ namespace REPS {
             return new ModelConfig();
         }
 
-        public bool init() {
+        public bool Init() {
             try {
                 StreamReader reader = new StreamReader(path + fileName);
                 string json = reader.ReadToEnd();

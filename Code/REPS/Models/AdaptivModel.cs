@@ -20,66 +20,26 @@ namespace REPS.Models {
         protected float QuantileCutoff;
 
         public AdaptivModel(ModelConfig config) : base(config) {
-            this.updatePercentage = config.updatePercentage;
-            if(updatePercentage > 1 || updatePercentage <= 0) {
-                throw new ArgumentException($"UpdatePercentage should be between 0 and 1, you gave {updatePercentage}");
-            }
-            this.QuantileCutoff = config.QuantileCutoff;
-            if(QuantileCutoff >= 0.5 || QuantileCutoff <= 0) {
-                throw new ArgumentException($"QuantileCutoff should be less than 0.5 and more than 0, you gave {QuantileCutoff}");
-            }
-        }
-
-        protected override async Task<Func<List<int>, int>> CompileFunctionAsync(string function, List<string> parameters) {
-            if(this.type == SupportedTypes.INT) {
-                string code = $@"
-                using System;
-
-                public class DynamicFunction {{
-                    public static int Compute({string.Join(", ", parameters.Select(p => $"int {p}"))}) {{
-                        {function}
-                        return value;
-                    }}
-                }}";
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
-                MetadataReference[] references = {
-                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location)
-                    };
-                CSharpCompilation compilation = CSharpCompilation.Create(
-                    "DynamicModel",
-                    new[] { syntaxTree },
-                    references,
-                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                    );
-                using var ms = new System.IO.MemoryStream();
-                var result = compilation.Emit(ms);
-
-                if(!result.Success) {
-                    throw new Exception("Compilation failed!");
+            if(!(config.updatePercentage is null || config.QuantileCutoff is null)) {
+                this.updatePercentage = (float)config.updatePercentage;
+                if(updatePercentage > 1 || updatePercentage <= 0) {
+                    throw new ArgumentException($"UpdatePercentage should be between 0 and 1, you gave {updatePercentage}");
                 }
-
-                ms.Seek(0, System.IO.SeekOrigin.Begin);
-                Assembly assembly = Assembly.Load(ms.ToArray());
-                Type type = assembly.GetType("DynamicFunction");
-                MethodInfo method = type.GetMethod("Compute");
-#pragma warning disable CS8605 // Unboxing a possibly null value.
-                return await Task.FromResult((List<int> values) =>
-                    (int)method.Invoke(null, new object[] { values }
-                    ));
-#pragma warning restore CS8605 // Unboxing a possibly null value.
+                this.QuantileCutoff = (float)config.QuantileCutoff;
+                if(QuantileCutoff >= 0.5 || QuantileCutoff <= 0) {
+                    throw new ArgumentException($"QuantileCutoff should be less than 0.5 and more than 0, you gave {QuantileCutoff}");
+                }
             }
-            return null;
         }
 
-        protected override async Task<Func<object[], object>> CompileTrigger(string function) {
+        protected override async Task<Func<object[], object?>> CompileTrigger(string function) {
+            string guid = Guid.NewGuid().ToString("N");
             string code = $@"
                 using System;           
 
-                public class DynamicTrigger {{
-                    public static int Compute(object output, float lower, float upper){{
-                        int value = (int)output;
+                public class DynamicTrigger_{guid} {{
+                    public static bool Compute_{guid}(object output, float lower, float upper){{
+                        int value = System.Convert.ToInt32(output);
                         {function}
                         bool triggered = false;
                         if(lower > value || upper < value) triggered = true;
@@ -87,29 +47,7 @@ namespace REPS.Models {
                         }}
                     }}
                 ";
-            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
-            MetadataReference[] references = {
-                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location)
-                    };
-            CSharpCompilation compilation = CSharpCompilation.Create(
-                "DynamicTrigger",
-                new[] { syntaxTree },
-                references,
-                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                );
-            using var ms = new System.IO.MemoryStream();
-            var result = compilation.Emit(ms);
-
-            if(!result.Success) {
-                throw new Exception("Compilation failed!");
-            }
-
-            ms.Seek(0, System.IO.SeekOrigin.Begin);
-            Assembly assembly = Assembly.Load(ms.ToArray());
-            Type type = assembly.GetType("DynamicTrigger");
-            MethodInfo method = type.GetMethod("Compute");
+            MethodInfo method = MethodTriggerConstructor(code, guid);
             return await Task.FromResult(((object[]a) => method.Invoke(null, new object[] { a[0], a[1], a[2] })));
         }
 
@@ -129,11 +67,12 @@ namespace REPS.Models {
             }
         }
 
-        public override async Task<bool> Process() {
-            var _func = CompileFunctionAsync(function, parametersNames);
+        public override async Task<State> Process() {
+            var _func = CompileFunctionAsync(function, parameters.Keys.ToArray());
             var _trigger = CompileTrigger(this.triggerFunction);
+            State state = State.Stable;
             if(type == SupportedTypes.INT) {
-                List<int> inputs = parameters.Values.Cast<int>().ToList(); //get the values from the dictionary
+                object[] inputs = (object[])parameters.Values.Cast<object>(); //get the values from the dictionary
                 var func = await _func;
                 output = func(inputs);
                 Console.WriteLine("Output is :" + output.ToString());
@@ -141,21 +80,21 @@ namespace REPS.Models {
                 try {
                     object eval = trigger([output, triggerLowerEqulibrium, triggerUpperEqulibrium]);
                     if((bool)eval) {
-                        Console.WriteLine("Triggered"); //TODO: rewrite to message the mqtt broker
+                        state = State.Stable;
                     }
                     else {
-                        Console.WriteLine("Not Triggered"); //TODO: rewrite to message the mqtt broker
+                        state = State.Unstable;
                     }
                 }
                 catch(Exception ex) {
                     Console.WriteLine($"Error: {ex.Message}");
-
+                    state = State.Unknown;
                 }
 
-                return true;
+                return state;
             }
             else
-                return false;
+                return state;
         }
     }
 }

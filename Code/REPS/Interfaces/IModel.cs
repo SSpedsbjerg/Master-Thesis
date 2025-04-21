@@ -1,4 +1,5 @@
-﻿using System;
+﻿using REPS.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,9 +16,9 @@ namespace REPS.Interfaces {
             get;
         }
 
-        Task<bool> Process();
+        Task<State> Process();
         Task<bool> Test();
 
-        public bool UpdateValue(string valueID, object value);
+        public bool UpdateValue(string valueID, INode node);
     }
 }

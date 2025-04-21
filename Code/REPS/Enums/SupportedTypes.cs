@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace REPS.Enums {
     public enum SupportedTypes {
-        INT
+        BOOLEAN,
+        INT,
+        STRING
     }
 }

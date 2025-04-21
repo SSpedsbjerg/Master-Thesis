@@ -103,9 +103,12 @@ Here, weekly goals will be written down to document the work.
 | 8-9 | First iteration, develop most of the MVP for the system achieve at minimum the basic parts of the system | This should be possible |
 | 10-11 | Develop a GUI aswell as the trigger function to achieve MVP | Bit unsure about the work with the GUI |
 | 13-14 | Develop a better model aswell as allowing for the dynamic learning for the system, I also need to setup an environment where I can make tests | This is without a doubt possible to achieve, the question is just the quality
-| 15-16 | | |
-| 17-18 | | |
-
+| 15 | Finish the work from previous itteration, all of it is nearly finished. The problem I ran into and still working on is tech-debt from the first iteration. | I will also move to do reflections and meetings more often |
+| 16 | | |
+| 17 | | |
+| 18 | | |
+| 19 | | |
+| 20 | | |
 
 ## Notes
 Week 10-11 has been delayed with one week due to sickness
@@ -201,3 +204,9 @@ Add Support for text analysis
 I will be creating a simulator, which job is to make requests or anything else which could simulator a scenario. I will program it so it takes a seed and a time to live, so it will make the scenarioes the same way everytime within the given time frame.
 
 I've decided to use one of my other projects to run the test on, I will be modifying it abit so it sends data to the MQTT, and then from which the REPS will pick it up. The simulator will be targeting the side project
+
+## Conclusion
+Didn't get to finish, but is nearly done, I expect that it can be finished within a few days, so next iteration will be spend doing that.
+
+# Iteration 4
+Fix tech-debt and deploy features planned from previous iteration.

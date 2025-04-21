@@ -34,6 +34,10 @@ namespace REPS.Nodes {
             connectionTask = client.CreateConnectionAsync(Enumerable.Repeat(topic, 1).ToArray(), routingKey);
         }
 
+        public override string ToString() {
+            return $"SensorNode: id:{id} name:{name} type:{type}";
+        }
+
         public void OverrideMessage(string message) {
             this.preProcessedMessage = message;
             this.overriddenMessage = true;

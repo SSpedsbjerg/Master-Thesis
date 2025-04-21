@@ -36,10 +36,11 @@
       "RoutingKey" :  0,
       "Model": {
         "ID": 0,
-        "Type": "Simple",
+        "Type": "svm",
+        "DebugMode": true,
         "Name": "Name",
         "SupportedType": "INT",
-        "Function": "a*b",
+        "Function": "return System.Convert.ToInt32(a)*System.Convert.ToInt32(b)",
         "Parameters": [ "a", "b" ],
         "TestValue": 5,
         "TestParameterValues": [ 2, 3 ],

@@ -2,6 +2,7 @@
 using REPS.Enums;
 using REPS.Interfaces;
 using REPS.Models;
+using REPS.Models.SVM;
 using REPS.Structs;
 using System;
 using System.Collections.Generic;
@@ -35,22 +36,13 @@ namespace REPS.Nodes {
             this.type = config.type;
             this.modelConfig = config.modelConfig;
             this.reportTopic = config.reportTopic;
-            this.modelType = config.modelType;
+            this.modelType = config.modelConfig.modelType;
             this.sensorNodeIDs = config.sensorNodeIDs;
             this.eventNodeIDs = config.eventNodeIDs;
             this.client = new Client(config.host);
             this.nodes = new List<INode>();
             string[] topics = { this.reportTopic };
             this.connectionTask = client.CreateConnectionAsync(topics, config.routingKey);
-            switch(config.modelConfig.modelType.ToLower()) {
-                case "simple":
-                    this.modelType = "simple";
-                    break;
-                default:
-                    _ = Log.Error(new Exception("Invalid Modeltype"), "EventNode", "Constructor");
-                    this.modelType = "simple";
-                    break;
-            }
         }
         public object Output {
             get => output;
@@ -59,6 +51,10 @@ namespace REPS.Nodes {
 
         public int ID {
             get => id;
+        }
+
+        public override string ToString() {
+            return $"Eventnode: id:{id} name:{name} type{type}";
         }
 
         public bool AssignNodes(List<INode> nodes) {
@@ -71,54 +67,78 @@ namespace REPS.Nodes {
             return true;
         }
 
-        private async Task<bool> initAsync() {
+        private async Task<bool> InitAsync() {
+            if(this.initiated)
+                return true;
             this.connection = await connectionTask;
             this.initiated = true;
             connectionTask.Dispose();
             if(this.modelType == "simple") {
                 model = new SimpleModel(config: modelConfig);
-                if(await model.Test() | await model.Process()) {
-                    _ = connection.SendMessageAsync(message: output as string ?? output?.ToString() ?? "null"); //if output is already a string type we avoid casting and the problems that follow that, if it is not a string we cast it, as well as this 
-                }
-                else {
-                    _ = connection.SendMessageAsync($"EventNode {id}, {name}, is unable to launch its model");
-                    _ = Log.Warning($"EventNode {id}, {name}, is unable to launch its model", "EventNode", "initAsync");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"EventNode {id}, {name}, is unable to launch its model");
-                    Console.ResetColor();
-                }
+            }
+            else if(this.modelType == "adaptiv") {
+                model = new AdaptivModel(config: modelConfig);
+            }
+            else if(this.modelType == "svm") {
+                model = new SupportVectorMachineModel(config: modelConfig);
             }
             else {
-                Console.ForegroundColor= ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Event Nodes ModelType is invalid or non existent");
                 Console.ResetColor();
             }
+
+
+            if(await model.Test() | (await model.Process()) == State.Stable) {
+                _ = connection.SendMessageAsync(message: output as string ?? output?.ToString() ?? "null"); //if output is already a string type we avoid casting and the problems that follow that, if it is not a string we cast it, as well as this 
+            }
+            else {
+                _ = connection.SendMessageAsync($"EventNode {id}, {name}, is unable to launch its model");
+                _ = Log.Warning($"EventNode {id}, {name}, is unable to launch its model", "EventNode", "initAsync");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"EventNode {id}, {name}, is unable to launch its model");
+                Console.ResetColor();
+            }
+
             foreach(int id in sensorNodeIDs) {
                 this.nodes.Add(NodeController.GetNodeByID<SensorNode>(id));
             }
             foreach(int id in eventNodeIDs) {
                 this.nodes.Add(NodeController.GetNodeByID<EventNode>(id));
             }
-            
+            foreach(string parameter in modelConfig.parameters) {
+                model.UpdateValue(parameter, null);//avoid that parameters are not declared before usage
+            }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Created Eventnode: {this.name}");
+            Console.ResetColor();
             return true;
         }
 
         public async Task Process() {
             if(!initiated) {
-                _ = await initAsync();
+                bool success = await InitAsync();
+                if(success) {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Created Eventnode: {this.name}");
+                    Console.ResetColor();
+                }
+                else {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Could not create Eventnode: {this.name}");
+                    Console.ResetColor();
+                }
             }
             else {
                 int i = 0;
                 foreach(string parameter in modelConfig.parameters) {
-                    model.UpdateValue(parameter, nodes[i].Output); //There is an error here which can eccour due to lack of nodes
+                    if(parameter == null || parameter.Length == 0) {
+                        Console.WriteLine(modelConfig.name);
+                    }
+                    model.UpdateValue(parameter, nodes[i]); //There is an error here which can eccour due to lack of nodes; Also, there seems to be cases where it does not add the parameter
                     i++;
                 }
-                if(await model.Process()) {
-                    return;
-                }
-                else {
-                    _ = connection.SendMessageAsync($"EventNode {id}, {name}, failed to process");
-                }
+                this.state = await model.Process();
             }
 
             if(state == State.Stable) {

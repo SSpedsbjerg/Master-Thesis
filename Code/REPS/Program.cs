@@ -11,7 +11,8 @@ public class Program {
 
     private static void start(string path, string filename) {
         interpreter = new JSONInterpreter(path, filename);
-        interpreter.init();
+        interpreter.Init();
+        interpreter.updateRate = REPS.Enums.UpdateRate.Sequencial;
         nodes = interpreter.GetNodes();
         NodeController.init(nodes);
         while(true) {
@@ -24,7 +25,6 @@ public class Program {
         
         foreach(INode node in nodes) {
             if(node.GetType() == typeof(SensorNode)) {
-                ((SensorNode)node).OverrideMessage($"{i++}");
                 Task sensorProcess = node.Process();
                 tasks.Add(sensorProcess);
             }
@@ -54,15 +54,8 @@ public class Program {
         }
     }
 
-    public static async Task run(Client client) {
-        string[] topics = { "test" };
-        Connection connection = await client.CreateConnectionAsync(topics, string.Empty);
-        var succes = connection.SendMessageAsync("Hello World");
-        Console.WriteLine(succes);
-        //await connection.CloseConnectionAsync();
-    }
-
     static void Main(string[] args) {
+        REPS.Convert.Init();
         DirectoryInfo info = new DirectoryInfo("./");
         FileInfo[] files = info.GetFiles();
         foreach(FileInfo file in files) {
@@ -71,6 +64,7 @@ public class Program {
         //start(args[0], args[1]);
         if(args.Length == 0) {
             Console.WriteLine("No arguments given");
+            //start("C:/Users/simon/Documents/GitHub/Master-Thesis/Code/REPS/", "RareDiseasePredictor.json");
             start("C:/Users/simon/Documents/GitHub/Master-Thesis/Code/REPS/", "TestConfig.json");
         }
         else {

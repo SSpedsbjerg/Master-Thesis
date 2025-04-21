@@ -63,12 +63,12 @@
         "Type": "Simple",
         "Name": "BruteForceAttackModel",
         "SupportedType": "BOOLEAN",
-        "Function": "a > 500",
+        "Function": "return (int)a > 500",
         "Parameters": [ "a" ],
         "TestValue": 0,
-        "TestParameters": [ 0 ],
+        "TestParameterValues": [ 0 ],
         "TestTopic": "NONE",
-        "TriggerFunction": "if(value == true) return 3; else return 0;"
+        "TriggerFunction": "if(System.Convert.ToBoolean(output) == true) return 3; else return 0;"
       }
     },
     {
@@ -76,7 +76,7 @@
       "Name": "DOSAttack",
       "SensorNodes": [ 0, 1 ],
       "EventNodes": [],
-      "SupoortedType": "BOOLEAN",
+      "SupportedType": "BOOLEAN",
       "Host": "localhost",
       "RoutingKey": 0,
       "ReportTopic": "CyberAttack",
@@ -85,12 +85,12 @@
         "Type": "Simple",
         "Name": "DOSAttackModel",
         "SupportedType": "BOOLEAN",
-        "Function": "a > 500 || b > 500",
+        "Function": "return System.Convert.ToInt32(a) > 500 || System.Convert.ToInt32(b) > 500",
         "Parameters": [ "a", "b" ],
         "TestValue": 0,
-        "TestParameters": [ 0 ],
+        "TestParameterValues": [ 0 ],
         "TestTopic": "NONE",
-        "TriggerFunction": "if(value == true) return 3; else return 0;"
+        "TriggerFunction": "if(System.Convert.ToBoolean(output) == true) return 3; else return 0;"
       }
     },
     {
@@ -100,18 +100,19 @@
       "EventNodes": [],
       "SupportedType": "INT",
       "Host": "localhost",
+      "ReportTopic": "BotCreation",
       "RoutingKey": 0,
       "Model": {
         "ID": 2,
         "Type": "Simple",
         "Name": "BotCreationModel",
         "SupportedType": "INT",
-        "Function": "a",
+        "Function": "return System.Convert.ToInt32(a)",
         "Parameters": [ "a" ],
         "TestValue": 0,
-        "TestParameters": [ 0 ],
+        "TestParameterValues": [ 0 ],
         "TestTopic": "NONE",
-        "TriggerFunction": "if(value == 100) return 3; else return 0;"
+        "TriggerFunction": "if(System.Convert.ToInt32(output) == 100) return 3; else return 0;"
       }
     },
     {
@@ -119,20 +120,21 @@
       "Name": "BotPrivligeEscalation",
       "SensorNodes": [],
       "EventNodes": [ 0, 2 ],
-      "SupportedType": "BOOLEAN",
+      "SupportedType": "INT",
       "Host": "localhost",
+      "ReportTopic": "BotPrivligeEscalation",
       "RoutingKey": 0,
       "Model": {
         "ID": 3,
         "Type": "Simple",
         "Name": "PrivligeEscalationModel",
-        "SupportedType": "BOOLEAN",
-        "Function": "if(a == true) b; else 0;",
+        "SupportedType": "INT",
+        "Function": "if(System.Convert.ToInt32(a) == 0) a = System.Convert.ToBoolean(a); if((bool)a == true) return System.Convert.ToInt32(b); else return 0;",
         "Parameters": [ "a", "b" ],
         "TestValue": 0,
-        "TestParameters": [ 0 ],
+        "TestParameterValues": [ 0 ],
         "TestTopic": "NONE",
-        "TriggerFunction": "if(value > 1) return 3; else return 0;"
+        "TriggerFunction": "if(System.Convert.ToInt32(output) > 1) return 3; else return 0;"
       }
     }
   ]

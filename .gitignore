@@ -356,3 +356,9 @@ paket-files/
 __pycache__/
 *.pyc
 Experiments/*.csv
+*.bbl
+*.blg
+*.toc
+*.aux
+Writing/MainProject/document.run.xml
+Writing/MainProject/document-blx.bib
