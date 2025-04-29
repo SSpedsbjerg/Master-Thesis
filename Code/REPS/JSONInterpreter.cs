@@ -44,6 +44,7 @@ namespace REPS {
 
 
         private List<SensorConfig> ReadSensorConfigs(JObject config) {
+            
             List<SensorConfig> sensorConfigs = new List<SensorConfig>();
             JArray sensorNodes = null;
             try {
@@ -62,12 +63,22 @@ namespace REPS {
                         case "boolean":
                             sensorConfig.type = Enums.SupportedTypes.BOOLEAN;
                             break;
+
                         case "int":
                             sensorConfig.type = Enums.SupportedTypes.INT;
                             break;
+
                         case "string":
                             sensorConfig.type= Enums.SupportedTypes.STRING;
+                            JToken? isUsernameResult;
+                            config.TryGetValue("isUsername", out isUsernameResult);
+                            if(isUsernameResult is not null) {
+                                sensorConfig.isUsername = bool.Parse(isUsernameResult.ToString());
+                            }
+                            else
+                                sensorConfig.isUsername = false;
                             break;
+
                         default:
                         _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
                         break;
@@ -145,18 +156,27 @@ namespace REPS {
 
         private ModelConfig ToModel(JObject config) {
             try {
+                JToken? isUsernameResult;
                 ModelConfig modelConfig = new ModelConfig();
                 modelConfig.id = (int)config.GetValue("ID");
                 switch(config.GetValue("SupportedType").ToString().ToLower()) {
                     case "boolean":
                         modelConfig.type = Enums.SupportedTypes.BOOLEAN;
                         break;
+
                     case "int":
                         modelConfig.type = Enums.SupportedTypes.INT;
                         break;
+
                     case "string":
                         modelConfig.type= Enums.SupportedTypes.STRING;
+                        config.TryGetValue("isUsername", out isUsernameResult);
+                        if(isUsernameResult is not null) {
+                            modelConfig.isUsername = bool.Parse(isUsernameResult.ToString());
+                        }
+                        else modelConfig.isUsername = false;
                         break;
+
                     default:
                     _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
                     break;

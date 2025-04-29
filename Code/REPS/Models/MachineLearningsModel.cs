@@ -25,12 +25,14 @@ namespace REPS.Models {
     }
 
     public abstract class MachineLearningsModel : AdaptivModel {
+        protected bool? hasUsernames = false;
         protected bool? debugMode = false;
         protected Data[] dataSet;
         protected MLContext context;
         public MachineLearningsModel(ModelConfig config) : base(config) {
-
+            hasUsernames = config.isUsername;
         }
+
         public virtual void SetData(Data[] data) {
             this.dataSet = data;
             Train(this.dataSet);

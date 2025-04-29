@@ -13,5 +13,6 @@ namespace REPS.Structs {
         public string routingKey;
         public string topic;
         public SupportedTypes type;
+        public bool? isUsername;
     }
 }

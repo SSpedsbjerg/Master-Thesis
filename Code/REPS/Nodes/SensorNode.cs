@@ -1,5 +1,6 @@
 ﻿using REPS.Connections;
 using REPS.Enums;
+using REPS.ExtractionModels;
 using REPS.Interfaces;
 using REPS.Structs;
 using System;
@@ -20,6 +21,7 @@ namespace REPS.Nodes {
         private string preProcessedMessage;
         private bool overriddenMessage = false;
         private string name;
+        private bool? hasUsername;
 
         private object output; 
 
@@ -30,6 +32,7 @@ namespace REPS.Nodes {
             type = config.type;
             id = config.id;
             name = config.name;
+            hasUsername = config.isUsername;
             Client client = new Client(host);
             connectionTask = client.CreateConnectionAsync(Enumerable.Repeat(topic, 1).ToArray(), routingKey);
         }
@@ -80,7 +83,14 @@ namespace REPS.Nodes {
             try {
                 if(this.type == SupportedTypes.INT) {
                     this.output = Convert.GetValue<int>(preProcessedMessage);
-                }                
+                }
+                else if(this.type == SupportedTypes.STRING) {
+                    this.output = Convert.GetValue<string>(preProcessedMessage);
+                    UsernameExtraction.Usernames.Add(preProcessedMessage);
+                }
+                else if(this.type == SupportedTypes.BOOLEAN) {
+                    this.output = Convert.GetValue<bool>(preProcessedMessage);
+                }
             }
             catch(InvalidCastException ex) {
                 _ = Log.Error(ex, "SensorNode", "Attempted to cast message to correct type");

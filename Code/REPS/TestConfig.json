@@ -21,6 +21,14 @@
       "Host": "localhost",
       "RoutingKey": 0,
       "Topic": "first"
+    },
+    {
+      "ID": 2,
+      "Name": "third",
+      "SupportedType": "STRING",
+      "Host": "localhost",
+      "RoutingKey": 0,
+      "Topic": "third"
     }
   ],
 

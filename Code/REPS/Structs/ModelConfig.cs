@@ -21,5 +21,6 @@ namespace REPS.Structs {
         public float? QuantileCutoff; //should be between 0 and 0.5
         public bool? debugMode;
         public int? numberOfTrees;
+        public bool? isUsername;
     }
 }

@@ -3,6 +3,7 @@ using REPS.Connections;
 using REPS.Interfaces;
 using REPS.Nodes;
 using REPS.Structs;
+using REPS.ExtractionModels;
 
 public class Program {
     private static List<INode> nodes = new List<INode> ();
@@ -54,7 +55,10 @@ public class Program {
         }
     }
 
+
+
     static void Main(string[] args) {
+        Console.CancelKeyPress += new ConsoleCancelEventHandler(UsernameExtraction.SaveDataOnClose);
         REPS.Convert.Init();
         DirectoryInfo info = new DirectoryInfo("./");
         FileInfo[] files = info.GetFiles();
