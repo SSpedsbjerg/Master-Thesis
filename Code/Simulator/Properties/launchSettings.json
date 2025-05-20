@@ -2,7 +2,7 @@
   "profiles": {
     "Simulator": {
       "commandName": "Project",
-      "commandLineArgs": "4564654\r\n5\r\nhttp://127.0.0.1:57693"
+      "commandLineArgs": "452455 1 http://192.168.1.20:8080"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker"

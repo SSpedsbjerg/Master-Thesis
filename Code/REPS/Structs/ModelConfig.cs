@@ -22,5 +22,7 @@ namespace REPS.Structs {
         public bool? debugMode;
         public int? numberOfTrees;
         public bool? isUsername;
+        public string? trainingsDataLocation;
+        public float? timedTrigger;
     }
 }

@@ -52,7 +52,7 @@ namespace REPS.Models {
         }
 
         protected virtual void UpdateEqulibrium<T>((object, TimeOnly)[] values) {
-            if(this.type == SupportedTypes.INT) {
+            if(typeof(T) == typeof(int)) {
                 int cutOffPoint = (int)(this.values.Count * updatePercentage);
                 TimeOnly timeCutoff = this.values[cutOffPoint].Item2;
                 (object, TimeOnly)[]? toBeReplaced = ((object, TimeOnly)[])this.values.Where(data => data.Item2 > timeCutoff);
@@ -63,8 +63,9 @@ namespace REPS.Models {
                 }
                 this.values.AddRange(values);
                 this.triggerLowerEqulibrium = this.values[(int)(this.values.Count * QuantileCutoff)].Item1;
-                this.triggerLowerEqulibrium = this.values[(int)(this.values.Count * (1-QuantileCutoff))].Item1;
+                this.triggerUpperEqulibrium = this.values[(int)(this.values.Count * (1 - QuantileCutoff))].Item1;
             }
+            //implement the rest of the updates
         }
 
         public override async Task<State> Process() {

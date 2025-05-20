@@ -11,6 +11,7 @@ backend=bibtex
 \usepackage{array}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{listings}
 
 %CodeColours
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -18,7 +19,6 @@ backend=bibtex
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 \definecolor{codeblue}{rgb}{0,0,0.80}
-
 
 
 %Codestyle
@@ -44,6 +44,44 @@ backend=bibtex
 }
 %Set style
 \lstset{style=mystyle}
+
+%------------------------JSON------------------------%
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+	basicstyle=\normalfont\ttfamily,
+	numbers=left,
+	numberstyle=\scriptsize,
+	stepnumber=1,
+	numbersep=8pt,
+	showstringspaces=false,
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{background},
+	literate=
+	*{0}{{{\color{numb}0}}}{1}
+	{1}{{{\color{numb}1}}}{1}
+	{2}{{{\color{numb}2}}}{1}
+	{3}{{{\color{numb}3}}}{1}
+	{4}{{{\color{numb}4}}}{1}
+	{5}{{{\color{numb}5}}}{1}
+	{6}{{{\color{numb}6}}}{1}
+	{7}{{{\color{numb}7}}}{1}
+	{8}{{{\color{numb}8}}}{1}
+	{9}{{{\color{numb}9}}}{1}
+	{:}{{{\color{punct}{:}}}}{1}
+	{,}{{{\color{punct}{,}}}}{1}
+	{\{}{{{\color{delim}{\{}}}}{1}
+	{\}}{{{\color{delim}{\}}}}}{1}
+	{[}{{{\color{delim}{[}}}}{1}
+	{]}{{{\color{delim}{]}}}}{1},
+}
+%------------------------JSON------------------------%
+
+\renewcommand{\lstlistingname}{Code Snippet}% Listing -> Algorithm
 
 %Images and similar
 \usepackage{graphicx}
@@ -98,16 +136,35 @@ backend=bibtex
 	
 	\include{methods}
 	
-	\section{Requirements}
-	
-	\section{Related Work}
-	
-	\section{Analysis}
-	
+	\section{Related Work}\label{sec:RelatedWork}
+	TODO: formulere noterne om til at passe i dette afsnit
+
 	\include{implementation}
 	
 	\section{Evaluation}
-	
+		Attempting to evaluate \gls{reps}
+		\subsection{Research Question 0 : How should a \gls{reps} be constructed}
+			A \gls{reps} should be constructed based on this projects experience along side other patterns and software engineering values/tactics. Separation of concerns is a value which comes with a \gls{reps} by its design. Nodes only retrieves their data and do not publish to other nodes, this allows for easier adding and removing of new nodes.
+			
+			The using a human readable configuration file allows a user to make quick changes, during and in between runtimes. The patterns design allows for simple setup and interaction with the system while keeping the time to learn the system lower than many other similar solutions.
+			
+		\subsection{Research Question 1 : What advantages and disadvantages does \gls{reps} have compared to other solutions?}
+			To answer this question I will go through a set of similar solutions, I will take basis on my experience and what data I can gather to prove my point.
+			
+			Complexity in this technology:
+			\begin{itemize}
+				\item Complexity in setup : The amount of technology required to use the \gls{reps} pattern is, a communication platform, something that follows the MQTT standard fits well. Some form of object notation such as JSON is required for for the user to make a config. This can be moved to a website instead or other \gls{gui}. The required technology knowledge to use this pattern is therefore small.
+				\item Configuration overhead : The current implementation of the \gls{reps} pattern uses 30 keywords (Appendix \ref{sec:Keywords}) with 3 which is not necessary for the pattern but made for optimisation or tech debt reasons. One way to determine how easy it is to get into the pattern is to make a simple function, akin to a "Hello World". As \gls{reps} is not made to generate data but make determinations, I will give an example of addition with two values (Code Snippet \ref{lst:simpleAddition}).
+
+For a more in depth example, a simple service has been made to detect whether someone is creating a large set of bot accounts to a website.
+\begin{center}
+	\begin{figure}[!h]
+		\includegraphics[width=.6\textwidth]{Images/BotCreation}
+		\caption{node setup to determine whether an attacker is creating a large amount of bots}
+	\end{figure}
+\end{center}
+				The setup determine whether an event of a new individual user is a bot (Event ID: 1), an event of a large influx of new users (Event ID: 0) and combined whether a potential event of a large amount of bots being created (Event ID: 2).
+			\end{itemize}
 	\section{Discussion}
 	\subsection{Hindsight}
 	In this section, a overview of the good tactics and the tactics which a developer should avoid when making \gls{reps} or similar systems.
@@ -115,7 +172,7 @@ backend=bibtex
 	\subsubsection{Good tactics}
 		Setting up a proper development environment for this project is crucial, developing for docker in mind allowed for separation from the developers environment and test \gls{reps} more efficiently. The thread count for this program has lead to unforeseen problems and deploying on docker lowered the risk of my system having any affect on the test. Deploying on docker also allowed me greater deal of control of memory and version control.
 		
-		For this project, it was planned more than the developer would usually do for a project, and yet tech-debt is a larger problem than expected. This is attributed to two things, the C\# Roslyn library, as requirements changed throughout this project, the method to compile the user specified function needed many changes and test to verify the behaviour. Planning around this
+		For this project, it was planned more than the developer would usually do for a project, and yet tech-debt is a larger problem than expected. This is attributed to two things, the C\# Roslyn library, as requirements changed throughout this project, the method to compile the user specified function needed many changes and test to verify the behaviour.
 		
 		Making a \gls{json} interpreter for this project has boosted development speed and most likely has overcome the initial time-cost which it cost to make it.
 		
@@ -126,8 +183,76 @@ backend=bibtex
 	
 		A logging tool was used which were developed in previous projects to help debugging. This tools was not developed to avoid race conditions which just caused more exceptions than it logged.
 	
+	\subsubsection{Other findings}
+		I discovered that compiling an event node function in run time requires more resources as well as taken a large time to implement. While using a \gls{ml} model has more use cases and is often times depending on the model, cheaper in memory usage.
+	
 	\newpage
 	\section{Conclusion}
+	
+	\newpage
+	\section{Appendix}
+	\subsection{Number of keywords}\label{sec:Keywords}
+	This is a list of all of the keywords which \gls{reps} uses
+	\begin{enumerate}
+		\item BrokerInfo : An object containing required info for the broker
+		\begin{enumerate}
+			\item NotificationBroker : Where \gls{reps} should notify the user on an event
+			\item NotificationTopic : What topic it should notify
+			\item ReportBroker : Where it should report to
+		\end{enumerate}
+		\item SensorNodes : An object containing all sensor nodes
+		\begin{enumerate}
+			\item ID : used to refer back to it
+			\item Name : Used to make error handling easier
+			\item Host
+			\item RoutingKey
+			\item Topic : What topic to report to
+		\end{enumerate}
+		\item EventNodes : An object containing all event nodes
+		\begin{enumerate}
+			\item ID
+			\item Name
+			\item SensorNodes : An array of id for all sensor nodes which this node should retrieve data from
+			\item EventNodes : An array of id for all event nodes which this node should retrieve data from
+			\item ReportTopic
+			\item SupportedType : Determination of what type the node should work as, this keyword can in theory be removed but exists still due to tech debt.
+			\item Host
+			\item RoutingKey
+			\item Model : An object containing all information for the model
+			\begin{enumerate}
+				\item ID
+				\item Type : What model type it is, this follows with their own keywords
+				\item isUsername : if you handle usernames or other similar text based input, you can use this. This is not needed for the pattern or a user, but I found it useful for optimisation purposes.
+				\item DebugMode : puts the model into debug mode
+				\begin{enumerate}
+					\item simpel : A model which the user can define themself with code
+					\begin{itemize}
+						\item Function : A function in C\# which will be compiled in runtime so the user can define themself.
+						\item TriggerFunction : A logical function to determine when a event is triggered and should
+					\end{itemize}
+					\item timed : A model to find a average amount of unique
+					\begin{itemize}
+						\item TimedTrigger : A value limit to determine whether a event has happend or not
+					\end{itemize}
+					\item Adaptiv : A model that can change its trigger limit depending on its usecase
+					\begin{itemize}
+						\item QuantileCutoff
+						\item UpdatePercentage
+						\item It also shares it the same keywords as simpel
+					\end{itemize}
+					\item svm : Support Vector Machine model
+					\begin{itemize}
+						\item TrainingData : Path to the trainingsdata
+					\end{itemize}
+					\item forest : Random Forest Modell
+					\begin{itemize}
+						\item TrainingData
+						\item NumberOfTrees
+					\end{itemize}
+				\end{enumerate}
+			\end{enumerate}
+		\end{enumerate}
+	\end{enumerate}
 	
 	\newpage
 	\section*{References}	

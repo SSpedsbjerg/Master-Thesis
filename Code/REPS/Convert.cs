@@ -125,6 +125,9 @@ namespace REPS {
                     return (T)(object)-1;
                 }
             }
+            else if(typeof(T) == typeof(string)) {
+                return (T)input;
+            }
             return (T)(object)-1;
         }
     }

@@ -59,29 +59,15 @@ namespace REPS {
                     sensorConfig.id = (int)sensorNode.GetValue("ID");
                     sensorConfig.host = sensorNode.GetValue("Host").ToString();
                     sensorConfig.name = sensorNode.GetValue("Name").ToString();
-                    switch(sensorNode.GetValue("SupportedType").ToString().ToLower()) {
-                        case "boolean":
-                            sensorConfig.type = Enums.SupportedTypes.BOOLEAN;
-                            break;
-
-                        case "int":
-                            sensorConfig.type = Enums.SupportedTypes.INT;
-                            break;
-
-                        case "string":
-                            sensorConfig.type= Enums.SupportedTypes.STRING;
-                            JToken? isUsernameResult;
-                            config.TryGetValue("isUsername", out isUsernameResult);
-                            if(isUsernameResult is not null) {
-                                sensorConfig.isUsername = bool.Parse(isUsernameResult.ToString());
-                            }
-                            else
-                                sensorConfig.isUsername = false;
-                            break;
-
-                        default:
-                        _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
-                        break;
+                    sensorConfig.type = DetermineSupportedType(sensorNode);
+                    if(sensorConfig.type == SupportedTypes.STRING) {
+                        JToken? isUsernameResult;
+                        config.TryGetValue("isUsername", out isUsernameResult);
+                        if(isUsernameResult is not null) {
+                            sensorConfig.isUsername = bool.Parse(isUsernameResult.ToString());
+                        }
+                        else
+                            sensorConfig.isUsername = false;
                     }
                     sensorConfig.topic = sensorNode.GetValue("Topic").ToString();
                     sensorConfig.routingKey = sensorNode.GetValue("RoutingKey").ToString();
@@ -103,6 +89,30 @@ namespace REPS {
             return sensorConfigs;
         }
 
+        private Enums.SupportedTypes DetermineSupportedType(JObject config) {
+            switch(config.GetValue("SupportedType").ToString().ToLower()) {
+                case "boolean":
+                    return Enums.SupportedTypes.BOOLEAN;
+
+                case "int":
+                    return Enums.SupportedTypes.INT;
+
+                case "string":
+                    return Enums.SupportedTypes.STRING;
+
+                case "float":
+                    return Enums.SupportedTypes.FLOAT;
+                    
+                case "double":
+                    return Enums.SupportedTypes.DOUBLE;
+
+                default:
+                    Console.WriteLine("Failed to determine supported type");
+                    _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
+                    return Enums.SupportedTypes.INVALID;
+            }
+        }
+
         private List<EventConfig> ReadEventConfigs(JObject config) {
             List<EventConfig> eventConfigs = new List<EventConfig>();
             JArray eventNodes = null;
@@ -116,20 +126,7 @@ namespace REPS {
                 try {
                     EventConfig eventConfig = new EventConfig();
                     eventConfig.id = (int)eventNode.GetValue("ID");
-                    switch(eventNode.GetValue("SupportedType").ToString().ToLower()) {
-                        case "boolean":
-                            eventConfig.type = Enums.SupportedTypes.BOOLEAN;
-                            break;
-                        case "int":
-                            eventConfig.type = Enums.SupportedTypes.INT;
-                            break;
-                        case "string":
-                            eventConfig.type = Enums.SupportedTypes.STRING;
-                            break;
-                        default:
-                            _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
-                            break;
-                    }
+                    eventConfig.type = DetermineSupportedType(eventNode);
                     eventConfig.sensorNodeIDs = eventNode.Value<JArray>("SensorNodes").ToObject<int[]>().ToList();
                     eventConfig.eventNodeIDs = eventNode.Value<JArray>("EventNodes").ToObject<int[]>().ToList();
                     eventConfig.modelConfig = ToModel(eventNode.Value<JObject>("Model"));
@@ -159,28 +156,15 @@ namespace REPS {
                 JToken? isUsernameResult;
                 ModelConfig modelConfig = new ModelConfig();
                 modelConfig.id = (int)config.GetValue("ID");
-                switch(config.GetValue("SupportedType").ToString().ToLower()) {
-                    case "boolean":
-                        modelConfig.type = Enums.SupportedTypes.BOOLEAN;
-                        break;
 
-                    case "int":
-                        modelConfig.type = Enums.SupportedTypes.INT;
-                        break;
 
-                    case "string":
-                        modelConfig.type= Enums.SupportedTypes.STRING;
-                        config.TryGetValue("isUsername", out isUsernameResult);
-                        if(isUsernameResult is not null) {
-                            modelConfig.isUsername = bool.Parse(isUsernameResult.ToString());
-                        }
-                        else modelConfig.isUsername = false;
-                        break;
 
-                    default:
-                    _ = Log.Error(new Exception("Wrong or misconfigured Supported Type"), "JSONInterpreter", "Failed to read the Supported type, could be that it is misconfigured or using a type which is not supported");
-                    break;
+                config.TryGetValue("isUsername", out isUsernameResult);
+                if(isUsernameResult is not null) {
+                    modelConfig.isUsername = bool.Parse(isUsernameResult.ToString());
                 }
+                else
+                    modelConfig.isUsername = false;
                 modelConfig.parameters = config.Value<JArray>("Parameters").ToObject<string[]>().ToList();
                 try {
                     modelConfig.testvalue = (int)config.GetValue("TestValue");
@@ -191,6 +175,13 @@ namespace REPS {
                 
                 modelConfig.name = config.GetValue("Name").ToString();
                 JToken? value;
+
+                config.TryGetValue("TrainingData", out value);
+                if(value is not null) {
+                    modelConfig.trainingsDataLocation = value.ToString();
+                }
+                value = null;
+
                 switch(config.GetValue("Type").ToString().ToLower()) {
                     case "simple":
                         modelConfig.modelType = "simple";
@@ -212,6 +203,15 @@ namespace REPS {
                             throw new Exception("Missing QuantileCutoff in config");
                         }
                         else modelConfig.QuantileCutoff = float.Parse(value.ToString());
+                        return modelConfig;
+
+                    case "timed":
+                        modelConfig.modelType = "timed";
+                        config.TryGetValue("DebugMode", out value);
+                        if(value is null)
+                            modelConfig.debugMode = false;
+                        config.TryGetValue("TimedTrigger", out value);
+                        if(value is not null) modelConfig.timedTrigger = float.Parse(value.ToString());
                         return modelConfig;
 
                     case "svm":

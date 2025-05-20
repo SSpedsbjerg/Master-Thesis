@@ -49,7 +49,7 @@ namespace REPS.Models {
             get => parameters.Keys.Count;
         }
 
-        public bool UpdateValue(string parameter, INode node) {
+        public virtual bool UpdateValue(string parameter, INode node) {
             if(node == null) return false;
             if(node.Output != null) {
                 if(parameters.ContainsKey(parameter)) {

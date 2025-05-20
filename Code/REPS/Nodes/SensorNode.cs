@@ -70,6 +70,7 @@ namespace REPS.Nodes {
             if(connection is null) {
                 _ = await initAsync();
             }
+            
             if(connection.Message is null && !overriddenMessage) {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Connection message was null, sensor node: {id}");

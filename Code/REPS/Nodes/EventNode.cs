@@ -80,6 +80,9 @@ namespace REPS.Nodes {
                 case "adaptiv":
                     model = new AdaptivModel(config: modelConfig);
                     break;
+                case "timed":
+                    model = new TimedModel(config: modelConfig);
+                    break;
                 case "svm":
                     model = new SupportVectorMachineModel(config: modelConfig);
                     break;

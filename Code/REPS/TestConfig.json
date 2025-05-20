@@ -8,53 +8,86 @@
   "SensorNodes": [
     {
       "ID": 0,
-      "Name": "first",
-      "SupportedType": "INT",
-      "Host": "localhost",
-      "RoutingKey": 0,
-      "Topic": "first"
-    },
-    {
-      "ID": 1,
-      "Name": "second",
-      "SupportedType": "INT",
-      "Host": "localhost",
-      "RoutingKey": 0,
-      "Topic": "first"
-    },
-    {
-      "ID": 2,
-      "Name": "third",
+      "Name": "AccountCreationSensor",
       "SupportedType": "STRING",
       "Host": "localhost",
       "RoutingKey": 0,
-      "Topic": "third"
+      "Topic": "AccountCreationActivity"
+    },
+    {
+      "ID": 1,
+      "Name": "fourth",
+      "SupportedType": "STRING",
+      "Host": "localhost",
+      "RoutingKey": 0,
+      "Topic": "LoginActivity"
+    },
+    {
+      "ID": 2,
+      "Name": "fifth",
+      "SupportedType": "STRING",
+      "Host": "localhost",
+      "RoutingKey": 0,
+      "Topic": "LoginActivity"
     }
   ],
 
   "EventNodes": [
     {
       "ID": 0,
-      "Name": "Name",
-      "SensorNodes": [ 0, 1 ],
+      "Name": "AccountCreationTimerEvent",
+      "SensorNodes": [ 0 ],
       "EventNodes": [],
-      "ReportTopic": "testEventNode",
-      "SupportedType": "INT",
+      "ReportTopic": "BotDetection",
+      "SupportedType": "FLOAT",
       "Host": "localhost",
-      "RoutingKey" :  0,
+      "RoutingKey": 0,
       "Model": {
         "ID": 0,
-        "Type": "forest",
-        "NumberOfTrees": 50,
-        "DebugMode": true,
-        "Name": "Name",
+        "Type": "timed",
+        "DebugMode": false,
+        "Name": "AccountCreationTimerModel",
+        "SupportedType": "FLOAT",
+        "TimedTrigger": 0.5,
+        "Parameters": ["a"]
+      }
+    },
+    {
+      "ID": 1,
+      "Name": "BotDeterminerEvent",
+      "SensorNodes": [ 2 ],
+      "EventNodes": [],
+      "ReportTopic": "BotDetection",
+      "SupportedType": "INT",
+      "Host": "localhost",
+      "RoutingKey": 0,
+      "Model": {
+        "ID": 1,
+        "Type": "svm",
+        "DebugMode": false,
+        "Name": "BotDeterminerModel",
         "SupportedType": "INT",
-        "Function": "return System.Convert.ToInt32(a)*System.Convert.ToInt32(b)",
+        "TrainingData": "C:/Users/simon/Documents/GitHub/Master-Thesis/Code/BotCreationEvent.csv"
+      }
+    },
+    {
+      "ID": 2,
+      "Name": "BotCreationAttackDeterminerEvent",
+      "SensorNodes": [],
+      "EventNodes": [ 0, 1 ],
+      "ReportTopic": "BotCreationAttackDeterminer",
+      "SupportedType": "INT",
+      "Host": "localhost",
+      "RoutingKey": 0,
+      "Model": {
+        "ID": 1,
+        "Type": "simple",
+        "DebugMode": false,
+        "Name": "BotDeterminerModel",
+        "SupportedType": "BOOLEAN",
+        "Function": "return ((float)a > 0f && (float)b > 0.5)",
         "Parameters": [ "a", "b" ],
-        "TestValue": 5,
-        "TestParameterValues": [ 2, 3 ],
-        "TestTopic": "NONE",
-        "TriggerFunction": "if(value > 40) return 3; else if (value > 30) return 2; else if (value > 20) return 1; else if (value > 10) return 0;"
+        "TriggerFunction": "if((bool)output) return 1; else return 0;"
       }
     }
   ]

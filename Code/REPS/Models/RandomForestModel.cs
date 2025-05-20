@@ -44,7 +44,7 @@ namespace REPS.Models {
                     trainingData.Add((Data)input);
                 }
                 IDataView? data = context.Data.LoadFromEnumerable(trainingData);
-                var pipeline = context.Transforms.Concatenate("Features", nameof(Data.Feature1), nameof(Data.Feature2)).Append(context.BinaryClassification.Trainers.FastForest(this.options));
+                var pipeline = context.Transforms.NormalizeMinMax("Features").Append(context.BinaryClassification.Trainers.FastForest(this.options));
                 this.model = pipeline.Fit(data);
                 this.predictionEngine = context.Model.CreatePredictionEngine<Data, Prediction>(model);
                 return true;
@@ -62,8 +62,7 @@ namespace REPS.Models {
             var values = parameters.Values.ToArray();
             float value0 = System.Convert.ToSingle(values[0]);
             Data data = new() {
-                Feature1 = System.Convert.ToSingle(values[0]),
-                Feature2 = System.Convert.ToSingle(values[1])
+                Features = values.Select(x => (float)x).ToArray(),
             };
             output = Predict(data: data);
             return State.Stable; //fix up a trigger once I'm sure everything else works as intended

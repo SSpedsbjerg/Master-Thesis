@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace REPS.ExtractionModels {
     public static class UsernameExtraction {
@@ -33,11 +34,31 @@ namespace REPS.ExtractionModels {
                 int length = uName.Length;
                 int VowelCount = uName.Count(c => "aeiou".Contains(c));
                 int ConsonantsCount = uName.Length - VowelCount;
-                double vowelRatio = VowelCount / ConsonantsCount;
+                double vowelRatio = (double)VowelCount / (double)uName.Length;
                 double ShannonEntropy = CalculateShannonEntropy(uName);
                 featureList.Add(new double[] { vowelRatio, ShannonEntropy });
             }
             return featureList;
+        }
+
+        public static float[] ExtractRealName(string username) {
+            float[] features;
+            string uName = username.ToLower();
+            int length = uName.Length;
+            int VowelCount = uName.Count(c => "aeiou".Contains(c));
+            int ConsonantsCount = uName.Length - VowelCount;
+            double vowelRatio = (double)VowelCount / (double)uName.Length;
+            double ShannonEntropy = CalculateShannonEntropy(uName);
+            double specialCharRatio = 0;
+            foreach(char letter in uName) {
+                if(!char.IsLetter(letter))
+                    specialCharRatio++;
+            }
+            specialCharRatio = specialCharRatio / (double)uName.Length;
+
+
+            features = new float[] { (float)vowelRatio, (float)ShannonEntropy, length, (float)specialCharRatio, };
+            return features;
         }
 
         public static void WriteFeaturesToCSV(List<string> usernames, List<double[]> featureList, string fileName) {
@@ -59,6 +80,8 @@ namespace REPS.ExtractionModels {
                 Console.WriteLine("Saving data...");
                 WriteFeaturesToCSV(Usernames, ExtractRealNames(Usernames), $"TrainingSet_{new Guid("N")}");
             }
+            Console.WriteLine("Press Enter to close");
+            Console.ReadLine();
         }
     }
 }

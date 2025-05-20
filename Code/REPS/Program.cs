@@ -13,7 +13,7 @@ public class Program {
     private static void start(string path, string filename) {
         interpreter = new JSONInterpreter(path, filename);
         interpreter.Init();
-        interpreter.updateRate = REPS.Enums.UpdateRate.Sequencial;
+        interpreter.updateRate = REPS.Enums.UpdateRate.Fast;
         nodes = interpreter.GetNodes();
         NodeController.init(nodes);
         while(true) {
@@ -33,25 +33,20 @@ public class Program {
         foreach(Task task in tasks) {
             await task;
         }
-        //tasks.Clear();
-        //does not reach this point
+
         if(interpreter.updateRate == REPS.Enums.UpdateRate.Fast) {
             foreach(INode node in nodes) {
                 if(node is EventNode) {
                     tasks.Add(node.Process());
                 }
             }
-            foreach(Task task in tasks) {
-                await task;
-            }
         }
         else if(interpreter.updateRate == REPS.Enums.UpdateRate.Sequencial) {
             foreach(INode node in nodes) {
                 if(node is EventNode) {
-                    await node.Process();
+                    node.Process().Wait();
                 }
             }
-
         }
     }
 

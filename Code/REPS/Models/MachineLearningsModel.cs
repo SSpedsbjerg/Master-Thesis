@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace REPS.Models {
     //has to be a class type and not a struct
     public class Data {
-        [LoadColumn(0)] public float Feature1;
-        [LoadColumn(1)] public float Feature2;
-        [LoadColumn(2)] public bool Label;
+        [VectorType(4)]//defines length, for some reason I cannot seem to make my ml adjust this during run-time
+        public float[] Features { get; set; } = default!; //loads from column zero to the second last column
+        public bool Label;
     }
 
     //has to be a class type and not a struct
@@ -54,7 +54,7 @@ namespace REPS.Models {
                 float center = label ? seperation : 0;
                 float x = (float)(random.NextDouble() * 1.5 + center);
                 float y = (float)(random.NextDouble() * 1.5 + center);
-                data[i] = new Data { Feature1 = x, Feature2 = y, Label = label };
+                data[i] = new Data { Features = [x, y], Label = label };
             }
             return data;
         }

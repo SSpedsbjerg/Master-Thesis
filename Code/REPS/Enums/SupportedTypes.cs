@@ -8,6 +8,9 @@ namespace REPS.Enums {
     public enum SupportedTypes {
         BOOLEAN,
         INT,
-        STRING
+        STRING,
+        FLOAT,
+        DOUBLE,
+        INVALID
     }
 }
