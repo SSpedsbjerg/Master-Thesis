@@ -40,8 +40,9 @@ namespace REPS {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"NotificationBroker: {NotificationBroker}, NotificationTopic: {NotificationTopic}, ReportBroker: {ReportBroker}");
             Console.ResetColor();
+            
         }
-
+        
 
         private List<SensorConfig> ReadSensorConfigs(JObject config) {
             

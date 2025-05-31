@@ -1,0 +1,77 @@
+\section{Related Work}\label{sec:RelatedWork}
+	As this project is exploratory, a literature review is conducted to identify Existing solutions and Machine learning models used.
+	The aim is to understand prior approaches and use this insight to inform the project's direction.
+	
+	A term mapping is first created to identify relevant search terms. This is done through brainstorming and synonym lookup. Each term is checked for contextual relevance using a synonym dictionary, and valid alternatives are added to the mapping.
+	\begin{center}
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{|p{2cm}|p{10cm}|}
+				\hline
+				Term & Synonym \\ \hline
+				Event & Act, Action, Case, Circumstance, Crisis, Development, Episode, Experience, Incident, Occasion, Situation, Advent, Calamity, Catastrophe, Concuncture, Emergency, Exploit, Occurrence, phenomenon \\ \hline
+				Prediction & Forecasting, Indicate, Prognostication, Anticipation \\ \hline
+				State & Case, Element, Position, Status \\ \hline
+				Change & Adjustment, development, revision, mutation, correction, transmutation\\ \hline
+				Value & Content \\ \hline
+				Rule & Decree, Guideline, Law, Regulation, Ruling, Statute, Criterion, Dictum, Guide, Model, Prescription, Precept, Policy \\ \hline
+				Trigger & Cause, Activator, Set off, Give rise to, elicit \\ \hline
+			\end{tabular}
+	}
+	\end{center}
+	
+	The first search engine used is Scopus, chosen for its broad coverage across multiple publishers, reducing bias from any single publisher's standards. To ensure the use of recent state-of-the-art research, articles published before 2015 are excluded. Using this constraint and the defined synonym mapping, the following query is applied:\newline\noindent\rule{\textwidth}{0.4pt}\newline
+	TITLE-ABS-KEY ( ( event OR act OR action OR case OR circumstance OR crisis OR development OR episode OR experience OR incident OR occasion OR situation OR advent OR calamity OR catastrophe OR concuncture OR emergency OR exploit OR occurrence OR phenomenon ) AND ( prediction OR forecasting OR indicate OR prognostication OR anticipation ) ) AND PUBYEAR $>$ 2014 AND PUBYEAR $<$ 2026 AND PUBYEAR $>$ 2014 AND PUBYEAR $<$ 2024 AND ( LIMIT-TO ( DOCTYPE , "cp" ) OR LIMIT-TO ( DOCTYPE , "ar" ) ) AND ( LIMIT-TO ( SUBJAREA , "COMP" ) OR LIMIT-TO ( SUBJAREA , "MATH" ) ) AND ( LIMIT-TO ( LANGUAGE , "English" ) )
+	\newline
+	\newline\noindent\rule{\textwidth}{0.4pt}\newline\newpage
+	The initial search yields 172,968 articles, which are sorted by citation count to prioritize quality. To maintain source diversity, only a subset of the top 200 results is considered, limiting overrepresentation from a single search engine so to allow time for other search engines. From this set, 32 articles are selected based on title relevance to \gls{reps} and their potential to inform the project's development.
+
+	The selected articles were published across the following sources:
+	\begin{itemize}
+		\item ACM : 7,
+		\item Springer Link : 3
+		\item IEEE Xplore : 12
+		\item Oxford Academic : 1
+		\item Nature Biomedical Engineering : 2
+		\item MIT : 1
+		\item MDPI : 1
+		\item ACL Anthology : 1
+		\item Science Direct : 3
+	\end{itemize}
+	
+	The next search engine used is Forskningsportalen, a Danish platform for academic research that includes publications in both Danish and English. It was chosen to reduce duplication of articles found in other databases. The query used is the same as for the Scopus search, with adjustments to match Forskningsportalen’s syntax:
+	\newline\noindent\rule{\textwidth}{0.2pt}\newline
+	\noindent
+	\vspace{.2cm}
+	( event OR act OR action OR case OR circumstance OR crisis OR development OR episode OR experience OR incident OR occasion OR situation OR advent OR calamity OR catastrophe OR concuncture OR emergency OR exploit OR occurrence OR phenomenon ) AND ( prediction OR forecasting OR indicate OR prognostication OR anticipation ) AND Publication Types=(Journal Article OR Conference Paper OR Thesis PhD) AND Publication Audiences=(Scientific) AND	Publication Status=(Published) AND	Review Status=(Peer Reviewed) AND Language=(English OR Danish) AND	Open Access=(Open Access) AND DK Main Research Areas=(Science/Technology) AND Years=(2024 OR 2023 OR 2022 OR 2021 OR 2020 OR 2019 OR 2018 OR 2017 OR 2016 OR 2015 OR 2014)
+	\vspace{.2cm}
+	\newline\noindent\rule{\textwidth}{0.4pt}\newline
+	\vspace{.1cm}
+	
+	The search returned 7,509 results. To reduce the scope, only the 100 most cited articles were considered. Using the same method as the Scopus search, 8 articles were selected based on their titles. After review, 4 were deemed relevant to this project.
+	
+	%include publishers
+	
+	In total, 40 articles were reviewed, with 17 selected based on quality. Selection criteria included data and result credibility, does the result align with their data and or experiment, as well as consistency between the abstract and the papers content, does the abstract state something different from the papers content.
+	\newpage
+	Two major concerns are identified across the selected articles: prediction challenges (noted in 9 articles) and feature reduction (noted in 6 articles).
+	
+	As stated, a record of what \gls{ml} models used in the reviewed papers would be made for two reasons: to provide a reference set for potential comparison with the final product, and to inform model selection if \gls{ml} is incorporated into the system.
+	Frequently used models include:
+	\begin{itemize}
+		\item Neural Networks: 12 (including Recurrent Neural Networks: 9, and Gated Recurrent Units: 7)
+		\item Support Vector Machines (\gls{svm}): 7
+		\item Bayesian Models: 5
+		\item Random Forest: 5
+		\item Nearest Neighbour: 5
+	\end{itemize}
+
+	\subsection{Outcome}
+		The review aims to identify high-value directions and avoid unproductive paths during the analysis phase of software development.
+		Most articles do not explicitly describe the challenges encountered. As a result, potential pitfalls must be inferred by noting which methods or solutions are consistently omitted. Solutions that are rarely mentioned despite being theoretically viable are likely avoided due to having practical problems. Conversely, frequently referenced methods are considered more reliable and are prioritized in this project.
+	
+		Wu et al.\cite{WuPan} use a graph-based structure for time series forecasting, its idea is very similar to this project but takes a different approach, it transforms multivariate time series data into a graph which can be used in a graph neural network, The graph structures nodes derives from variables from multivariate time series data. In relation to this project it shows one approach to the same problem of defining a relation between nodes to predict events. (skal det uddybbes videre iforhold til mit projekt? og jeg formoder at det skal gøres det samme med de andre eksempler). \sout{Ribeiro et al.\cite{Ribeiro} Propose a technique to explain how the model came to a prediction which can help the end user in trusting the prediction. Lv et al. \cite{Lv_Duan} Uses deep learning to make traffic flow prediction, one of the scenarios considered early in for this project. Zhang et al.\cite{Zhang} uses Long short-term memory networks to predict remaining useful life.} These articles fall within the domain targeted by the proposed pattern.
+	
+		In the early stages of the project, it was considered that an event node could include a \gls{ml} model. A review of the selected literature where all sources incorporate \gls{ml} to some extent for prediction indicates a clear trend. Based on this, the project shifts from possibly including \gls{ml} to should have it as a component. 
+		\sout{
+		The articles also inform the approach to user interaction. Ribeiro et al.~\cite{Ribeiro} emphasize user trust through model explain-ability, while Wu et al.~\cite{WuPan} contribute structural insights. Based on these, a publish-subscribe pattern will be used for communication between \gls{reps} and external components.
+	}

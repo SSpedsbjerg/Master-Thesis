@@ -1,8 +1,8 @@
 {
   "BrokerInfo": {
-    "NotificationBroker": "localhost",
+    "NotificationBroker": "192.168.1.20",
     "NotificationTopic": "notify",
-    "ReportBroker": "localhost"
+    "ReportBroker": "192.168.1.20"
   },
 
   "SensorNodes": [
@@ -10,7 +10,7 @@
       "ID": 0,
       "Name": "AccountCreationSensor",
       "SupportedType": "STRING",
-      "Host": "localhost",
+      "Host": "192.168.1.20",
       "RoutingKey": 0,
       "Topic": "AccountCreationActivity"
     },
@@ -18,7 +18,7 @@
       "ID": 1,
       "Name": "fourth",
       "SupportedType": "STRING",
-      "Host": "localhost",
+      "Host": "192.168.1.20",
       "RoutingKey": 0,
       "Topic": "LoginActivity"
     },
@@ -26,7 +26,7 @@
       "ID": 2,
       "Name": "fifth",
       "SupportedType": "STRING",
-      "Host": "localhost",
+      "Host": "192.168.1.20",
       "RoutingKey": 0,
       "Topic": "LoginActivity"
     }
@@ -40,7 +40,7 @@
       "EventNodes": [],
       "ReportTopic": "BotDetection",
       "SupportedType": "FLOAT",
-      "Host": "localhost",
+      "Host": "192.168.1.20",
       "RoutingKey": 0,
       "Model": {
         "ID": 0,
@@ -49,7 +49,7 @@
         "Name": "AccountCreationTimerModel",
         "SupportedType": "FLOAT",
         "TimedTrigger": 0.5,
-        "Parameters": ["a"]
+        "Parameters": [ "a" ]
       }
     },
     {
@@ -59,7 +59,7 @@
       "EventNodes": [],
       "ReportTopic": "BotDetection",
       "SupportedType": "INT",
-      "Host": "localhost",
+      "Host": "192.168.1.20",
       "RoutingKey": 0,
       "Model": {
         "ID": 1,
@@ -67,7 +67,8 @@
         "DebugMode": false,
         "Name": "BotDeterminerModel",
         "SupportedType": "INT",
-        "TrainingData": "C:/Users/simon/Documents/GitHub/Master-Thesis/Code/BotCreationEvent.csv"
+        "TrainingData": "./BotCreationEvent.csv",
+        "Parameters": [ "a" ]
       }
     },
     {
@@ -77,15 +78,35 @@
       "EventNodes": [ 0, 1 ],
       "ReportTopic": "BotCreationAttackDeterminer",
       "SupportedType": "INT",
-      "Host": "localhost",
+      "Host": "192.168.1.20",
       "RoutingKey": 0,
       "Model": {
-        "ID": 1,
+        "ID": 2,
         "Type": "simple",
         "DebugMode": false,
         "Name": "BotDeterminerModel",
         "SupportedType": "BOOLEAN",
-        "Function": "return ((float)a > 0f && (float)b > 0.5)",
+        "Function": "return (static_cast<float>(a) > 0f && static_cast<float>(b) > 0.5)",
+        "Parameters": [ "a", "b" ],
+        "TriggerFunction": "if((bool)output) return 1; else return 0;"
+      }
+    },
+    {
+      "ID": 3,
+      "Name": "BotCreationAttackDeterminerEvent",
+      "SensorNodes": [],
+      "EventNodes": [ 0, 1 ],
+      "ReportTopic": "BotCreationAttackDeterminer",
+      "SupportedType": "INT",
+      "Host": "192.168.1.20",
+      "RoutingKey": 0,
+      "Model": {
+        "ID": 3,
+        "Type": "simple",
+        "DebugMode": false,
+        "Name": "BotDeterminerModel",
+        "SupportedType": "BOOLEAN",
+        "Function": "return (static_cast<float>(a) > 0f && static_cast<float>(b) > 0.5)",
         "Parameters": [ "a", "b" ],
         "TriggerFunction": "if((bool)output) return 1; else return 0;"
       }
