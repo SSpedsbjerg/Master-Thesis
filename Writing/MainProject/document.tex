@@ -12,7 +12,7 @@ backend=bibtex
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{listings}
-
+\usepackage{incgraph,tikz}
 %CodeColours
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -149,7 +149,7 @@ backend=bibtex
 			\begin{itemize}
 				\item \textbf{FR0 - Individual Process in each node:} This works as planned and expected. C\# tasks enable nodes to run in parallel as intended.
 				\item \textbf{FR1 – Communication with Other Services:} Implemented using RabbitMQ, which successfully enables service-to-service communication. The only missing feature is queue prioritization, which was deferred in favour of higher-priority tasks. However, the system is designed to support priority implementation in the future. It is considered fulfilled with a few non essential features missing.
-				\item \textbf{FR2 – Ease of Adding New Event Nodes:} New nodes can be added efficiently using the \gls{json} configuration system, allowing a new setup to be completed within minutes (see Code Snippets~\ref{lst:simpleAddition}, and~\ref{lst:BotCreation}).Event nodes containing simple models may occasionally raise exceptions due to syntax errors, though this can be further mitigated with additional development. This requirement is considered fulfilled, with room for implementation improvements. However, the system does not currently support adding event nodes at runtime. While this feature could offer value for example, by preserving the current state of active nodes, it was deprioritised in favour of more critical functionality.
+				\item \textbf{FR2 – Ease of Adding New Event Nodes:} New nodes can be added efficiently using the \gls{json} configuration system, allowing a new setup to be completed within minutes (see Code Snippets~\ref{lst:simpleAddition}, and~\ref{lst:BotCreation}). Event nodes containing simple models may occasionally raise exceptions due to syntax errors when writing C\# code directly in it, this can be further mitigated with additional development such as a \gls{dsl}. This requirement is considered fulfilled, with room for implementation improvements. However, the system does not currently support adding event nodes at runtime. While this feature could offer value for example, by preserving the current state of active nodes, it was deprioritised in favour of more critical functionality.
 				\item \textbf{FR3 - Being able to quickly start up \gls{reps} using a config:} When excluding syntax errors, the system starts reliably using the configuration file. This functionality is considered stable and effective.
 				\item \textbf{FR4 – Support for \gls{ml} Models in Event Nodes:} Successfully implemented with two \gls{ml} models: \gls{svm} and \gls{rf}. The current design allows each node to contain and manage its own model, making it straightforward to incorporate additional models in the future. The only potential limitation concerns models with high memory usage, such as \gls{knn}, which may impact performance.
 				\item \textbf{FR5 – Event Detection Capability:} Successfully implemented. While the current implementation confirms that event detection is possible, further work is required to evaluate the accuracy and reliability of detection. The focus at this stage was on feasibility; assessing effectiveness will follow in future work.
@@ -157,36 +157,48 @@ backend=bibtex
 				\item \textbf{FR7 – Automatic \gls{reps} Creation:} Not initiated and therefore not fulfilled.
 			\end{itemize}
 
-		\subsection{complexity}
-			It was found that \gls{reps} exhibits low complexity. As complexity is an abstract concept in software, this paper presents two arguments to support the claim:
+		\subsection{complexity}\label{sec:complexity}
+			It was found that \gls{reps} exhibits low complexity. As complexity is an abstract concept in software, this report presents two arguments to support the claim:
 				\begin{itemize}
 					\item \textbf{Technological Complexity:} The \gls{reps} pattern requires minimal technological overhead. A communication platform similar to the MQTT standard and a data format such as JSON are sufficient to configure the system. Alternatively, a web interface or other \gls{gui} could replace manual configuration. As a result, the technical knowledge required to use the pattern is limited.
-					\item \textbf{Configuration Overhead:} The current implementation uses 30 keywords (Appendix~\ref{sec:Keywords}), of which only three are non-essential—introduced for optimisation or to manage technical debt. One way to assess usability is to implement a basic function similar to a “Hello World”. Since \gls{reps} is designed for decision-making rather than data generation, a simple addition example is provided (Code Snippet~\ref{lst:simpleAddition}, page 22).
+					\item \textbf{Configuration Overhead:} Defined as, knowledge a user need to attain to be able to fully configure \gls{reps}. The current implementation uses 30 unique keywords, keywords being predefined reserved identifiers which the \gls{reps} makes use of (Appendix~\ref{sec:Keywords}). There is three non-essential keywords introduced for optimisation or to manage technical debt in the current implementation. One way to assess usability is to implement a basic function similar to a “Hello World”. Since \gls{reps} is designed for decision-making rather than data generation, a simple addition example is provided (Code Snippet~\ref{lst:simpleAddition}, page 22).
 
 					For a more detailed example, a basic service has been developed to detect the mass creation of bot accounts on a website (Figure~\ref{fig:BotCreation}).
 				\begin{center}
 					\begin{figure}[!h]
-						\includegraphics[width=.6\textwidth]{Images/BotCreation}
+						\includegraphics[width=\textwidth]{Images/BotCreation}
 						\caption{node setup to determine whether an attacker is creating a large amount of bots}
 						\label{fig:BotCreation}
 					\end{figure}
 				\end{center}
-				The setup determine whether an event of a new individual user is a bot (Event ID: 1), an event of a large influx of new users (Event ID: 0) and combined whether a potential event of a large amount of bots being created (Event ID: 2).
 			\end{itemize}
 			
-		\subsection{Memory usage}
-			The simple bot detection service (see Figure \ref{fig:implementedModels}) consumes between 65 and 70 MB of memory. , of which 25.85 MB accounts for overhead, including communication with RabbitMQ, logging, and related processes. Running the same service without the simple model (a run-time compiled method) reduces memory usage to between 41 MB and 44 MB. Adding an additional simple node to the original service increases memory consumption to approximately 75 MB, indicating an overhead of around 10 MB.  The \gls{svm} model uses approximately 4 MB with five features. The memory usage of the timed model is negligible.
-			
+			\subsection{Measurements}\label{sec:measurements}
+				This section discusses CPU and memory usage, presenting observations relevant to likely scenarios where \gls{reps} may be deployed. Latency is excluded, latency being the average time from event actually starts to REPS makes a determination. Latency depends largely on the update rate of \gls{reps} and network transport times. Program size is also not considered critical due to varying edge cases in different environments; for reference, the latest Debian Docker image occupies 231.81 MB.
+				
+				\subsubsection{CPU Usage}
+					Each node uses very little processing power. Usage varies depending on the model, but the current implementations are so lightweight that a reliable assessment cannot be constructed. Nodes run in parallel, utilising all available CPU threads. When the number of nodes exceeds the number of CPU cores, \gls{reps} will use 100\% of the CPU by processing multiple nodes concurrently, scheduling tasks as resources become available.
+					
+					This can be problematic, as it may not be desirable to utilise all available resources unnecessarily. Therefore, some form of resource limitation should be considered in future work to prevent excessive hardware usage.
+					
+					The current implementation writes extensively to the console to actively monitor the system’s state. Approximately 52\% of CPU usage is attributed to logging. While retaining some logging may prove useful for future debugging, it appears to consume a significant proportion of resources and may not be justified under normal operation.
+					
+					CPU usage is minimal and therefore not a primary concern for further analysis.
+					
+				\subsubsection{Memory Usage}
+					The simple bot detection service (see Figure \ref{fig:BotCreation}) consumes between 65 and 70 MB of memory, of which 25.85 MB accounts for overhead, including communication with RabbitMQ, logging, and related processes. Running the same service without the simple model (a run-time compiled method) reduces memory usage to between 41 MB and 44 MB. Adding an additional simple node to the original service increases memory consumption to approximately 75 MB, indicating an overhead of around 10 MB.  The \gls{svm} model uses approximately 4 MB with five features. The memory usage of the timed model is negligible.
+					
+					Memory usage is a important metric to design around based on these readings.
+		\newpage	
 		\subsection{Research Question 1: Advantages and Disadvantages of \gls{reps} Compared to Other Solutions}
-			This evaluation identifies key advantages and disadvantages of \gls{reps}. Advantages include low complexity and ease of setup. Disadvantages involve relatively higher memory usage and increased implementation effort, as developing \gls{reps} requires more work than implementing many \gls{ml} models own their own such as \gls{rf} and \gls{svm}.
+			While I hoped I would be able to answer this question more concretely, due to it not being a fair comparison with industrial solutions as this project was exploratory and not an attempt to compete with existing solutions. This does not mean that it is not possible to answer this question as indirectly, as the original intent was allow a software engineer to determine whether this solution fits to their use case. For an engineer to do this they would need information about the system, thereby allowing themselves determine advantages and disadvantages with \gls{reps}. With the information presented in section \ref{sec:measurements} and \ref{sec:complexity} I believe that a potential engineer may be able to make this determination themselves. This leaves the question only partially answered, it is answered to some degree as it keeps to the original intent. It does not fully answer the question as the question is not actually answered.
 
 			
 	\section{Discussion}	
 	
-	\subsection{DSL}
-	
 	\subsection{Simulator}
-	
+		The Simulator worked great for testing and generating data to train models on. There were a few problems from iteration to iteration where the site which the test was run on would change and therefore the Simulator would have to change as well.
+		
 	\subsection{Hindsight}
 	In this section, a overview of the good tactics and the tactics which a developer should avoid when making \gls{reps} or similar systems.
 	
@@ -208,7 +220,7 @@ backend=bibtex
 		I discovered that compiling an event node function in run time requires more resources as well as taken a large time to implement. While using a \gls{ml} model has more use cases and is often times depending on the model, cheaper in memory usage.
 	
 	\subsection{\gls{gui}}
-		A \gls{gui} is useful for an end consumer, but working in this project it was not wort developing. The idea for developing it for this project even tough it already was a low priority, was to speed up the development process for the rest of the project. It could increase understanding if a visual was developed for the nodes in the \gls{reps} and allow me to more quickly create new config files to test. It turned out after one iteration of work that this would require too much time to finish to a useful state.
+		A \gls{gui} is useful for an end consumer, but working in this project it was not worth developing. The idea for developing it for this project even tough it already was a low priority, was to speed up the development process for the rest of the project. It could increase understanding if a visual was developed for the nodes in the \gls{reps} and allow me to more quickly create new config files to test. It turned out after one iteration of work that this would require too much time to finish to a useful state.
 	
 	\subsection{Reflection}
 		This project changed a lot from the start of the project, while I generally think the project was a success, there is so much more that could have been done. I'm disappointed that I did not manage to make comparisons with other industrial technologies, nor did I manage to make more scenarios which could be used in the \gls{reps}. At the start I was unsure whether I would model \gls{reps} configs based on real data sets or virtual copy (find det rigtige ord), using the virtual copy was very good for the first experiment. It revealed a lot of the advantages for this project, and I did believe that the product wouldn't be worth developing until I started seeing the first result of the experiment.
@@ -220,13 +232,22 @@ backend=bibtex
 		If I were to redo this project, I would not develop simple nodes at least until the first set of experiments were finished, I would further increase the amount of time spent on experimentation. It is clear now that the extra time was needed for the experimentation. So I at least could gather more data because at the current value of this project is more of if it possible to do rather than to what degree is it useful. While I made a few determinations on this project, they are abstract to some degree and is not based on direct data but rather my experience on this project.
 	
 	\subsection{Future Work}
-		For future, there is a need to performed further experimentations on what extend \gls{reps} might be useful. This project assess the viability of \gls{reps} and some of the advantages and disadvantages which can be determined at the stage before thorough experimentations.
+		If more work is put into this project, these are the areas which the work will go into.
 		
-		A \gls{gui} in my belief will be useful but I have not anything to make that determination. For this a \gls{gui} development and experimentation would be needed to make this determination.
+		\subsubsection{Experimentations}
+			For future, there is a need to performed further experimentations on what extend \gls{reps} might be useful. This project assess the viability of \gls{reps} and some of the advantages and disadvantages which can be determined at the stage before thorough experimentations.
+		
+		\subsubsection{DSL}
+			A \gls{dsl} could bring values in terms of further improving the configuration files. I would lower the risk of a user making syntax errors, it could maybe further increase speed, simplicity or readability of the configuration files. While it is not necessary, it could further this project. The \gls{dsl} would reduce pain-points of the current configuration system and would increase the speed of the user.
+
+		
+		\subsubsection{\gls{gui}}
+			A \gls{gui} in my belief will be useful but I have not anything to make that determination. For this a \gls{gui} development and experimentation would be needed to make this determination. This is in conflict with the \gls{dsl}, in terms of setting everything up except for perhaps the simple models which contains the run-time code. One option is to combine the \gls{dsl} with the \gls{gui} where the \gls{dsl} would only be for the simple model when you have to specify a code block.
 	
 	\newpage
 	\section{Conclusion}
-	
+		I developed \gls{reps}, a pattern to make determinations where units(find bedre ord) of data have a relation to one another. By combining \gls{mqtt}, \gls{json} and parallel node interpretation \gls{reps} was created. I managed to determine a good way to develop \gls{reps} and learn what works and what does not, thereby allowing future developers to develop similar system without going trough the same pitfalls and take inspiration from what worked in this project. \gls{reps} manages to make determinations while keeping complexity low, allowing a user to easily design their system in few precise keywords. This project proves that \gls{reps} is a viable solution to make determinations, next step is to determine how useful it is compared to other industrial solutions. \gls{reps} might lead to a more developer friendly determiner that isn't beholden to individual solutions but rather can combine models based on their usecase.
+		
 	\newpage
 	\section{Appendix}
 	\subsection{Number of keywords}\label{sec:Keywords}

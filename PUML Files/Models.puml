@@ -1,0 +1,96 @@
+@startuml
+package Models {
+        +class SimpleModel{
+            int id
+            SupportedTypes type
+            string function
+            object output
+            - object testValue
+            - List<double> testParameterValues
+            - string testTopic
+            + Dictionary<string, object> parameters
+
+            + object Output
+            + int NumberOfInputs
+            + void UpdateValue(string parameter object value)
+            - async Task<Func<List<int>, int>> CompileFunctionAsync(string function, List<string> parameters)
+            + async Task<bool> Process()
+            + async Task<bool> Test()
+            + bool UpdateValue(string valueID, object value)
+        }
+
+        +class AdaptivModel{
+            - object triggerUpperEqulibrium
+            - object triggerLowerEqulibrium
+            - List<object, TimeOnly> values
+            - float updatePercentage
+            - float QuantileCutoff
+
+            + AdaptivModel(ModelConfig config) : base(config)
+            - override async Task<Func<object[], object?>> CompileTrigger(string function)
+            + override async Task<State> Process()
+        }
+
+        +class TimedModel{
+            - object newestValue
+            - float timedTrigger
+            + TimedModel(ModelConfig config) : base(config)
+            + override bool UpdateValue(string parameter, INode node)
+            + override async Task<State> Process()
+        }
+
+        +class Data{
+            +float Feature1
+            +float Feature2
+            +bool Label
+        }
+
+        +class Prediction{
+            + bool PredictedLabel
+            + float Score
+        }
+
+        +abstract MachineLearningModel{
+            - bool? debugMode
+            - Data[] dataSet
+            - MLContext context
+
+            + MachineLearningsModel(ModelConfig config) : base(config)
+            + virtual void SetData(Data[] data)
+            + virtual bool Train(object[] data)
+            + virtual object Predict(object data)
+            - virtual Data[] GenerateTestData(int count, float seperation)
+        }
+
+        +class SupportVectorMachineModel{
+            - TransformerChain<BinaryPredictionTransformer<Microsoft.ML.Trainers.LinearBinaryModelParameters>>? model
+            - PredictionEngine<Data, Prediction>? predictionEngine
+
+            + SupportVectorMachineModel(ModelConfig config) : base(config)
+            + override object Predict(object data)
+            + override bool Train(object[] inputData)
+            + override async Task<State> Process()
+        }
+
+        +class RandomForestModel{
+            - TransformerChain<BinaryPredictionTransformer<FastForestBinaryModelParameters>>? model
+            - PredictionEngine<Data, Prediction>? predictionEngine
+            - FastForestBinaryTrainer.Options options
+
+            + RandomForestModel(ModelConfig config) : base(config)
+            + override object Predict(object data)
+            + override bool Train(object[] inputData)
+            + override async Task<State> Process()
+        }
+
+        AdaptivModel -> SimpleModel : "Inherient"
+        MachineLearningModel -> AdaptivModel : "Inherient"
+        MachineLearningModel -up-> Data : "uses"
+        MachineLearningModel -up-> Prediction : "uses"
+        SupportVectorMachineModel -up-> MachineLearningModel : "inherient"
+        RandomForestModel -up-> MachineLearningModel : "inherient"
+        TimedModel -> SimpleModel : "Inherient"
+
+
+    }
+@enduml

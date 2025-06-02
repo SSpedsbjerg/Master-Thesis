@@ -38,7 +38,7 @@
 		\item Science Direct : 3
 	\end{itemize}
 	
-	The next search engine used is Forskningsportalen, a Danish platform for academic research that includes publications in both Danish and English. It was chosen to reduce duplication of articles found in other databases. The query used is the same as for the Scopus search, with adjustments to match Forskningsportalen’s syntax:
+	The next search engine used is Forskningsportalen, a Danish platform for academic research that includes publications in both Danish and English. It was chosen to reduce duplication of articles found in other databases, as the majority of the already selected articles derives from two search engines and either one of those selected articles may reappear. The query used is the same as for the Scopus search, with adjustments to match Forskningsportalen’s syntax:
 	\newline\noindent\rule{\textwidth}{0.2pt}\newline
 	\noindent
 	\vspace{.2cm}
@@ -52,7 +52,7 @@
 	%include publishers
 	
 	In total, 40 articles were reviewed, with 17 selected based on quality. Selection criteria included data and result credibility, does the result align with their data and or experiment, as well as consistency between the abstract and the papers content, does the abstract state something different from the papers content.
-	\newpage
+	
 	Two major concerns are identified across the selected articles: prediction challenges (noted in 9 articles) and feature reduction (noted in 6 articles).
 	
 	As stated, a record of what \gls{ml} models used in the reviewed papers would be made for two reasons: to provide a reference set for potential comparison with the final product, and to inform model selection if \gls{ml} is incorporated into the system.
@@ -69,9 +69,12 @@
 		The review aims to identify high-value directions and avoid unproductive paths during the analysis phase of software development.
 		Most articles do not explicitly describe the challenges encountered. As a result, potential pitfalls must be inferred by noting which methods or solutions are consistently omitted. Solutions that are rarely mentioned despite being theoretically viable are likely avoided due to having practical problems. Conversely, frequently referenced methods are considered more reliable and are prioritized in this project.
 	
-		Wu et al.\cite{WuPan} use a graph-based structure for time series forecasting, its idea is very similar to this project but takes a different approach, it transforms multivariate time series data into a graph which can be used in a graph neural network, The graph structures nodes derives from variables from multivariate time series data. In relation to this project it shows one approach to the same problem of defining a relation between nodes to predict events. (skal det uddybbes videre iforhold til mit projekt? og jeg formoder at det skal gøres det samme med de andre eksempler). \sout{Ribeiro et al.\cite{Ribeiro} Propose a technique to explain how the model came to a prediction which can help the end user in trusting the prediction. Lv et al. \cite{Lv_Duan} Uses deep learning to make traffic flow prediction, one of the scenarios considered early in for this project. Zhang et al.\cite{Zhang} uses Long short-term memory networks to predict remaining useful life.} These articles fall within the domain targeted by the proposed pattern.
+		Wu et al.[\cite{WuPan}] use a graph-based structure for time series forecasting, its idea is very similar to this project but takes a different approach, it transforms multivariate time series data into a graph which can be used in a graph neural network, The graph structures nodes derives from variables from multivariate time series data. In relation to this project it shows one approach to the same problem of defining a relation between nodes to predict events. If needed to incorporate automatic graph generation for \gls{reps}, taking their ideas and transforming it to fit better to that use case could. Incorporating their ideas into \gls{reps} could prove valuable if there is time for it.
+		
+		Ribeiro et al.[\cite{Ribeiro}] Propose a technique to explain how the model came to a prediction which can help the end user in trusting the prediction. \gls{reps} gains the trust by making the user construct their own system, while if they implement \gls{ml} they will have to trust it and can test it on other data. Ribeiro et al. proposal of a method to interpret the model afterwards gives the user trust in the model and the determination. This could also be valuable to explain which node had large impact on determining the outcome in the \gls{reps}.
+		
+		These articles fall within the domain targeted by the proposed pattern.
 	
 		In the early stages of the project, it was considered that an event node could include a \gls{ml} model. A review of the selected literature where all sources incorporate \gls{ml} to some extent for prediction indicates a clear trend. Based on this, the project shifts from possibly including \gls{ml} to should have it as a component. 
-		\sout{
-		The articles also inform the approach to user interaction. Ribeiro et al.~\cite{Ribeiro} emphasize user trust through model explain-ability, while Wu et al.~\cite{WuPan} contribute structural insights. Based on these, a publish-subscribe pattern will be used for communication between \gls{reps} and external components.
-	}
+		
+		The articles also inform the approach to user interaction. Ribeiro et al.~[\cite{Ribeiro}] emphasize user trust through model explain-ability, while Wu et al.~[\cite{WuPan}] contribute structural insights. Based on these, a publish-subscribe pattern will be used for communication between \gls{reps} and external components.
