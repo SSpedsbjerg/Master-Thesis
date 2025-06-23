@@ -32,14 +32,8 @@ Code/REPS/obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs
 Code/REPS/obj/Debug/net9.0/REPS.AssemblyInfo.cs
 Code/REPS/obj/Debug/net9.0/REPS.GlobalUsings.g.cs
 Code/REPS/obj/project.assets.json
-Code/REPS/obj/REPS.csproj.nuget.dgspec.json
-Code/REPS/obj/REPS.csproj.nuget.g.props
 *.targets
 Code/REPS/Properties/launchSettings.json
-*.csproj
-Code/REPS/REPS.csproj.user
-Code/REPS/REPS.sln
-Code/Broker/Broker.csproj.user
 Code/Broker/.vs/Broker/v17/DocumentLayout.backup.json
 Code/Broker/.vs/Broker/v17/DocumentLayout.json
 /Code/REPS/bin/Debug/net9.0/pt-BR
@@ -55,9 +49,6 @@ Code/Broker/.vs/Broker/v17/DocumentLayout.json
 *.exe
 /Code/REPS/obj/Debug/net9.0/ref
 /Code/REPS/obj/Debug/net9.0/refint
-Code/REPS/obj/Debug/net9.0/REPS.csproj.BuildWithSkipAnalyzers
-Code/REPS/obj/Debug/net9.0/REPS.csproj.FileListAbsolute.txt
-Code/REPS/obj/Debug/net9.0/REPS.csproj.Up2Date
 Code/REPS/obj/Debug/net9.0/REPS.pdb
 Code/REPS/obj/Debug/net9.0/REPS.sourcelink.json
 Code/REPS/.vs/slnx.sqlite
@@ -89,8 +80,6 @@ Code/REPSUserInterface/REPSUserInterface/REPSUserInterface/appsettings.json
 *.map
 /Code/REPSUserInterface/REPSUserInterface/REPSUserInterface/wwwroot
 Code/REPSUserInterface/REPSUserInterface/REPSUserInterface/Properties/launchSettings.json
-Code/REPSUserInterface/REPSUserInterface/REPSUserInterface/obj/REPSUserInterface.csproj.nuget.g.props
-Code/REPSUserInterface/REPSUserInterface/REPSUserInterface/obj/REPSUserInterface.csproj.nuget.dgspec.json
 Code/REPSUserInterface/REPSUserInterface/REPSUserInterface/obj/project.assets.json
 
 

@@ -16,7 +16,8 @@
 			Feature prioritisation is guided by evaluating dependencies and the user value each feature provides. A cost-benefit analysis is conducted at the start of each iteration to ensure alignment with project scope.
 		
 		\subsubsection{Development model}
-			Software development is often guided by two main methodologies: Waterfall and Agile. Waterfall is suitable when requirements are unlikely to change, such as in medical software. Waterfall is a method for when requirements is not likely to change such as developing medical software. Waterfall often follows these steps:
+			Software development is often guided by two main methodologies: Waterfall and Agile. Waterfall is suitable when requirements are unlikely to change, such as in medical software.
+			Waterfall often follows these steps:
 			\begin{figure}[!h]
 				\begin{center}
 					\includegraphics[width=.8\textwidth]{Images/Waterfall}
@@ -25,7 +26,7 @@
 				\end{center}
 			\end{figure}
 	
-			Agile is more adaptive and supports frequent changes in requirements. The stages in agile is often circular and allows for going back and forth in the stages.
+			Agile is more adaptive and supports frequent changes in requirements, which makes it valuable for this project due to its exploratory nature. The stages in agile is often circular and allows for going back and forth in the stages.
 			
 			This project applies some SCRUM practices, with iterations limited to two weeks. After each iteration, the project state is reviewed to support requirement adjustments. The first day of each iteration is reserved for documentation and reflection on the previous cycle. The class diagram is updated regularly to maintain a clear overview of the system.
 			
@@ -39,10 +40,8 @@
 				\end{center}
 			\end{figure}
 	
-	\subsection{Development Process}
-		\textbf{Tools}\\ \noindent
-			Tools that monitor memory and CPU usage can help identify problems or bottlenecks early in the development process. Additional tools are developed and used to accelerate testing and experimentation. A custom \gls{gui} was created to streamline testing by enabling easy deployment of a varied set of test cases. Docker is used for experiment deployment, as it also provides the ability to track CPU, memory, and network usage.\newline \newline
-		\noindent
+	\subsection{Development Tools}
+			Tools that monitor memory and CPU usage can help identify problems or bottlenecks early in the development process. Additional tools are developed and used to accelerate testing and experimentation. A custom \gls{gui} was created to streamline testing by enabling easy deployment of a varied set of test cases. Docker is used for experiment deployment, as it also provides the ability to track CPU, memory, and network usage.
 
 	\subsection{Analysis}\label{sec:Analysis}
 		To determine the optimal design based on insights from the research phase, several analytical methods are applied.
@@ -65,19 +64,19 @@
 			\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{3cm}|p{3cm}|}
 				\hline
 				Requirement ID & Requirement & Prioritization Level & Description & Reason \\ \hline
-				FR0 & Individual process in each 'Event Node' & Must have &An 'Event Node' is the main process for making predictions and conclusions. & These processes are essential for generating predictions and conclusions.\\ \hline
+				FR0 & Individual process in each 'Event Node' & Must have &An 'Event Node' is the main process for making predictions. & These processes are essential for making predictions.\\ \hline
 				FR1 & Ability to communicate with external services not part of \gls{reps} & Must have & External systems must be able to receive values from \gls{reps} to make decisions based on \gls{reps}' observations. & For external systems to react to \gls{reps}' state changes, \gls{reps} must share its data. Without this, \gls{reps} serves no purpose. \\ \hline
 				FR2 & Easily add new 'Event Nodes' & Could have & 	Using XML, JSON, or another format, new nodes could be added to the \gls{reps}. & May accelerate testing, though not required for system functionality. \\ \hline
 				FR3 & Quickly initialise \gls{reps} using a configuration file & Could have & 	Allows quicker deployment and enables sharing of \gls{reps} configurations. &  It could speed up testing, but it is not a requirement for the system to function \\ \hline
 				FR4 & Support for \gls{ml} models in 'Event Nodes' & Should have & Would expand \gls{reps}' use cases, enabling companies to integrate or develop models tailored to specific problems. & Highly useful for this project but not essential for evaluating system viability. \\ \hline
-				FR5 & Event detection & Must have & Detects relevant events occurring within the system. & Core functionality of the system. \\ \hline
+				FR5 & Event Detection Capability & Must have & Detects relevant events occurring within the system. & Core functionality of the system. \\ \hline
 				FR6 & Graphical user-interface & Wont have & A user interface would simplify \gls{reps} setup for developers. & Deemed too time-consuming and not essential for evaluating system viability. \\ \hline
 				FR7 & Automatic \gls{reps} creation & Wont have & Could theoretically enable automatic \gls{reps} generation from system documentation. & Considered a separate research topic and beyond the scope of this project. \\ \hline
 			\end{tabular}
 		}
 	\end{center}
-	{\scriptsize Wont have means I do not plan to implement such feature at the moment, but is included as this could have value for future work.}
-	
+	{\scriptsize Wont have means I do not plan to implement such feature at the moment, but is included as this could have value for future work.}\\ \noindent
+	Non-Functional Requirements:
 	\begin{center}
 		\resizebox{\textwidth}{!}{
 			\scriptsize
@@ -99,7 +98,7 @@
 		The publish-subscribe pattern best suits the communication needs. Its modifiability and adaptability align well with the communication requirements (FR1) while supporting easy extension (FR2 \& FR3). \gls{mqtt} supports all necessary features and is therefore picked due to its simplicity and light weight.
 		
 		\item \textbf{JSON interpreter for saving (FR2, FR3):}\\
-		A relational database does not suit \gls{reps}’s structure. \gls{json} or XML provide the flexibility required. There is no need for the performance benefits of a relational database. JSON is preferred, as I have more experience implementing it, whereas XML is less familiar. AVRO will not be used as it will require more development time than \gls{json}.
+		A relational database does not suit \gls{reps}’s structure. \gls{json} or XML provide the flexibility required. There is no need for the performance benefits of a relational database. \gls{json} is preferred, as I have more experience implementing it, whereas XML is less familiar. AVRO will not be used as it will require more development time than \gls{json}.
 		
 		\item \textbf{ C\#:} \\
 		I have the most experience with C\#. While it may be slower than languages like C/C++, it is sufficiently fast for this project. Its object-oriented nature suits REPS well. A drawback is the limited availability of ML libraries compared to Python, which may slow the implementation of FR4 but will enable faster development of other features.
@@ -108,7 +107,7 @@
 		Roslyn is a .NET compiler platform which allows for turning the C\# compiler into a programmable platform. Meaning I can compile code during run time. As anything compiled during runtime, it will require more computational power, an increase in CPU and Memory usages is expected. Roslyn allows for the simplest form of making determinations in a node and is therefore included even though it may have Memory usage problems.
 		
 		\item \textbf{\gls{ml} models (FR4):}\\
-		A simple model will use Roslyn to make determinations, but as the related work (section \ref{sec:RelatedWork}) determined, \gls{ml} models frequently used to make determinations and supporting that will therefore for that reason most likely bring the highest value. Through this project, the following \gls{ml} models in same order will be implemented. \gls{svm}, easy to implement and is the second most used model in the related work. \gls{rf} due to t be very different from \gls{svm}, allowing to determine the range of models which can be used in \gls{reps}. Neural Networks requires more implementation than some of the other 2, while it is the most used, it also requires more work, and as the implementation of models is not the focus of this project, it can be put in the last spot in the queue for implementation.
+		A simple model will use Roslyn to make determinations, but as the related work (section \ref{sec:RelatedWork}) determined, \gls{ml} models frequently used to make determinations and supporting that will most likely bring the highest value. Through this project, the following \gls{ml} models in same following order will be implemented. \gls{svm}, easy to implement and is the second most used model in the related work. \gls{rf} due to it being very different from \gls{svm}, allowing to determine the range of models which can be used in \gls{reps}. Neural Networks requires more implementation than some of the other 2, while it is the most used according to the related work, it also requires more work, and as the implementation of models is not the focus of this project, it can be put in the last spot in the queue for implementation.
 	\end{itemize}
 	\newpage
 	\begin{figure}[!h]
@@ -121,33 +120,33 @@
 	
 	Based on the diagrams in Figure \ref{fig:analysisDiagram}, RabbitMQ will be used for MQTT as it meets all project requirements and supports C\# implementation. It offers classic MQTT features and queue prioritisation, which may be essential in crisis situations. The number of priority levels should be limited, as increasing them demands more CPU resources. Additionally, messages set to expire might remain longer than expected, since RabbitMQ expires messages from the head of the queue. However, this should not pose a problem provided the end user does not send excessive messages.
 	
-	In C\#, the output must be defined as the \texttt{object} type. While the \texttt{dynamic} type is an alternative, it introduces runtime casting, which increases the risk of errors. The \texttt{var} keyword is not suitable, as it resolves types at compile time. By using \texttt{object}, I must explicitly define a set of permitted casting types. This reduces flexibility but significantly lowers the risk of runtime errors.
+	In C\#, the output must be defined as the \texttt{object} type to allow broad usage of different types. While the \texttt{dynamic} type is an alternative, it introduces runtime casting, which increases the risk of errors. The \texttt{var} keyword is not suitable, as it resolves types at compile time. By using \texttt{object}, I must explicitly define a set of permitted casting types. This reduces flexibility but significantly lowers the risk of runtime errors.
 	
 	I will use C\#'s Roslyn to interpret functions at runtime. This enables full customisation of logic, including mathematical operations and conditional statements.
 	
-	%https://www.nuget.org/PACKAGES?q=\&includeComputedFrameworks=true\&prerel=true\&sortby=totalDownloads-desc
-	For \gls{json} parsing, I will be using Newtonsoft, a C\# framework for interpreting JSON. This choice is based on its ease of use, extensive documentation, and the fact that it is the most downloaded NuGet package[], which suggests that if any issues arise, solutions are likely to be found on Stack Overflow or similar platforms.
+	%
+	For \gls{json} parsing, I will be using Newtonsoft, a C\# framework for interpreting JSON. This choice is based on its ease of use, extensive documentation, and the fact that it is the most downloaded NuGet package\cite{Newtonsoft}, which suggests that if any issues arise, solutions are likely to be found on Stack Overflow or similar platforms.
 	
-	%(TODO: gennemgå flere af noterne og skriv om rabbitMQ og threading begrundelserne her)
-	The target of the project is to have and be able to create graphs, a worry then arrives that the implementation is a tree that is pretends to be a graph, i.e. that it is not possible to create circular dependencies. Therefore there is a need to remove dependencies from other nodes, that even though the parent node is not finished processing, the child node will just have to use the old output value. This ensures that a circular dependency does not cause an infinite loop and actually allows for it to be a graph.
-	\newpage
+	The target of the project is to have and be able to create graphs, a worry then arrives that the implementation is has a tree like structure that is pretends to be a graph, i.e. that it is not possible to create circular dependencies but all nodes descend from a set of root sensor nodes. Therefore there is a need to remove dependencies from other nodes, that even though the parent node is not finished processing, the child node will just have to use the old output value. This ensures that a circular dependency does not cause an infinite loop and actually allows for it to be a graph.
+	
 	\subsection{Design}
-	Based on the analysis (\ref{sec:Analysis}), a set of technology choices (\ref{sec:TechChoices}) could be stated which is needed to achieve the requirements (\ref{sec:Requirements}). Based on the technology, a more precise design is made to align with the technology.
+	Based on the analysis (section \ref{sec:Analysis}), a set of technology choices (section \ref{sec:TechChoices}) could be stated which is needed to achieve the requirements (section \ref{sec:Requirements}), and on the technology choices, a more precise design is made to align with the technology.
 	\begin{figure}[!h]
 		\begin{center}
 			\includegraphics[width=.9\textwidth]{Images/DesignAnalysisDiagram}
 			\caption{First Design}
+			\label{fig:firstDesignDiagram}
 		\end{center}
 	\end{figure}
 	
 	\begin{figure}[!h]
 		\begin{center}
-			\includegraphics[width=.6\textwidth]{Images/SequenceDiagram}
+			\includegraphics[width=.9\textwidth]{Images/SequenceDiagram}
 			\caption{Sequence Diagram}
 		\end{center}
 	\end{figure}
 	
-	As the project furthers and new iterations of the project is completed, the class diagram will be updated with the final diagram (Figure: \ref{fig:FinalClassDiagram}):
+	As the project furthers and new iterations of the project is completed, the class diagram will be updated with the final diagram (Figure: \ref{fig:FinalClassDiagram}), this diagram is just to show the size of the final program when more of the planned features has been developed, as it is too bige to properly represent on paper. It mostly remains in the same theme as figure \ref{fig:firstDesignDiagram}:
 	\begin{figure}
 		\begin{center}
 			\includegraphics[width=\paperwidth, angle=90, origin=c]{Images/Final}
@@ -176,7 +175,7 @@
 	
 		Each Event Node contains a model which it uses to determine an output. The complexity of the model can vary; a simple model, can take a mathematical function written in C\# syntax and generate an output based on it.
 	
-		The following models have been implemented based on related work, section \ref{sec:RelatedWork}.
+		The following models have been implemented based on related work(section \ref{sec:RelatedWork}).
 	
 	\begin{itemize}
 		\item SimpleModel : A model intended for users to define their own logic using a simple expression. While it is Turing complete, it is not suited for complex algorithms due to higher memory consumption.
@@ -187,6 +186,7 @@
 		\item RandomForestModel :  A model that implements the Random Forest.
 	\end{itemize}
 	\noindent
+	\newpage
 	A Simple models implementation has to compile the trigger and function
 	\begin{lstlisting}[language={[sharp]C}, caption={SimpleMode.cs},label=lst:simpleCompile]
 protected virtual async Task<Func<object[], object?>> CompileFunctionAsync(string function, string[] parameters) {
@@ -236,7 +236,7 @@ protected virtual void UpdateEqulibrium<T>((object, TimeOnly)[] values) {
 	\end{lstlisting}
 	It updates the trigger limit, which determines when an event is considered triggered.
 	
-	A Machine Learning (ML) model is an abstract class and is also regarded as an adaptive model. However, in the current implementation, it does not utilise the inherited functionality. The concept is that machine learning models can also adapt as new data becomes available. The Machine Learning model defines two methods which are not yet implemented.
+	A Machine Learning (ML) model is an abstract class and is also regarded as an adaptive model. However, in the current implementation, it does not utilise the inherited functionality. The concept is that \gls{ml} models can also adapt as new data becomes available. The \gls{ml} model defines two methods which are not implemented as it is expected to be implemented in class' which inherent from this.
 	
 	\gls{ml} models cover a wider range of use cases and are easier to implement from a user’s perspective. Both \gls{svm} and \gls{rf} have been implemented to test their viability. 
 	The \gls{svm} model uses Microsoft.ML, which provides much of the implementation needed for different models. The \gls{svm} requires only a path to the training data; the data is then used to train the model.
@@ -323,7 +323,7 @@ public struct SensorConfig {
 		\end{lstlisting}}
 	
 		Implementing all of the configurations in the \gls{json} reader, from which we can determine the amount of keywords needed implement the current solution. There is a total of 30 keywords, a list can be found in appendix \ref{sec:Keywords}.
-		
+		\newpage
 		With the current implementation of the \gls{json} reader, a user can implement \gls{reps}. For example, a simple model that takes two sensors and adds their values can be defined as shown in Code Snippet \ref{lst:simpleAddition}.
 {\scriptsize\begin{lstlisting}[language=json, caption={A simple model for addition}, label=lst:simpleAddition]
 {
@@ -440,7 +440,7 @@ public struct SensorConfig {
 	\newpage
 	\subsubsection{Nodes}
 		Any kind of nodes implements an INode
-		\begin{lstlisting}[language={[sharp]C},caption={INode}, label=lst:INode]
+		\begin{lstlisting}[language={[sharp]C},caption={INode.cs}, label=lst:INode]
 namespace REPS.Interfaces {
 	public interface INode {
 		object Output {
@@ -646,4 +646,4 @@ public List<(string, string, Guid, int)> GetTypes<T>() {
 		
 		Using a human-readable configuration file allows users to make quick changes during and between runtimes. The pattern’s design supports simple setup and interaction, while minimising the learning curve compared to similar solutions.
 		
-		In conclusion, the best way to implement \gls{reps} is with each node being independent, allowing varied implementations. Although this project is implemented as a monolith, there is no reason it could not be implemented as microservices. Independence enables nodes to perform calculations concurrently without waiting for others to finish. There should be a clear separation between sensor nodes and event nodes, as their concerns differ, and multiple event nodes can utilise the same sensor data. Event nodes should have only one output, ensuring they remain focused on their task.
+		The best way to implement \gls{reps} is with each node being independent, allowing varied implementations. Although this project is implemented as a monolith, there is no reason it could not be implemented in a microservice architecture. Independence enables nodes to perform calculations concurrently without waiting for others to finish. There should be a clear separation between sensor nodes and event nodes, as their concerns differ, and multiple event nodes can utilise the same sensor data. Event nodes should have only one output, ensuring they remain focused on their task.
